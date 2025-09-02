@@ -5,16 +5,17 @@ import Experiences from '../../components/Experiences/Experiences';
 import About from '../../components/About/About';
 import Location from '../../components/Location/Location';
 import Preferences from '../../components/Preferences/Preferences';
+import Payment from '../../components/Payment/Payment';
 import Marquee from '../../components/Marquee/Marquee';
 import Footer from '../../components/Footer/Footer';
 import { 
   NavItem, 
   HeroProps, 
   ExperiencePackage, 
-  SpecialExperience,
   AboutSection,
   LocationInfo,
-  PreferencesLimits
+  PreferencesLimits,
+  PaymentConfig
 } from '../../types';
 import styles from './LandingPage.module.css';
 
@@ -83,37 +84,52 @@ const LandingPage: React.FC = () => {
         description: 'Uma experiência que honra cada momento, com gentileza e atenção aos detalhes.'
       },
       mood: 'Elegante e Refinado'
-    }
-  ];
-
-  const specialExperiences: SpecialExperience[] = [
+    },
     {
-      name: 'Passaporte Premium',
+      name: 'Flash',
+      duration: '30 minutos',
+      price: '530,00',
+      description: 'Conexão profunda e íntima',
+      features: ['Momento íntimo', 'Conexão especial', 'Ambiente privado'],
+      popular: false,
+      personality: {
+        trait: 'Intimidade',
+        emotion: 'Conexão',
+        description: 'Um encontro focado na conexão íntima e momentos especiais compartilhados.'
+      },
+      mood: 'Íntimo e Especial'
+    },
+    {
+      name: 'Passaporte',
       duration: '1 hora',
       price: '530,00',
-      description: 'Para seguidores do Privacy - experiência exclusiva com desconto especial',
-      badge: 'Exclusivo',
+      description: 'Experiência exclusiva para assinantes',
+      features: ['Agenda prioritária', 'Valor especial', 'Mimo secreto'],
+      popular: false,
       personality: {
-        trait: 'Tranquilidade',
-        emotion: 'Exclusividade',
-        description: 'Um encontro especial que combina serenidade com momentos únicos e memoráveis.'
+        trait: 'Exclusividade',
+        emotion: 'Privilegio',
+        description: 'Uma experiência premium exclusiva para assinantes ativos do Privacy ou OnlyFans.'
       },
-      mood: 'VIP'
+      mood: 'Exclusivo e Privilegiado'
     },
     {
       name: 'Comfort',
       duration: '3 horas',
       price: '620,00',
-      description: 'Companhia sem toque ou clima romântico - ideal para quem busca apenas conversa e atenção',
-      badge: 'Especial',
+      description: 'Encontro romântico e especial',
+      features: ['Clima romântico', 'Momentos especiais', 'Ambiente acolhedor'],
+      popular: false,
       personality: {
-        trait: 'Carinho',
-        emotion: 'Companheirismo',
-        description: 'Foco total na conexão emocional, criando um espaço seguro para conversas sinceras.'
+        trait: 'Romantismo',
+        emotion: 'Paixão',
+        description: 'Um encontro dedicado ao romantismo e aos momentos especiais entre duas pessoas.'
       },
-      mood: 'Conversativo'
+      mood: 'Romântico e Apaixonante'
     }
   ];
+
+
 
   const aboutData: AboutSection = {
     title: 'Sobre Mim',
@@ -137,7 +153,7 @@ const LandingPage: React.FC = () => {
   };
 
   const locationData: LocationInfo = {
-    area: 'Região Paulista, próximo ao Paraíso',
+    area: 'Bairro Jardins, próximo a Paulista',
     description: 'Flat discreto, confortável e sofisticado em localização privilegiada. Ambiente seguro e acolhedor para sua total tranquilidade.',
     amenities: [
       'Ducha quente',
@@ -154,14 +170,27 @@ const LandingPage: React.FC = () => {
     offers: [
       'Experiência leve, divertida, de namoradinha',
       'Conversa, atenção, sem pressa',
-      'Podolatria (calça 34, sem cócegas)',
+      'Podolatria (Calço 34 e não sinto cocegas)',
       'Ambiente aconchegante e limpo'
     ],
     limits: [
-      'Não finaliza na boca/rosto',
-      'Não faz anal',
-      'Não atende pessoas agressivas'
+      'Não aceito finalizações na boca ou rosto',
+      'Não faço anal',
+      'Não atendo pessoas agressivas',
+      'Não tolero desrespeito'
     ]
+  };
+
+  const paymentConfig: PaymentConfig = {
+    PIX_KEY: 'pix@franjinha.com',
+    PIX_HOLDER_NAME: 'Franjinha',
+    CARD_FEE_PERCENT: 3.5,
+    DEPOSIT_PERCENT: 30,
+    DEPOSIT_DEADLINE_HOURS: 24,
+    CANCEL_WINDOW_HOURS: 12,
+    CREDIT_VALIDITY_DAYS: 30,
+    LATE_TOLERANCE_MIN: 15,
+    WHATSAPP_URL: 'https://wa.me/5511999999999'
   };
 
   return (
@@ -171,11 +200,11 @@ const LandingPage: React.FC = () => {
         <Hero {...heroProps} />
         <Experiences 
           packages={experiencePackages} 
-          specials={specialExperiences} 
         />
         <About aboutData={aboutData} />
         <Location locationData={locationData} />
         <Preferences preferencesData={preferencesData} />
+        <Payment config={paymentConfig} />
       </main>
       <Marquee text="Agora Aceitando Reservas" />
       <Footer />

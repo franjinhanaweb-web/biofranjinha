@@ -27,7 +27,7 @@ const Location: React.FC<LocationProps> = ({ locationData }) => {
               </p>
               
               <div className={styles.locationPromise}>
-                <h4>Nossa Promessa</h4>
+                <h4>Minha Promessa</h4>
                 <p>{locationData.promise}</p>
               </div>
             </div>
@@ -50,15 +50,7 @@ const Location: React.FC<LocationProps> = ({ locationData }) => {
           </Col>
         </Row>
 
-        <div className={styles.locationFooter}>
-          <div className={styles.locationHighlight}>
-            <div className={styles.highlightIcon}>🏠</div>
-            <div className={styles.highlightContent}>
-              <h4>Flat Discreto</h4>
-              <p>Ambiente privado e confortável para sua total tranquilidade</p>
-            </div>
-          </div>
-        </div>
+
       </Container>
     </section>
   );

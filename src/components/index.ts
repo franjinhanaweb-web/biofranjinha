@@ -7,4 +7,5 @@ export { default as Experiences } from './Experiences/Experiences';
 export { default as About } from './About/About';
 export { default as Location } from './Location/Location';
 export { default as Preferences } from './Preferences/Preferences';
+export { default as Payment } from './Payment/Payment';
 export { default as VinylRecord } from './VinylRecord';

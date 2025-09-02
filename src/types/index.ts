@@ -82,6 +82,18 @@ export interface PaymentInfo {
   ctaLink: string;
 }
 
+export interface PaymentConfig {
+  PIX_KEY: string;
+  PIX_HOLDER_NAME: string;
+  CARD_FEE_PERCENT?: number;
+  DEPOSIT_PERCENT: number;
+  DEPOSIT_DEADLINE_HOURS: number;
+  CANCEL_WINDOW_HOURS: number;
+  CREDIT_VALIDITY_DAYS: number;
+  LATE_TOLERANCE_MIN: number;
+  WHATSAPP_URL: string;
+}
+
 export interface SocialMedia {
   platform: string;
   url: string;
@@ -96,4 +108,5 @@ export interface VinylRecordProps {
   isSpinning?: boolean;
   className?: string;
   coverText?: string;
+  style?: React.CSSProperties;
 }

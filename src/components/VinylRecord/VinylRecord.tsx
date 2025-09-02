@@ -9,7 +9,8 @@ const VinylRecord: React.FC<VinylRecordProps> = ({
   onClick,
   isSpinning = true,
   className,
-  coverText
+  coverText,
+  style
 }) => {
   return (
     <div 
@@ -21,7 +22,8 @@ const VinylRecord: React.FC<VinylRecordProps> = ({
           className={styles.cover}
           style={{ 
             backgroundImage: coverImage ? `url(${coverImage})` : undefined,
-            backgroundSize: coverImage ? '100% 100%' : undefined
+            backgroundSize: coverImage ? '100% 100%' : undefined,
+            ...style
           }}
         >
           <div className={styles.print}></div>
@@ -29,9 +31,12 @@ const VinylRecord: React.FC<VinylRecordProps> = ({
             <div className={`${styles.coverText} ${
               coverText?.toLowerCase().includes('classic') ? styles.classic :
               coverText?.toLowerCase().includes('prestige') ? styles.prestige :
-              coverText?.toLowerCase().includes('girlfriend') ? styles.girlfriend : ''
+              coverText?.toLowerCase().includes('girlfriend') ? styles.girlfriend :
+              coverText?.toLowerCase().includes('flash') ? styles.flash :
+              coverText?.toLowerCase().includes('luxury') ? styles.luxury :
+              coverText?.toLowerCase().includes('romantic') ? styles.romantic : ''
             }`}>
-              {coverText?.toLowerCase().includes('girlfriend') ? 'Girlfriend Experience' : (coverText || 'Classic')}
+              {coverText?.toLowerCase().includes('girlfriend') ? 'Girlfriend' : (coverText || 'Classic')}
             </div>
           )}
         </div>
