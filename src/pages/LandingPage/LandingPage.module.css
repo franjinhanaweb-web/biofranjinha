@@ -1,0 +1,21 @@
+.landingPage {
+  min-height: 100vh;
+  background: #fefefe;
+}
+
+/* Smooth scrolling for anchor links */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Focus styles for accessibility */
+*:focus {
+  outline: 2px solid #e91e63;
+  outline-offset: 2px;
+}
+
+/* Button focus override */
+button:focus {
+  outline: 2px solid #e91e63;
+  outline-offset: 2px;
+}
