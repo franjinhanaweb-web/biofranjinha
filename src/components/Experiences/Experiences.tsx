@@ -1,5 +1,5 @@
-import React, { useState, useRef } from 'react';
-import { Container, Row, Col } from 'react-bootstrap';
+import React, { useState, useRef, useCallback } from 'react';
+import { Container } from 'react-bootstrap';
 import { ExperiencePackage } from '../../types';
 import VinylRecord from '../VinylRecord';
 import styles from './Experiences.module.css';
@@ -52,71 +52,88 @@ const Experiences: React.FC<ExperiencesProps> = ({ packages }) => {
   const [selectedPackage, setSelectedPackage] = useState<string | null>(null);
   const [isPassaporteExpanded, setIsPassaporteExpanded] = useState(false);
   const [activePassaporteTab, setActivePassaporteTab] = useState<'how-it-works' | 'mimo-secreto' | 'transfer'>('how-it-works');
-  const carouselRef = useRef<HTMLDivElement>(null);
+
 
   const handlePackageSelect = (packageName: string) => {
     setSelectedPackage(selectedPackage === packageName ? null : packageName);
   };
 
-  // Carrossel usa animação CSS contínua
+  // Novo carrossel simples e limpo
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+  const autoplayInterval = useRef<NodeJS.Timeout | null>(null);
 
-  // Touch handlers para carrossel com navegação manual
-  const [isDragging, setIsDragging] = useState(false);
-  const [dragStart, setDragStart] = useState(0);
-  const [dragOffset, setDragOffset] = useState(0);
-  const [animationPaused, setAnimationPaused] = useState(false);
-  const [manualOffset, setManualOffset] = useState(0);
-  const [isManualMode, setIsManualMode] = useState(false);
+  // Função para ir para o próximo slide
+  const goToNext = useCallback(() => {
+    setCurrentIndex((prev) => (prev + 1) % packages.length);
+  }, [packages.length]);
+
+  // Função para ir para o slide anterior
+  const goToPrevious = useCallback(() => {
+    setCurrentIndex((prev) => (prev - 1 + packages.length) % packages.length);
+  }, [packages.length]);
+
+  // Autoplay
+  const startAutoplay = useCallback(() => {
+    if (autoplayInterval.current) clearInterval(autoplayInterval.current);
+    autoplayInterval.current = setInterval(() => {
+      if (isAutoPlaying) {
+        goToNext();
+      }
+    }, 4000); // Aumentei para 4 segundos para dar mais tempo para ver cada álbum
+  }, [isAutoPlaying, goToNext]);
+
+  // Pausar autoplay
+  const pauseAutoplay = () => {
+    setIsAutoPlaying(false);
+    if (autoplayInterval.current) clearInterval(autoplayInterval.current);
+  };
+
+  // Reiniciar autoplay
+  const resumeAutoplay = () => {
+    setIsAutoPlaying(true);
+    startAutoplay();
+  };
+
+  // Iniciar autoplay quando o componente monta
+  React.useEffect(() => {
+    startAutoplay();
+    return () => {
+      if (autoplayInterval.current) clearInterval(autoplayInterval.current);
+    };
+  }, [startAutoplay]); // Adicionado startAutoplay como dependência
+
+  // Handlers de touch
+  const [touchStart, setTouchStart] = useState(0);
+  const [touchEnd, setTouchEnd] = useState(0);
 
   const handleTouchStart = (e: React.TouchEvent) => {
-    setIsDragging(true);
-    setDragStart(e.targetTouches[0].clientX);
-    setAnimationPaused(true);
-    setIsManualMode(true);
+    setTouchStart(e.targetTouches[0].clientX);
+    pauseAutoplay();
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
-    if (!isDragging) return;
-    
-    e.preventDefault(); // Previne scroll da página
-    
-    const currentX = e.targetTouches[0].clientX;
-    const offset = currentX - dragStart;
-    setDragOffset(offset);
+    setTouchEnd(e.targetTouches[0].clientX);
   };
 
   const handleTouchEnd = () => {
-    if (!isDragging) return;
+    if (!touchStart || !touchEnd) return;
     
-    const threshold = 50; // Distância mínima para considerar um swipe
-    const currentOffset = dragOffset;
-    const maxOffset = 300; // Limite máximo de movimento manual
-    
-    setIsDragging(false);
-    setDragOffset(0);
-    
-    // Se o usuário fez um swipe significativo, mantém o modo manual
-    if (Math.abs(currentOffset) > threshold) {
-      setManualOffset(prev => {
-        const newOffset = prev + currentOffset;
-        // Limita o movimento dentro de limites razoáveis
-        return Math.max(-maxOffset, Math.min(maxOffset, newOffset));
-      });
-      setIsManualMode(true);
-      setAnimationPaused(true);
-    } else {
-      // Se foi apenas um toque, volta para o modo automático após 3 segundos
-      setIsManualMode(false);
-      setTimeout(() => {
-        if (!isDragging) {
-          setAnimationPaused(false);
-          setManualOffset(0);
-        }
-      }, 3000);
-    }
-  };
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > 50;
+    const isRightSwipe = distance < -50;
 
-  // Mouse handlers removidos - desktop usa apenas layout estático
+    if (isLeftSwipe) {
+      goToNext();
+    } else if (isRightSwipe) {
+      goToPrevious();
+    }
+    
+    // Reinicia o autoplay após 5 segundos
+    setTimeout(() => {
+      resumeAutoplay();
+    }, 5000);
+  };
 
 
 
@@ -145,12 +162,10 @@ const Experiences: React.FC<ExperiencesProps> = ({ packages }) => {
             ))}
           </div>
 
-          {/* Carrossel Container - Mobile */}
-          <div className={styles.carouselContainer}>
-            {/* Container dos slides */}
+          {/* Novo Carrossel - Mobile */}
+          <div className={styles.mobileCarousel}>
             <div 
-              className={styles.carouselWrapper}
-              ref={carouselRef}
+              className={styles.carouselContainer}
               onTouchStart={handleTouchStart}
               onTouchMove={handleTouchMove}
               onTouchEnd={handleTouchEnd}
@@ -158,37 +173,32 @@ const Experiences: React.FC<ExperiencesProps> = ({ packages }) => {
               <div 
                 className={styles.carouselTrack}
                 style={{
-                  transform: isManualMode 
-                    ? `translateX(${manualOffset + dragOffset}px)` 
-                    : `translateX(${dragOffset * 0.1}%)`,
-                  animationPlayState: animationPaused ? 'paused' : 'running'
+                  transform: `translateX(-${currentIndex * 100}%)`,
+                  transition: 'transform 0.5s ease-in-out'
                 }}
               >
-                {/* Cria múltiplas sequências para carrossel infinito */}
-                {[...Array(3)].map((_, sequenceIndex) => 
-                  packages.map((pkg, index) => (
-                    <div key={`${sequenceIndex}-${index}`} className={styles.carouselSlide}>
-                      <BubbleCard
-                        package={pkg}
-                        isSelected={selectedPackage === pkg.name}
-                        isOtherSelected={selectedPackage !== null && selectedPackage !== pkg.name}
-                        onSelect={() => handlePackageSelect(pkg.name)}
-                      />
-                    </div>
-                  ))
-                )}
+                {packages.map((pkg, index) => (
+                  <div key={index} className={styles.carouselSlide}>
+                    <BubbleCard
+                      package={pkg}
+                      isSelected={selectedPackage === pkg.name}
+                      isOtherSelected={selectedPackage !== null && selectedPackage !== pkg.name}
+                      onSelect={() => handlePackageSelect(pkg.name)}
+                    />
+                  </div>
+                ))}
               </div>
             </div>
-
-            {/* Indicadores de navegação manual */}
-            <div className={styles.carouselIndicators}>
-              <div className={styles.manualHint}>
-                {isManualMode ? (
-                  <span className={styles.manualActive}>🎯 Modo manual ativo</span>
-                ) : (
-                  <span className={styles.autoHint}>👆 Toque e arraste para navegar</span>
-                )}
+            
+            {/* Indicador de Swipe */}
+            <div className={styles.swipeIndicator}>
+              <div className={styles.swipeIcon}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M8 6L4 10L8 14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M16 6L20 10L16 14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
               </div>
+              <span className={styles.swipeText}>Deslize para navegar</span>
             </div>
           </div>
 
@@ -590,6 +600,87 @@ const Experiences: React.FC<ExperiencesProps> = ({ packages }) => {
         </div>
 
 
+
+        {/* Seção About - Valores */}
+        <div className={styles.aboutSection}>
+          <div className={styles.aboutIntro}>
+            <h3 className={styles.aboutTitle}>Sobre Mim</h3>
+            <p className={styles.aboutDescription}>
+              Os valores que guiam cada encontro especial
+            </p>
+          </div>
+
+          <div className={styles.triangularContainer}>
+            {/* Anel circular de fundo */}
+            <div className={styles.circularRing}></div>
+            
+            {/* Bolha Tranquilidade (topo) */}
+            <div className={`${styles.valueBubble} ${styles.tranquilidadeBubble}`}>
+              <div className={styles.bubbleContent}>
+                <div className={styles.bubbleIcon}>😌</div>
+                <h4 className={styles.bubbleTitle}>Tranquilidade</h4>
+                <p className={styles.bubbleDescription}>
+                  Companhia carinhosa, sem pressa. Momentos únicos.
+                </p>
+              </div>
+            </div>
+
+            {/* Bolha Carinho (esquerda) */}
+            <div className={`${styles.valueBubble} ${styles.carinhoBubble}`}>
+              <div className={styles.bubbleContent}>
+                <div className={styles.bubbleIcon}>💝</div>
+                <h4 className={styles.bubbleTitle}>Carinho</h4>
+                <p className={styles.bubbleDescription}>
+                  Encontros atenciosos, nada mecânico. Foco total em você.
+                </p>
+              </div>
+            </div>
+
+            {/* Bolha Respeito (direita) */}
+            <div className={`${styles.valueBubble} ${styles.respeitoBubble}`}>
+              <div className={styles.bubbleContent}>
+                <div className={styles.bubbleIcon}>✨</div>
+                <h4 className={styles.bubbleTitle}>Respeito</h4>
+                <p className={styles.bubbleDescription}>
+                  Higiene e gentileza essenciais. Ambiente seguro e acolhedor.
+                </p>
+              </div>
+            </div>
+
+            {/* Conectores curvos */}
+            <svg className={styles.connectors} viewBox="0 0 400 350" xmlns="http://www.w3.org/2000/svg">
+              <path 
+                d="M 200 80 Q 120 200 200 200" 
+                className={styles.connectorLine}
+                stroke="rgba(147, 51, 234, 0.3)"
+                strokeWidth="2"
+                fill="none"
+                strokeLinecap="round"
+              />
+              <path 
+                d="M 200 80 Q 280 200 200 200" 
+                className={styles.connectorLine}
+                stroke="rgba(147, 51, 234, 0.3)"
+                strokeWidth="2"
+                fill="none"
+                strokeLinecap="round"
+              />
+              <path 
+                d="M 120 200 Q 200 250 280 200" 
+                className={styles.connectorLine}
+                stroke="rgba(147, 51, 234, 0.3)"
+                strokeWidth="2"
+                fill="none"
+                strokeLinecap="round"
+              />
+            </svg>
+
+            {/* Símbolo central opcional */}
+            <div className={styles.centralSymbol}>
+              <div className={styles.symbolIcon}>💖</div>
+            </div>
+          </div>
+        </div>
 
         {/* Mensagem Final */}
         <div className={styles.finalMessage}>

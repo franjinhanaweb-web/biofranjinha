@@ -19,7 +19,7 @@ interface PaymentProps {
 }
 
 const Payment: React.FC<PaymentProps> = ({ config }) => {
-  const [copiedPix, setCopiedPix] = useState(false);
+  const [, setCopiedPix] = useState(false);
   const [showToast, setShowToast] = useState(false);
 
   const handleCopyPix = async () => {

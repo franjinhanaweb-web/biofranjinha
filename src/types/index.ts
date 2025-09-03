@@ -54,14 +54,7 @@ export interface SpecialExperience {
   mood?: string;
 }
 
-export interface AboutSection {
-  title: string;
-  qualities: {
-    icon: string;
-    title: string;
-    description: string;
-  }[];
-}
+
 
 export interface LocationInfo {
   area: string;

@@ -2,7 +2,7 @@ import React from 'react';
 import Header from '../../components/Header/Header';
 import Hero from '../../components/Hero/Hero';
 import Experiences from '../../components/Experiences/Experiences';
-import About from '../../components/About/About';
+
 import Location from '../../components/Location/Location';
 import Preferences from '../../components/Preferences/Preferences';
 import Payment from '../../components/Payment/Payment';
@@ -12,7 +12,7 @@ import {
   NavItem, 
   HeroProps, 
   ExperiencePackage, 
-  AboutSection,
+
   LocationInfo,
   PreferencesLimits,
   PaymentConfig
@@ -131,26 +131,7 @@ const LandingPage: React.FC = () => {
 
 
 
-  const aboutData: AboutSection = {
-    title: 'Sobre Mim',
-    qualities: [
-      {
-        icon: '😌',
-        title: 'Tranquilidade',
-        description: 'Companhia carinhosa, sem pressa. Cada momento é único e especial.'
-      },
-      {
-        icon: '💝',
-        title: 'Carinho',
-        description: 'Encontros atenciosos, nada mecânico. Foco total em você.'
-      },
-      {
-        icon: '✨',
-        title: 'Respeito',
-        description: 'Higiene e gentileza como essenciais. Ambiente seguro e acolhedor.'
-      }
-    ]
-  };
+
 
   const locationData: LocationInfo = {
     area: 'Bairro Jardins, próximo a Paulista',
@@ -201,7 +182,7 @@ const LandingPage: React.FC = () => {
         <Experiences 
           packages={experiencePackages} 
         />
-        <About aboutData={aboutData} />
+
         <Location locationData={locationData} />
         <Preferences preferencesData={preferencesData} />
         <Payment config={paymentConfig} />

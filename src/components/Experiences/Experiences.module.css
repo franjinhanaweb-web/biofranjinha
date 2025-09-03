@@ -59,152 +59,84 @@
   overflow: visible;
 }
 
-/* Carrossel Container - Oculto por padrão (desktop) */
-.carouselContainer {
-  position: relative;
+/* Novo Carrossel Mobile */
+.mobileCarousel {
+  display: none;
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
   padding: 30px 0;
-  overflow-x: hidden; /* Previne scroll horizontal */
-  overflow-y: visible;
-  display: none; /* Oculto em desktop */
 }
 
-/* Botões de navegação removidos - carrossel auto-play */
-
-/* Container do carrossel */
-.carouselWrapper {
+.carouselContainer {
   position: relative;
   width: 100%;
-  overflow-x: hidden; /* Previne scroll horizontal */
-  overflow-y: visible;
+  overflow: hidden;
   border-radius: 20px;
-  touch-action: manipulation; /* Permite drag mas previne zoom e scroll indesejado */
+  touch-action: pan-x;
 }
 
-/* Pausa animação no hover para melhor interação */
-.carouselWrapper:hover .carouselTrack {
-  animation-play-state: paused;
-}
-
-/* Reduced motion support */
-@media (prefers-reduced-motion: reduce) {
-  .carouselTrack {
-    animation: none;
-  }
-}
-
-/* Track do carrossel - movimento contínuo */
 .carouselTrack {
   display: flex;
-  width: 300%; /* 3 sequências de 6 discos cada = 18 discos total */
-  animation: continuousScroll 20s linear infinite; /* Mais rápido para movimento contínuo */
-  cursor: grab;
-  transition: transform 0.3s ease-out; /* Transição suave para navegação manual */
+  width: 100%;
+  height: auto;
 }
 
-.carouselTrack:active {
-  cursor: grabbing;
-}
-
-@keyframes continuousScroll {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-66.666%); /* Move 2/3 da largura (2 sequências de 3 discos) */
-  }
-}
-
-/* Slide individual - mostra 2 discos por vez */
 .carouselSlide {
-  min-width: 50%; /* 2 discos por vez (100% / 2) */
+  min-width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 0; /* Remove padding para não ter espaçamento */
+  flex-shrink: 0;
 }
 
-/* Indicadores do carrossel */
-.carouselIndicators {
+/* Indicador de Swipe */
+.swipeIndicator {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  gap: 12px;
-  margin-top: 30px;
-  padding: 0 20px;
+  justify-content: center;
+  margin-top: 20px;
+  padding: 12px 0;
+  opacity: 0.7;
+  animation: pulse 2s ease-in-out infinite;
 }
 
-/* Dica de navegação manual */
-.manualHint {
+.swipeIcon {
   display: flex;
-  justify-content: center;
   align-items: center;
-  padding: 8px 16px;
-  border-radius: 20px;
-  font-size: 0.85rem;
-  font-weight: 500;
-  transition: all 0.3s ease;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: rgba(147, 51, 234, 0.1);
+  border-radius: 50%;
+  margin-bottom: 8px;
+  color: #9333ea;
 }
 
-.autoHint {
+.swipeText {
+  font-size: 0.875rem;
   color: #6b7280;
-  background: rgba(107, 114, 128, 0.1);
-  border: 1px solid rgba(107, 114, 128, 0.2);
-}
-
-.manualActive {
-  color: #059669;
-  background: rgba(5, 150, 105, 0.1);
-  border: 1px solid rgba(5, 150, 105, 0.2);
-  animation: pulse 2s infinite;
-}
-
-.indicator {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  border: 2px solid rgba(147, 51, 234, 0.3);
-  background: transparent;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  position: relative;
-}
-
-.indicator:hover {
-  border-color: rgba(147, 51, 234, 0.6);
-  transform: scale(1.2);
-}
-
-.indicator.active {
-  background: #9333ea;
-  border-color: #9333ea;
-  transform: scale(1.3);
-}
-
-.indicator.active::after {
-  content: '';
-  position: absolute;
-  top: -4px;
-  left: -4px;
-  right: -4px;
-  bottom: -4px;
-  border: 2px solid rgba(147, 51, 234, 0.2);
-  border-radius: 50%;
-  animation: pulse 2s infinite;
+  font-weight: 500;
+  text-align: center;
 }
 
 @keyframes pulse {
-  0% {
+  0%, 100% {
+    opacity: 0.7;
     transform: scale(1);
-    opacity: 1;
   }
-  100% {
-    transform: scale(1.5);
-    opacity: 0;
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
   }
 }
+
+
+
+
+
+
 
 /* Container da Bolha Individual */
 .bubbleContainer {
@@ -1221,12 +1153,8 @@
     display: none;
   }
   
-  .carouselContainer {
+  .mobileCarousel {
     display: block;
-  }
-  
-  .carouselSlide {
-    min-width: 50%; /* Tablet: 2 discos por vez */
   }
 }
 
@@ -1236,7 +1164,7 @@
     display: grid;
   }
   
-  .carouselContainer {
+  .mobileCarousel {
     display: none;
   }
 }
@@ -1259,28 +1187,19 @@
     font-size: 1rem;
   }
   
-  /* Carrossel mobile */
-  .carouselContainer {
-    padding: 20px 0;
+  /* Indicador de Swipe - Mobile */
+  .swipeIndicator {
+    margin-top: 15px;
+    padding: 8px 0;
   }
   
-  .carouselSlide {
-    padding: 0; /* Remove padding para não ter espaçamento */
-    min-width: 33.333%; /* Mobile: 3 discos por vez também */
+  .swipeIcon {
+    width: 35px;
+    height: 35px;
   }
   
-  .carouselTrack {
-    animation: continuousScroll 25s linear infinite; /* Mesma velocidade que desktop */
-  }
-  
-  .carouselIndicators {
-    margin-top: 20px;
-    gap: 10px;
-  }
-  
-  .indicator {
-    width: 10px;
-    height: 10px;
+  .swipeText {
+    font-size: 0.8rem;
   }
   
   .infoSection {
@@ -1435,25 +1354,7 @@
     font-size: 0.95rem;
   }
   
-  /* Carrossel mobile pequeno */
-  .carouselContainer {
-    padding: 15px 0;
-  }
-  
-  .carouselSlide {
-    padding: 0; /* Remove padding para não ter espaçamento */
-    min-width: 33.333%; /* Mobile pequeno: 3 discos por vez também */
-  }
-  
-  .carouselIndicators {
-    margin-top: 15px;
-    gap: 8px;
-  }
-  
-  .indicator {
-    width: 8px;
-    height: 8px;
-  }
+
   
   .infoSection {
     padding: 0 10px;
@@ -1514,6 +1415,123 @@
     padding: 10px 20px;
     font-size: 0.9rem;
   }
+
+  /* Seção About - Mobile - Layout Triangular Reduzido */
+  .aboutSection {
+    margin: 60px 0 0 0;
+    padding: 50px 15px;
+    overflow-x: hidden;
+  }
+  
+  .aboutTitle {
+    font-size: 1.8rem;
+    margin-bottom: 12px;
+  }
+  
+  .aboutDescription {
+    font-size: 0.95rem;
+    margin-bottom: 40px;
+  }
+  
+  .triangularContainer {
+    max-width: 100%;
+    height: 300px;
+    flex-direction: row;
+    gap: 0;
+    padding: 0;
+    position: relative;
+  }
+  
+  .circularRing {
+    display: block;
+    width: 250px;
+    height: 250px;
+  }
+  
+  .connectors {
+    display: block;
+  }
+  
+  .centralSymbol {
+    display: flex;
+    width: 40px;
+    height: 40px;
+  }
+  
+  .symbolIcon {
+    font-size: 1.2rem;
+  }
+  
+  .valueBubble {
+    position: absolute !important;
+    width: 100px;
+    height: 100px;
+    margin: 0;
+    transform: none !important;
+    border-radius: 50%;
+    box-shadow: 
+      0 4px 20px rgba(0, 0, 0, 0.08),
+      0 0 0 1px rgba(255, 255, 255, 0.2);
+  }
+  
+  .tranquilidadeBubble {
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%) !important;
+  }
+  
+  .carinhoBubble {
+    bottom: 20px;
+    left: 15px;
+  }
+  
+  .respeitoBubble {
+    bottom: 20px;
+    right: 15px;
+  }
+  
+  .bubbleContent {
+    flex-direction: column;
+    text-align: center;
+    padding: 8px;
+    gap: 4px;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+  }
+  
+  .bubbleIcon {
+    font-size: 2rem;
+    margin-bottom: 0;
+    flex-shrink: 0;
+  }
+  
+  .bubbleTitle {
+    font-size: 0.75rem;
+    margin-bottom: 2px;
+    line-height: 1.1;
+    font-weight: 600;
+  }
+  
+  .bubbleDescription {
+    font-size: 0.6rem;
+    text-align: center;
+    line-height: 1.0;
+    max-width: 70px;
+    margin: 0;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+  
+  .connectors {
+    width: 100%;
+    height: 100%;
+  }
+  
+  .connectorLine {
+    stroke-width: 1.5;
+    opacity: 0.4;
+  }
 }
 
 @media (max-width: 375px) {
@@ -1530,6 +1548,89 @@
   .carouselSlide {
     padding: 0; /* Remove padding para não ter espaçamento */
     min-width: 33.333%; /* Mobile muito pequeno: 3 discos por vez também */
+  }
+
+  /* Seção About - Mobile Muito Pequeno - Triangular Compacto */
+  .aboutSection {
+    margin: 50px 0 0 0;
+    padding: 40px 10px;
+  }
+  
+  .aboutTitle {
+    font-size: 1.6rem;
+    margin-bottom: 10px;
+  }
+  
+  .aboutDescription {
+    font-size: 0.9rem;
+    margin-bottom: 30px;
+  }
+  
+  .triangularContainer {
+    height: 250px;
+    gap: 0;
+    padding: 0;
+  }
+  
+  .circularRing {
+    width: 200px;
+    height: 200px;
+  }
+  
+  .centralSymbol {
+    width: 35px;
+    height: 35px;
+  }
+  
+  .symbolIcon {
+    font-size: 1rem;
+  }
+  
+  .valueBubble {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .tranquilidadeBubble {
+    top: 8px;
+  }
+  
+  .carinhoBubble {
+    bottom: 15px;
+    left: 10px;
+  }
+  
+  .respeitoBubble {
+    bottom: 15px;
+    right: 10px;
+  }
+  
+  .bubbleContent {
+    padding: 6px;
+    gap: 3px;
+  }
+  
+  .bubbleIcon {
+    font-size: 1.6rem;
+  }
+  
+  .bubbleTitle {
+    font-size: 0.65rem;
+    margin-bottom: 1px;
+    line-height: 1.0;
+  }
+  
+  .bubbleDescription {
+    font-size: 0.55rem;
+    line-height: 1.0;
+    max-width: 60px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+  
+  .connectorLine {
+    stroke-width: 1;
+    opacity: 0.3;
   }
   
   .albumCoverContainer {
@@ -1786,6 +1887,237 @@
   transform: translateY(0);
 }
 
+/* Seção About - Valores */
+.aboutSection {
+  margin-top: 100px;
+  padding: 80px 0;
+  background: linear-gradient(135deg, #fef7ff 0%, #f3e8ff 50%, #ede9fe 100%);
+  border-radius: 30px;
+  margin: 100px -20px 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.aboutSection::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 50% 30%, rgba(147, 51, 234, 0.05) 0%, transparent 60%),
+              radial-gradient(circle at 30% 70%, rgba(236, 72, 153, 0.05) 0%, transparent 60%),
+              radial-gradient(circle at 70% 70%, rgba(59, 130, 246, 0.05) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.aboutIntro {
+  text-align: center;
+  margin-bottom: 60px;
+  position: relative;
+  z-index: 2;
+}
+
+.aboutTitle {
+  font-size: 2.5rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 16px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.aboutDescription {
+  font-size: 1.1rem;
+  color: #6b7280;
+  max-width: 500px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* Container Triangular */
+.triangularContainer {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  height: 450px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Anel Circular de Fundo */
+.circularRing {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  height: 400px;
+  border: 2px solid rgba(147, 51, 234, 0.1);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(147, 51, 234, 0.03) 0%, transparent 70%);
+  animation: gentlePulse 4s ease-in-out infinite;
+}
+
+@keyframes gentlePulse {
+  0%, 100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.05);
+    opacity: 0.8;
+  }
+}
+
+/* Bolhas de Valores */
+.valueBubble {
+  position: absolute;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.9) 100%);
+  backdrop-filter: blur(20px);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    0 0 0 1px rgba(255, 255, 255, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3;
+}
+
+/* Removido efeito hover */
+
+/* Posicionamento das Bolhas */
+.tranquilidadeBubble {
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, rgba(147, 51, 234, 0.1) 0%, rgba(147, 51, 234, 0.05) 100%);
+  border: 1px solid rgba(147, 51, 234, 0.2);
+}
+
+/* Removido efeito hover */
+
+.carinhoBubble {
+  bottom: 60px;
+  left: 20px;
+  background: linear-gradient(135deg, rgba(236, 72, 153, 0.1) 0%, rgba(236, 72, 153, 0.05) 100%);
+  border: 1px solid rgba(236, 72, 153, 0.2);
+}
+
+/* Removido efeito hover */
+
+.respeitoBubble {
+  bottom: 60px;
+  right: 20px;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+/* Removido efeito hover */
+
+/* Conteúdo das Bolhas */
+.bubbleContent {
+  text-align: center;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 8px;
+}
+
+.bubbleIcon {
+  font-size: 2.2rem;
+  margin-bottom: 0;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+  flex-shrink: 0;
+}
+
+.bubbleTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  line-height: 1.2;
+}
+
+.bubbleDescription {
+  font-size: 0.8rem;
+  color: #6b7280;
+  line-height: 1.3;
+  margin: 0;
+  text-align: center;
+  font-weight: 400;
+  max-width: 140px;
+}
+
+/* Conectores SVG */
+.connectors {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.connectorLine {
+  stroke-dasharray: 5, 5;
+  animation: dashMove 3s linear infinite;
+  opacity: 0.6;
+}
+
+@keyframes dashMove {
+  0% {
+    stroke-dashoffset: 0;
+  }
+  100% {
+    stroke-dashoffset: 20;
+  }
+}
+
+/* Símbolo Central */
+.centralSymbol {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.8) 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 
+    0 4px 16px rgba(0, 0, 0, 0.1),
+    0 0 0 1px rgba(255, 255, 255, 0.3);
+  z-index: 4;
+  animation: gentleFloat 3s ease-in-out infinite;
+}
+
+@keyframes gentleFloat {
+  0%, 100% {
+    transform: translate(-50%, -50%) translateY(0);
+  }
+  50% {
+    transform: translate(-50%, -50%) translateY(-5px);
+  }
+}
+
+.symbolIcon {
+  font-size: 1.8rem;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
 /* Mensagem Final */
 .finalMessage {
   margin-top: 80px;
@@ -1851,5 +2183,217 @@
   
   .messageContent {
     padding: 30px 24px;
+  }
+
+  /* Seção About - Responsividade */
+  .aboutSection {
+    margin: 80px -15px 0;
+    padding: 60px 0;
+  }
+  
+  .aboutTitle {
+    font-size: 2rem;
+  }
+  
+  .aboutDescription {
+    font-size: 1rem;
+  }
+  
+  .triangularContainer {
+    max-width: 400px;
+    height: 380px;
+  }
+  
+  .circularRing {
+    width: 320px;
+    height: 320px;
+  }
+  
+  .valueBubble {
+    width: 140px;
+    height: 140px;
+  }
+  
+  .tranquilidadeBubble {
+    top: 15px;
+  }
+  
+  .carinhoBubble {
+    bottom: 50px;
+    left: 15px;
+  }
+  
+  .respeitoBubble {
+    bottom: 50px;
+    right: 15px;
+  }
+  
+  .bubbleContent {
+    padding: 12px;
+    gap: 6px;
+  }
+  
+  .bubbleIcon {
+    font-size: 1.8rem;
+    margin-bottom: 0;
+  }
+  
+  .bubbleTitle {
+    font-size: 0.9rem;
+    margin-bottom: 0;
+    line-height: 1.1;
+  }
+  
+  .bubbleDescription {
+    font-size: 0.75rem;
+    line-height: 1.2;
+    max-width: 120px;
+  }
+  
+  .centralSymbol {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .symbolIcon {
+    font-size: 1.5rem;
+  }
+}
+
+/* Breakpoint intermediário para tablets em modo retrato */
+@media (max-width: 600px) and (min-width: 481px) {
+  .aboutSection {
+    margin: 70px 0 0 0;
+    padding: 55px 20px;
+  }
+  
+  .aboutTitle {
+    font-size: 2.2rem;
+  }
+  
+  .aboutDescription {
+    font-size: 1rem;
+  }
+  
+  .triangularContainer {
+    max-width: 100%;
+    height: 350px;
+    gap: 0;
+    padding: 0;
+  }
+  
+  .circularRing {
+    width: 300px;
+    height: 300px;
+  }
+  
+  .centralSymbol {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .symbolIcon {
+    font-size: 1.5rem;
+  }
+  
+  .valueBubble {
+    width: 120px;
+    height: 120px;
+  }
+  
+  .tranquilidadeBubble {
+    top: 15px;
+  }
+  
+  .carinhoBubble {
+    bottom: 25px;
+    left: 20px;
+  }
+  
+  .respeitoBubble {
+    bottom: 25px;
+    right: 20px;
+  }
+  
+  .bubbleContent {
+    padding: 12px;
+    gap: 6px;
+  }
+  
+  .bubbleIcon {
+    font-size: 2.4rem;
+  }
+  
+  .bubbleTitle {
+    font-size: 0.85rem;
+    margin-bottom: 4px;
+    line-height: 1.1;
+  }
+  
+  .bubbleDescription {
+    font-size: 0.7rem;
+    line-height: 1.1;
+    max-width: 90px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+  
+  .connectorLine {
+    stroke-width: 2;
+    opacity: 0.5;
+  }
+}
+
+/* Orientação landscape em mobile */
+@media (max-height: 500px) and (orientation: landscape) {
+  .aboutSection {
+    margin: 40px -10px 0;
+    padding: 30px 0;
+  }
+  
+  .aboutTitle {
+    font-size: 1.8rem;
+    margin-bottom: 8px;
+  }
+  
+  .aboutDescription {
+    font-size: 0.9rem;
+    margin-bottom: 25px;
+  }
+  
+  .triangularContainer {
+    gap: 15px;
+    padding: 0 10px;
+  }
+  
+  .valueBubble {
+    height: 80px;
+    max-width: 300px;
+  }
+  
+  .bubbleContent {
+    padding: 10px 15px;
+    gap: 10px;
+  }
+  
+  .bubbleIcon {
+    font-size: 2rem;
+    width: 40px;
+    height: 40px;
+  }
+  
+  .bubbleTitle {
+    font-size: 0.95rem;
+    margin-bottom: 2px;
+  }
+  
+  .bubbleDescription {
+    font-size: 0.75rem;
+    line-height: 1.2;
+  }
+  
+  .valueBubble:not(:last-child)::after {
+    bottom: -7px;
+    height: 15px;
   }
 }

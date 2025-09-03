@@ -1,5 +1,6 @@
 .hero {
   min-height: 100vh;
+  min-height: -webkit-fill-available; /* Para iOS */
   background: #fefefe;
   padding: 0;
   position: relative;
@@ -7,6 +8,8 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+  /* Suporte para safe area do iOS */
+  padding-top: env(safe-area-inset-top);
 }
 
 .heroRow {
@@ -187,11 +190,14 @@
     text-align: center;
     min-height: auto;
     padding-top: 40px;
+    align-items: flex-start;
   }
   
   .imageCol {
     order: 2;
     padding: 1.5rem 1rem;
+    align-self: center;
+    margin-top: -20px; /* Alinha melhor com a tag */
   }
   
   .contentCol {
@@ -237,10 +243,13 @@
   
   .heroRow {
     padding-top: 30px;
+    align-items: flex-start;
   }
   
   .imageCol {
     padding: 1rem 0.5rem;
+    align-self: center;
+    margin-top: -15px; /* Alinha melhor com a tag */
   }
   
   .contentCol {
@@ -279,10 +288,13 @@
   
   .heroRow {
     padding-top: 20px;
+    align-items: flex-start;
   }
   
   .imageCol {
     padding: 0.75rem 0.5rem;
+    align-self: center;
+    margin-top: -10px; /* Alinha melhor com a tag */
   }
   
   .contentCol {
@@ -328,6 +340,12 @@
   
   .heroRow {
     padding-top: 15px;
+    align-items: flex-start;
+  }
+  
+  .imageCol {
+    align-self: center;
+    margin-top: -8px; /* Alinha melhor com a tag */
   }
   
   .contentCol {
@@ -403,5 +421,49 @@
   .ctaButton {
     padding: 0.6rem 1.5rem;
     font-size: 0.85rem;
+  }
+}
+
+/* Estilos específicos para iOS */
+@supports (-webkit-touch-callout: none) {
+  .hero {
+    /* Remove padding extra no iOS */
+    padding-top: 0;
+  }
+  
+  .heroRow {
+    /* Ajusta para safe area do iOS */
+    padding-top: calc(80px + env(safe-area-inset-top));
+  }
+}
+
+/* Para dispositivos com notch (iPhone X e superiores) */
+@media only screen 
+  and (device-width: 375px) 
+  and (device-height: 812px) 
+  and (-webkit-device-pixel-ratio: 3),
+  only screen 
+  and (device-width: 414px) 
+  and (device-height: 896px) 
+  and (-webkit-device-pixel-ratio: 2),
+  only screen 
+  and (device-width: 414px) 
+  and (device-height: 896px) 
+  and (-webkit-device-pixel-ratio: 3),
+  only screen 
+  and (device-width: 390px) 
+  and (device-height: 844px) 
+  and (-webkit-device-pixel-ratio: 3),
+  only screen 
+  and (device-width: 428px) 
+  and (device-height: 926px) 
+  and (-webkit-device-pixel-ratio: 3) {
+  
+  .hero {
+    padding-top: env(safe-area-inset-top);
+  }
+  
+  .heroRow {
+    padding-top: calc(60px + env(safe-area-inset-top));
   }
 }
