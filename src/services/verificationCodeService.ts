@@ -63,7 +63,6 @@ export const validateVerificationCode = async (code: string): Promise<CodeValida
     };
 
   } catch (error) {
-    console.error('Erro ao validar código:', error);
     return {
       isValid: false,
       isUsed: false,
@@ -79,9 +78,7 @@ export const markCodeAsUsed = async (codeId: string, userId: string): Promise<vo
     await updateDoc(codeRef, {
       isUsed: true
     });
-    console.log('Código marcado como usado com sucesso');
   } catch (error) {
-    console.error('Erro ao marcar código como usado:', error);
     throw new Error('Erro ao processar código de verificação');
   }
 };

@@ -29,7 +29,7 @@ const Payment: React.FC<PaymentProps> = ({ config }) => {
       setShowToast(true);
       setTimeout(() => setShowToast(false), 3000);
     } catch (err) {
-      console.error('Erro ao copiar PIX:', err);
+      // Erro ao copiar PIX
     }
   };
 

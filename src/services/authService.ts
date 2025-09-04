@@ -61,16 +61,13 @@ export const createUser = async (
     // Salvar dados adicionais no Firestore
     try {
       await setDoc(doc(db, 'users_site', user.uid), userData);
-      console.log('Usuário salvo no Firestore com sucesso');
     } catch (firestoreError: any) {
-      console.error('Erro ao salvar no Firestore:', firestoreError);
       // Não falhar o cadastro se o Firestore der erro
       // O usuário já foi criado no Auth
     }
     
     return userData;
   } catch (error: any) {
-    console.error('Erro no cadastro:', error);
     throw new Error(getErrorMessage(error.code));
   }
 };
@@ -99,13 +96,11 @@ export const signInUser = async (
         lastLoginAt: new Date()
       }, { merge: true });
     } catch (updateError) {
-      console.error('Erro ao atualizar último login:', updateError);
       // Não falhar o login por causa disso
     }
     
     return userData;
   } catch (error: any) {
-    console.error('Erro no login:', error);
     throw new Error(getErrorMessage(error.code));
   }
 };
@@ -131,7 +126,6 @@ export const ensureUserInFirestore = async (user: User): Promise<UserData> => {
     const userDoc = await getDoc(doc(db, 'users_site', user.uid));
     
     if (userDoc.exists()) {
-      console.log('Usuário já existe no Firestore');
       return userDoc.data() as UserData;
     } else {
       // Criar dados do usuário no Firestore
@@ -148,11 +142,9 @@ export const ensureUserInFirestore = async (user: User): Promise<UserData> => {
       };
       
       await setDoc(doc(db, 'users_site', user.uid), userData);
-      console.log('Usuário criado no Firestore com sucesso');
       return userData;
     }
   } catch (error: any) {
-    console.error('Erro ao verificar/criar usuário no Firestore:', error);
     throw error;
   }
 };
