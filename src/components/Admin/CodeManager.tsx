@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Button, Card, Alert, Spinner, Table } from 'react-bootstrap';
-import { listVerificationCodes } from '../../utils/populateVerificationCodes';
 import styles from './CodeManager.module.css';
 
 interface CodeInfo {
@@ -24,8 +23,7 @@ const CodeManager: React.FC = () => {
     setMessage(null);
     
     try {
-      await listVerificationCodes();
-      setMessage({ type: 'success', text: 'Códigos listados com sucesso! Verifique o console do navegador.' });
+      setMessage({ type: 'info', text: 'Para listar códigos, acesse o Firebase Console > Firestore Database > users_codes' });
       setShowCodes(true);
     } catch (error: any) {
       setMessage({ type: 'error', text: `Erro ao listar códigos: ${error.message}` });
