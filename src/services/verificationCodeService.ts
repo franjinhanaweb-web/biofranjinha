@@ -4,7 +4,7 @@ import { db } from '../config/firebase';
 export interface VerificationCode {
   id: string;
   code: string;
-  isUsed: boolean;
+  isUsed: boolean | string; // Pode ser boolean ou string (do Firebase)
 }
 
 export interface CodeValidationResult {
