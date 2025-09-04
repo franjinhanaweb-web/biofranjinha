@@ -13,9 +13,9 @@ REACT_APP_FIREBASE_APP_ID=your_app_id
 REACT_APP_FIREBASE_MEASUREMENT_ID=your_measurement_id
 ```
 
-### reCAPTCHA (já configurada)
+### reCAPTCHA (configurar com padrão REACT_APP_)
 ```
-RECAPTCHA_SITE_KEY=your_recaptcha_site_key
+REACT_APP_RECAPTCHA_SITE_KEY=your_recaptcha_site_key
 ```
 
 ## 🔧 **Variáveis Opcionais de Desenvolvimento**
@@ -60,7 +60,7 @@ REACT_APP_FIREBASE_APP_ID=...
 REACT_APP_FIREBASE_MEASUREMENT_ID=...
 
 # reCAPTCHA (obrigatório)
-RECAPTCHA_SITE_KEY=...
+REACT_APP_RECAPTCHA_SITE_KEY=...
 
 # Desabilitar proteções (opcional)
 REACT_APP_DISABLE_SOURCE_PROTECTION=true
@@ -78,7 +78,7 @@ REACT_APP_FIREBASE_APP_ID=...
 REACT_APP_FIREBASE_MEASUREMENT_ID=...
 
 # reCAPTCHA (obrigatório)
-RECAPTCHA_SITE_KEY=...
+REACT_APP_RECAPTCHA_SITE_KEY=...
 
 # Segurança máxima
 REACT_APP_ENABLE_SOURCE_PROTECTION=true
@@ -90,12 +90,11 @@ REACT_APP_REMOVE_CONSOLE=true
 1. Acesse **Cloudflare Pages** > Seu projeto
 2. Vá em **Settings** > **Environment Variables**
 3. Adicione as variáveis necessárias
-4. **IMPORTANTE**: Configure o build command como `npm run build:cloudflare`
-5. Faça **redeploy** do projeto
+4. Faça **redeploy** do projeto
 
 ### 📋 **Configuração de Build no Cloudflare**
 
-- **Build command**: `npm run build:cloudflare`
+- **Build command**: `npm run build`
 - **Build output directory**: `build`
 - **Node.js version**: `18` ou superior
 
