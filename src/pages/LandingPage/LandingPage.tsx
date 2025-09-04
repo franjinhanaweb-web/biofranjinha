@@ -192,21 +192,6 @@ const LandingPage: React.FC<LandingPageProps> = ({ onNavigateToLogin, onNavigate
         onLogout={onLogout}
       />
       
-      {/* Seção de Boas-vindas para usuário logado */}
-      {user && (
-        <div className="welcome-section">
-          <div className="container">
-            <div className="row justify-content-center">
-              <div className="col-md-8 col-lg-6 text-center">
-                <div className="welcome-content">
-                  <h3 className="welcome-title">Bem-vinda, {user.displayName}! 👋</h3>
-                  <p className="welcome-subtitle">Agora você tem acesso completo a todas as informações e recursos exclusivos.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
       
       <main>
         <Hero {...heroProps} />
