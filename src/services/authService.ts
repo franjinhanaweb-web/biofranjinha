@@ -60,6 +60,7 @@ export const createUser = async (
     
     return userData;
   } catch (error: any) {
+    console.error('Erro no cadastro:', error);
     throw new Error(getErrorMessage(error.code));
   }
 };
@@ -109,6 +110,7 @@ export const signInUser = async (
       return userData;
     }
   } catch (error: any) {
+    console.error('Erro no login:', error);
     throw new Error(getErrorMessage(error.code));
   }
 };
