@@ -185,7 +185,12 @@ const LandingPage: React.FC<LandingPageProps> = ({ onNavigateToLogin, onNavigate
 
   return (
     <div className={styles.landingPage}>
-      <Header brandName="Franjinha" navItems={navItems} />
+      <Header 
+        brandName="Franjinha" 
+        navItems={navItems}
+        user={user}
+        onLogout={onLogout}
+      />
       
       {/* Seção de Boas-vindas para usuário logado */}
       {user && (
@@ -196,15 +201,6 @@ const LandingPage: React.FC<LandingPageProps> = ({ onNavigateToLogin, onNavigate
                 <div className="welcome-content">
                   <h3 className="welcome-title">Bem-vinda, {user.displayName}! 👋</h3>
                   <p className="welcome-subtitle">Agora você tem acesso completo a todas as informações e recursos exclusivos.</p>
-                  {onLogout && (
-                    <button 
-                      className="btn btn-logout"
-                      onClick={onLogout}
-                    >
-                      <span className="btn-text">Sair</span>
-                      <span className="btn-icon">→</span>
-                    </button>
-                  )}
                 </div>
               </div>
             </div>

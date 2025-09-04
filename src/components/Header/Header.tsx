@@ -1,14 +1,16 @@
 import React from 'react';
-import { Navbar, Container, Nav } from 'react-bootstrap';
+import { Navbar, Container, Nav, Button } from 'react-bootstrap';
 import { NavItem } from '../../types';
 import styles from './Header.module.css';
 
 interface HeaderProps {
   brandName: string;
   navItems: NavItem[];
+  user?: any;
+  onLogout?: () => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ brandName, navItems }) => {
+const Header: React.FC<HeaderProps> = ({ brandName, navItems, user, onLogout }) => {
   return (
     <header className={styles.header}>
       <Navbar 
@@ -33,6 +35,18 @@ const Header: React.FC<HeaderProps> = ({ brandName, navItems }) => {
                   {item.label}
                 </Nav.Link>
               ))}
+              {user && onLogout && (
+                <Nav.Item className="ms-3">
+                  <Button 
+                    variant="outline-light" 
+                    size="sm"
+                    onClick={onLogout}
+                    className={styles.logoutButton}
+                  >
+                    Sair
+                  </Button>
+                </Nav.Item>
+              )}
             </Nav>
           </Navbar.Collapse>
         </Container>
