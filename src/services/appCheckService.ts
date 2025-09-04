@@ -9,7 +9,8 @@ export const initializeAppCheckService = () => {
       // Tentar diferentes nomes de variáveis de ambiente
       const siteKey = process.env.REACT_APP_FIREBASE_APP_CHECK_SITE_KEY || 
                      process.env.REACT_APP_RECAPTCHA_SITE_KEY ||
-                     process.env.RECAPTCHA_SITE_KEY;
+                     process.env.RECAPTCHA_SITE_KEY ||
+                     (window as any).ENV?.RECAPTCHA_SITE_KEY;
       
       if (!siteKey) {
         console.warn('⚠️ App Check não configurado: Site key do reCAPTCHA não encontrada');

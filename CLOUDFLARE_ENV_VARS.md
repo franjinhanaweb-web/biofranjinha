@@ -90,7 +90,14 @@ REACT_APP_REMOVE_CONSOLE=true
 1. Acesse **Cloudflare Pages** > Seu projeto
 2. Vá em **Settings** > **Environment Variables**
 3. Adicione as variáveis necessárias
-4. Faça **redeploy** do projeto
+4. **IMPORTANTE**: Configure o build command como `npm run build:cloudflare`
+5. Faça **redeploy** do projeto
+
+### 📋 **Configuração de Build no Cloudflare**
+
+- **Build command**: `npm run build:cloudflare`
+- **Build output directory**: `build`
+- **Node.js version**: `18` ou superior
 
 ## 🔍 **Como Testar**
 

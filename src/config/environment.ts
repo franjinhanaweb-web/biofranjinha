@@ -20,11 +20,13 @@ export const ENV_CONFIG = {
   APP_CHECK: {
     SITE_KEY: process.env.REACT_APP_FIREBASE_APP_CHECK_SITE_KEY || 
               process.env.REACT_APP_RECAPTCHA_SITE_KEY ||
-              process.env.RECAPTCHA_SITE_KEY,
+              process.env.RECAPTCHA_SITE_KEY ||
+              (typeof window !== 'undefined' ? (window as any).ENV?.RECAPTCHA_SITE_KEY : undefined),
     ENABLED: process.env.NODE_ENV === 'production' && 
              !!(process.env.REACT_APP_FIREBASE_APP_CHECK_SITE_KEY || 
                 process.env.REACT_APP_RECAPTCHA_SITE_KEY ||
-                process.env.RECAPTCHA_SITE_KEY)
+                process.env.RECAPTCHA_SITE_KEY ||
+                (typeof window !== 'undefined' ? (window as any).ENV?.RECAPTCHA_SITE_KEY : undefined))
   },
   
   // Segurança
@@ -85,6 +87,7 @@ export const logEnvironmentConfig = () => {
       console.log('- RECAPTCHA_SITE_KEY:', !!process.env.RECAPTCHA_SITE_KEY);
       console.log('- REACT_APP_RECAPTCHA_SITE_KEY:', !!process.env.REACT_APP_RECAPTCHA_SITE_KEY);
       console.log('- REACT_APP_FIREBASE_APP_CHECK_SITE_KEY:', !!process.env.REACT_APP_FIREBASE_APP_CHECK_SITE_KEY);
+      console.log('- window.ENV.RECAPTCHA_SITE_KEY:', !!(window as any).ENV?.RECAPTCHA_SITE_KEY);
     }
     
     const validation = validateEnvironment();
