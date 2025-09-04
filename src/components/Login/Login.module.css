@@ -1,0 +1,313 @@
+.loginContainer {
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #fefefe 0%, #f8fafc 25%, #e2e8f0 50%, #cbd5e1 75%, #94a3b8 100%);
+  padding: 2rem 1rem;
+  position: relative;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.loginContainer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 80%, rgba(233, 30, 99, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(233, 30, 99, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(233, 30, 99, 0.05) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.loginCard {
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.1),
+    0 10px 20px rgba(0, 0, 0, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  position: relative;
+  overflow: hidden;
+  animation: slideInUp 0.6s ease-out;
+}
+
+.loginCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #e91e63 0%, #f06292 50%, #e91e63 100%);
+  border-radius: 24px 24px 0 0;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.loginCard .cardBody {
+  padding: 3rem 2.5rem;
+  position: relative;
+}
+
+.cardTitle {
+  font-family: 'Georgia', serif;
+  color: #2c2c2c;
+  font-weight: 400;
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  text-align: center;
+  letter-spacing: -0.02em;
+  position: relative;
+}
+
+.cardTitle::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 2px;
+  background: linear-gradient(90deg, #e91e63 0%, #f06292 100%);
+  border-radius: 1px;
+}
+
+.alert {
+  border-radius: 16px;
+  border: none;
+  background: rgba(220, 53, 69, 0.1);
+  color: #dc3545;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 400;
+  border-left: 4px solid #dc3545;
+  padding: 1rem 1.25rem;
+}
+
+.loginCard h2 {
+  font-family: 'Georgia', serif;
+  color: #2c2c2c;
+  font-weight: 400;
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  text-align: center;
+  letter-spacing: -0.02em;
+  position: relative;
+}
+
+.loginCard h2::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 2px;
+  background: linear-gradient(90deg, #e91e63 0%, #f06292 100%);
+  border-radius: 1px;
+}
+
+.loginCard .formControl {
+  border-radius: 16px;
+  border: 2px solid rgba(226, 232, 240, 0.8);
+  padding: 1rem 1.25rem;
+  font-size: 1rem;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 300;
+  color: #2c2c2c;
+  background: rgba(248, 250, 252, 0.5);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.loginCard .formControl:focus {
+  border-color: #e91e63;
+  box-shadow: 
+    0 0 0 3px rgba(233, 30, 99, 0.1),
+    inset 0 1px 3px rgba(0, 0, 0, 0.05);
+  background: rgba(255, 255, 255, 0.9);
+  outline: none;
+}
+
+.loginCard .formControl::placeholder {
+  color: #94a3b8;
+  font-weight: 300;
+}
+
+.loginCard .formLabel {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 500;
+  color: #4a4a4a;
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.75rem;
+  text-transform: uppercase;
+}
+
+.loginCard .btnPrimary {
+  background: linear-gradient(135deg, #e91e63 0%, #f06292 100%);
+  border: none;
+  border-radius: 16px;
+  padding: 1rem 2rem;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 
+    0 4px 15px rgba(233, 30, 99, 0.3),
+    0 2px 8px rgba(233, 30, 99, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.loginCard .btnPrimary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.loginCard .btnPrimary:hover::before {
+  left: 100%;
+}
+
+.loginCard .btnPrimary:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 8px 25px rgba(233, 30, 99, 0.4),
+    0 4px 12px rgba(233, 30, 99, 0.3);
+}
+
+.loginCard .btnPrimary:active {
+  transform: translateY(0);
+  box-shadow: 
+    0 2px 8px rgba(233, 30, 99, 0.3),
+    0 1px 4px rgba(233, 30, 99, 0.2);
+}
+
+.loginCard .btnLink {
+  color: #e91e63;
+  font-weight: 500;
+  text-decoration: none;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.loginCard .btnLink::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: #e91e63;
+  transition: width 0.3s ease;
+}
+
+.loginCard .btnLink:hover {
+  color: #c2185b;
+  text-decoration: none;
+}
+
+.loginCard .btnLink:hover::after {
+  width: 100%;
+}
+
+.loginCard .alert {
+  border-radius: 16px;
+  border: none;
+  background: rgba(220, 53, 69, 0.1);
+  color: #dc3545;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 400;
+  border-left: 4px solid #dc3545;
+  padding: 1rem 1.25rem;
+}
+
+.loginCard .formControl.is-invalid {
+  border-color: #dc3545;
+  background: rgba(220, 53, 69, 0.05);
+}
+
+.loginCard .formControl.is-valid {
+  border-color: #28a745;
+  background: rgba(40, 167, 69, 0.05);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .loginContainer {
+    padding: 1rem 0.75rem;
+  }
+  
+  .loginCard .cardBody {
+    padding: 2rem 1.5rem;
+  }
+  
+  .loginCard h2 {
+    font-size: 2rem;
+  }
+  
+  .loginCard .formControl {
+    padding: 0.875rem 1rem;
+    font-size: 0.95rem;
+  }
+  
+  .loginCard .btnPrimary {
+    padding: 0.875rem 1.5rem;
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .loginContainer {
+    padding: 0.75rem 0.5rem;
+  }
+  
+  .loginCard .cardBody {
+    padding: 1.5rem 1rem;
+  }
+  
+  .loginCard h2 {
+    font-size: 1.75rem;
+  }
+  
+  .loginCard .formControl {
+    padding: 0.75rem 0.875rem;
+    font-size: 0.9rem;
+  }
+  
+  .loginCard .btnPrimary {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.9rem;
+  }
+}

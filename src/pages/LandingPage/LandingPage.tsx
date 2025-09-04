@@ -19,7 +19,16 @@ import {
 } from '../../types';
 import styles from './LandingPage.module.css';
 
-const LandingPage: React.FC = () => {
+import { UserData } from '../../services/authService';
+
+interface LandingPageProps {
+  onNavigateToLogin?: () => void;
+  onNavigateToRegister?: () => void;
+  onLogout?: () => void;
+  user?: UserData | null;
+}
+
+const LandingPage: React.FC<LandingPageProps> = ({ onNavigateToLogin, onNavigateToRegister, onLogout, user }) => {
   const navItems: NavItem[] = [
     { label: 'Início', href: '#home' },
     { label: 'Experiências', href: '#experiencias' },
@@ -177,6 +186,32 @@ const LandingPage: React.FC = () => {
   return (
     <div className={styles.landingPage}>
       <Header brandName="Franjinha" navItems={navItems} />
+      
+      {/* Seção de Boas-vindas para usuário logado */}
+      {user && (
+        <div className="welcome-section">
+          <div className="container">
+            <div className="row justify-content-center">
+              <div className="col-md-8 col-lg-6 text-center">
+                <div className="welcome-content">
+                  <h3 className="welcome-title">Bem-vinda, {user.displayName}! 👋</h3>
+                  <p className="welcome-subtitle">Agora você tem acesso completo a todas as informações e recursos exclusivos.</p>
+                  {onLogout && (
+                    <button 
+                      className="btn btn-logout"
+                      onClick={onLogout}
+                    >
+                      <span className="btn-text">Sair</span>
+                      <span className="btn-icon">→</span>
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      
       <main>
         <Hero {...heroProps} />
         <Experiences 

@@ -1,0 +1,82 @@
+/* App Global Styles */
+.App {
+  min-height: 100vh;
+  background: #fefefe;
+}
+
+/* Smooth transitions between pages */
+.page-transition {
+  transition: opacity 0.3s ease-in-out;
+}
+
+/* Global button styles */
+.btn {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn:focus {
+  outline: 2px solid #e91e63;
+  outline-offset: 2px;
+}
+
+/* Loading states */
+.loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* Error states */
+.error {
+  color: #dc3545;
+  font-weight: 500;
+}
+
+/* Success states */
+.success {
+  color: #28a745;
+  font-weight: 500;
+}
+
+/* Utility classes */
+.text-center {
+  text-align: center;
+}
+
+.mb-0 {
+  margin-bottom: 0;
+}
+
+.mb-3 {
+  margin-bottom: 1rem;
+}
+
+.mb-4 {
+  margin-bottom: 1.5rem;
+}
+
+.w-100 {
+  width: 100%;
+}
+
+.p-0 {
+  padding: 0;
+}
+
+.text-decoration-none {
+  text-decoration: none;
+}
+
+/* Responsive utilities */
+@media (max-width: 768px) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+}

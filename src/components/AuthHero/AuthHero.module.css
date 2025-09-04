@@ -64,15 +64,9 @@
   pointer-events: none;
 }
 
-
-
-
-
 .contentCol {
   padding: 2rem 3rem 4rem 3rem;
 }
-
-
 
 .content {
   max-width: 500px;
@@ -113,8 +107,14 @@
   margin-top: 2rem;
 }
 
-.ctaButton {
-  background: #e91e63;
+.authButtons {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.loginButton,
+.registerButton {
   border: none;
   border-radius: 50px;
   padding: 1rem 2.5rem;
@@ -123,21 +123,84 @@
   font-weight: 500;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  transition: all 0.2s ease;
-  box-shadow: 0 4px 15px rgba(233, 30, 99, 0.3);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
-  touch-action: manipulation; /* Melhora performance em touch */
-  -webkit-tap-highlight-color: transparent; /* Remove highlight em iOS */
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  position: relative;
+  overflow: hidden;
+  min-width: 180px;
+  justify-content: center;
 }
 
-.ctaButton:hover {
-  background: #c2185b;
-  transform: translateY(-2px);
+.loginButton {
+  background: linear-gradient(135deg, #e91e63 0%, #f06292 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(233, 30, 99, 0.3);
+}
+
+.registerButton {
+  background: linear-gradient(135deg, #2c2c2c 0%, #4a4a4a 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(44, 44, 44, 0.3);
+}
+
+.loginButton::before,
+.registerButton::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.loginButton:hover::before,
+.registerButton:hover::before {
+  left: 100%;
+}
+
+.loginButton:hover {
+  transform: translateY(-3px);
   box-shadow: 0 8px 25px rgba(233, 30, 99, 0.4);
 }
 
-.ctaButton:focus {
-  box-shadow: 0 0 0 3px rgba(233, 30, 99, 0.3);
+.registerButton:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(44, 44, 44, 0.4);
+}
+
+.loginButton:active,
+.registerButton:active {
+  transform: translateY(-1px);
+}
+
+.loginButton:focus,
+.registerButton:focus {
+  outline: 2px solid #e91e63;
+  outline-offset: 2px;
+}
+
+.buttonText {
+  position: relative;
+  z-index: 1;
+}
+
+.buttonIcon {
+  position: relative;
+  z-index: 1;
+  font-size: 1.2rem;
+  transition: transform 0.3s ease;
+}
+
+.loginButton:hover .buttonIcon,
+.registerButton:hover .buttonIcon {
+  transform: translateX(3px);
 }
 
 .divider {
@@ -183,7 +246,7 @@
   .hero {
     padding: 60px 0 40px;
     min-height: auto;
-    background-attachment: scroll; /* Melhora performance em mobile */
+    background-attachment: scroll;
   }
   
   .heroRow {
@@ -198,7 +261,7 @@
     order: 2;
     padding: 1.5rem 1rem;
     align-self: center;
-    margin-top: -20px; /* Alinha melhor com a tag */
+    margin-top: -20px;
   }
   
   .contentCol {
@@ -230,7 +293,14 @@
     aspect-ratio: 1/1;
   }
   
-  .ctaButton {
+  .authButtons {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  
+  .loginButton,
+  .registerButton {
     width: 100%;
     max-width: 280px;
   }
@@ -240,7 +310,7 @@
 @media (max-width: 640px) {
   .hero {
     padding: 50px 0 30px;
-    background-attachment: scroll; /* Melhora performance em mobile */
+    background-attachment: scroll;
   }
   
   .heroRow {
@@ -251,7 +321,7 @@
   .imageCol {
     padding: 1rem 0.5rem;
     align-self: center;
-    margin-top: -15px; /* Alinha melhor com a tag */
+    margin-top: -15px;
   }
   
   .contentCol {
@@ -276,7 +346,8 @@
     max-width: 320px;
   }
   
-  .ctaButton {
+  .loginButton,
+  .registerButton {
     padding: 1rem 2rem;
     font-size: 0.95rem;
   }
@@ -296,7 +367,7 @@
   .imageCol {
     padding: 0.75rem 0.5rem;
     align-self: center;
-    margin-top: -10px; /* Alinha melhor com a tag */
+    margin-top: -10px;
   }
   
   .contentCol {
@@ -323,10 +394,11 @@
     max-width: 280px;
   }
   
-  .ctaButton {
+  .loginButton,
+  .registerButton {
     padding: 0.875rem 1.75rem;
     font-size: 0.9rem;
-    min-height: 48px; /* Melhor para touch */
+    min-height: 48px;
   }
   
   .tagContainer {
@@ -347,7 +419,7 @@
   
   .imageCol {
     align-self: center;
-    margin-top: -8px; /* Alinha melhor com a tag */
+    margin-top: -8px;
   }
   
   .contentCol {
@@ -372,7 +444,8 @@
     max-width: 250px;
   }
   
-  .ctaButton {
+  .loginButton,
+  .registerButton {
     padding: 0.8rem 1.5rem;
     font-size: 0.85rem;
   }
@@ -420,7 +493,8 @@
     max-width: 200px;
   }
   
-  .ctaButton {
+  .loginButton,
+  .registerButton {
     padding: 0.6rem 1.5rem;
     font-size: 0.85rem;
   }
@@ -429,12 +503,10 @@
 /* Estilos específicos para iOS */
 @supports (-webkit-touch-callout: none) {
   .hero {
-    /* Remove padding extra no iOS */
     padding-top: 0;
   }
   
   .heroRow {
-    /* Ajusta para safe area do iOS */
     padding-top: calc(80px + env(safe-area-inset-top));
   }
 }
