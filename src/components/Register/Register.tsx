@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Form, Button, Card, Alert } from 'react-bootstrap';
 import styles from './Register.module.css';
+import { validateVerificationCode, CodeValidationResult } from '../../services/verificationCodeService';
 
 interface RegisterProps {
-  onRegister: (name: string, email: string, password: string, confirmPassword: string) => void;
+  onRegister: (name: string, email: string, password: string, confirmPassword: string, verificationCode: string) => void;
   onSwitchToLogin: () => void;
   error?: string;
   loading?: boolean;
@@ -14,7 +15,44 @@ const Register: React.FC<RegisterProps> = ({ onRegister, onSwitchToLogin, error,
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [verificationCode, setVerificationCode] = useState('');
   const [validated, setValidated] = useState(false);
+  const [codeValidation, setCodeValidation] = useState<CodeValidationResult | null>(null);
+  const [isValidatingCode, setIsValidatingCode] = useState(false);
+
+  // Validar código em tempo real
+  const validateCode = async (code: string) => {
+    if (code.length === 6 && /^\d{6}$/.test(code)) {
+      setIsValidatingCode(true);
+      try {
+        const result = await validateVerificationCode(code);
+        setCodeValidation(result);
+      } catch (error) {
+        setCodeValidation({
+          isValid: false,
+          isUsed: false,
+          message: 'Erro ao validar código'
+        });
+      } finally {
+        setIsValidatingCode(false);
+      }
+    } else {
+      setCodeValidation(null);
+    }
+  };
+
+  // Validar código quando o valor mudar
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      if (verificationCode.length === 6) {
+        validateCode(verificationCode);
+      } else {
+        setCodeValidation(null);
+      }
+    }, 500); // Debounce de 500ms
+
+    return () => clearTimeout(timeoutId);
+  }, [verificationCode]);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -27,7 +65,15 @@ const Register: React.FC<RegisterProps> = ({ onRegister, onSwitchToLogin, error,
         alert('As senhas não coincidem!');
         return;
       }
-      onRegister(name, email, password, confirmPassword);
+      if (verificationCode.length !== 6) {
+        alert('O código de verificação deve ter 6 dígitos!');
+        return;
+      }
+      if (!codeValidation || !codeValidation.isValid) {
+        alert('Por favor, aguarde a validação do código ou insira um código válido!');
+        return;
+      }
+      onRegister(name, email, password, confirmPassword, verificationCode);
     }
     
     setValidated(true);
@@ -109,6 +155,53 @@ const Register: React.FC<RegisterProps> = ({ onRegister, onSwitchToLogin, error,
               <Form.Control.Feedback type="invalid">
                 Por favor, confirme sua senha.
               </Form.Control.Feedback>
+            </Form.Group>
+
+            <Form.Group className="mb-3" controlId="formVerificationCode">
+              <Form.Label className={styles.formLabel}>Código de Verificação</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Digite o código de 6 dígitos"
+                value={verificationCode}
+                onChange={(e) => setVerificationCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                required
+                minLength={6}
+                maxLength={6}
+                pattern="[0-9]{6}"
+                className={`${styles.formControl} ${
+                  codeValidation?.isValid ? 'is-valid' : 
+                  codeValidation?.isValid === false ? 'is-invalid' : ''
+                }`}
+                disabled={isValidatingCode}
+              />
+              <Form.Control.Feedback type="invalid">
+                Por favor, digite um código de verificação válido de 6 dígitos.
+              </Form.Control.Feedback>
+              
+              {/* Feedback de validação em tempo real */}
+              {isValidatingCode && (
+                <div className={`${styles.validationMessage} ${styles.validating}`}>
+                  <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                  Validando código...
+                </div>
+              )}
+              
+              {codeValidation && !isValidatingCode && (
+                <div className={`${styles.validationMessage} ${
+                  codeValidation.isValid ? styles.valid : styles.invalid
+                }`}>
+                  {codeValidation.isValid ? (
+                    <span className="me-2">✅</span>
+                  ) : (
+                    <span className="me-2">❌</span>
+                  )}
+                  {codeValidation.message}
+                </div>
+              )}
+              
+              <Form.Text className="text-muted">
+                Digite o código de 6 dígitos que você recebeu por email.
+              </Form.Text>
             </Form.Group>
 
             <Button 

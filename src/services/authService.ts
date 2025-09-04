@@ -15,6 +15,7 @@ export interface UserData {
   displayName: string;
   createdAt: Date;
   lastLoginAt: Date;
+  verificationCode?: string; // Código de verificação usado no cadastro
   preferences?: {
     notifications: boolean;
     theme: string;
@@ -25,7 +26,8 @@ export interface UserData {
 export const createUser = async (
   email: string, 
   password: string, 
-  displayName: string
+  displayName: string,
+  verificationCode?: string
 ): Promise<UserData> => {
   try {
     // Criar usuário no Firebase Auth
@@ -49,6 +51,7 @@ export const createUser = async (
       displayName: displayName,
       createdAt: new Date(),
       lastLoginAt: new Date(),
+      verificationCode: verificationCode,
       preferences: {
         notifications: true,
         theme: 'light'

@@ -263,6 +263,65 @@
   background: rgba(40, 167, 69, 0.05);
 }
 
+/* Estilos específicos para o campo de código de verificação */
+.registerCard .formControl[type="text"][pattern] {
+  text-align: center;
+  font-family: 'Courier New', monospace;
+  font-size: 1.2rem;
+  letter-spacing: 0.2em;
+  font-weight: 600;
+}
+
+.registerCard .formControl[type="text"][pattern]:focus {
+  letter-spacing: 0.3em;
+}
+
+.registerCard .formText {
+  font-size: 0.85rem;
+  color: #6b7280;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 400;
+  margin-top: 0.5rem;
+  text-align: center;
+}
+
+/* Estilos para mensagens de validação do código */
+.validationMessage {
+  font-size: 0.875rem;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 500;
+  margin-top: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.validationMessage.validating {
+  color: #6b7280;
+  background: rgba(107, 114, 128, 0.1);
+  border: 1px solid rgba(107, 114, 128, 0.2);
+}
+
+.validationMessage.valid {
+  color: #059669;
+  background: rgba(5, 150, 105, 0.1);
+  border: 1px solid rgba(5, 150, 105, 0.2);
+}
+
+.validationMessage.invalid {
+  color: #dc2626;
+  background: rgba(220, 38, 38, 0.1);
+  border: 1px solid rgba(220, 38, 38, 0.2);
+}
+
+.validationMessage .spinner-border-sm {
+  width: 1rem;
+  height: 1rem;
+  border-width: 0.125em;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .registerContainer {

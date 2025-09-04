@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Register from '../../components/Register/Register';
 import { createUser, UserData } from '../../services/authService';
+import { validateVerificationCode, markCodeAsUsed } from '../../services/verificationCodeService';
 import { testFirestoreConnection, testUsersSiteCollection } from '../../utils/firestoreDebug';
 
 interface RegisterPageProps {
@@ -12,7 +13,7 @@ const RegisterPage: React.FC<RegisterPageProps> = ({ onSwitchToLogin, onRegister
   const [error, setError] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
 
-  const handleRegister = async (name: string, email: string, password: string, confirmPassword: string) => {
+  const handleRegister = async (name: string, email: string, password: string, confirmPassword: string, verificationCode: string) => {
     try {
       setError('');
       setLoading(true);
@@ -36,8 +37,31 @@ const RegisterPage: React.FC<RegisterPageProps> = ({ onSwitchToLogin, onRegister
         return;
       }
 
+      if (verificationCode.length !== 6 || !/^\d{6}$/.test(verificationCode)) {
+        setError('O código de verificação deve ter exatamente 6 dígitos numéricos.');
+        setLoading(false);
+        return;
+      }
+
+      // Validar código de verificação
+      const codeValidation = await validateVerificationCode(verificationCode);
+      if (!codeValidation.isValid) {
+        setError(codeValidation.message);
+        setLoading(false);
+        return;
+      }
+
+      if (!codeValidation.codeData) {
+        setError('Erro ao validar código de verificação.');
+        setLoading(false);
+        return;
+      }
+
       // Criar usuário no Firebase
-      const userData = await createUser(email, password, name);
+      const userData = await createUser(email, password, name, verificationCode);
+      
+      // Marcar código como usado
+      await markCodeAsUsed(codeValidation.codeData.id, userData.uid);
       
       // Sucesso no cadastro
       alert('Conta criada com sucesso! Você pode fazer login agora.');
