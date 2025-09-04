@@ -37,9 +37,8 @@ export const defaultNetworkConfig: NetworkSuppressionConfig = {
     'https://gallery.yopriceville.com',
     'http://www.designresourcebox.com',
     'https://fonts.googleapis.com',
-    'https://fonts.gstatic.com',
-    'https://firestore.googleapis.com',
-    'https://firebase.googleapis.com'
+    'https://fonts.gstatic.com'
+    // Removido Firebase URLs para permitir funcionamento normal
   ],
   
   suppressedPatterns: [
@@ -49,7 +48,7 @@ export const defaultNetworkConfig: NetworkSuppressionConfig = {
     // Padrões para fontes
     /\.(woff|woff2|ttf|eot|otf)$/i,
     
-    // Padrões para recursos externos específicos
+    // Padrões para recursos externos específicos (excluindo APIs)
     /wimpmusic\.com/i,
     /imgur\.com/i,
     /deviantart\.net/i,
@@ -57,6 +56,7 @@ export const defaultNetworkConfig: NetworkSuppressionConfig = {
     /designresourcebox\.com/i,
     /fonts\.googleapis\.com/i,
     /fonts\.gstatic\.com/i
+    // Removido padrões do Firebase para permitir funcionamento normal
   ],
   
   suppressedResourceTypes: [
@@ -69,12 +69,20 @@ export const defaultNetworkConfig: NetworkSuppressionConfig = {
   suppressFonts: true,
   suppressCSS: false,
   suppressScripts: false,
-  suppressAPIs: false,
+  suppressAPIs: false, // Manter APIs funcionando (incluindo Firebase)
   debugMode: false
 };
 
 // Função para verificar se uma URL deve ser suprimida baseada na configuração
 export const shouldSuppressUrl = (url: string, config: NetworkSuppressionConfig = defaultNetworkConfig): boolean => {
+  // Permitir sempre URLs do Firebase para evitar problemas de autenticação
+  if (url.includes('firebase.googleapis.com') || 
+      url.includes('firestore.googleapis.com') || 
+      url.includes('identitytoolkit.googleapis.com') ||
+      url.includes('securetoken.googleapis.com')) {
+    return false;
+  }
+
   // Verificar URLs específicas
   if (config.suppressedUrls.some(suppressedUrl => url.includes(suppressedUrl))) {
     if (config.debugMode) {
