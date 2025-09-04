@@ -22,7 +22,9 @@ const Register: React.FC<RegisterProps> = ({ onRegister, onSwitchToLogin, error,
 
   // Validar código em tempo real
   const validateCode = async (code: string) => {
-    if (code.length === 6 && /^\d{6}$/.test(code)) {
+    // Validar formato UUID (36 caracteres com hífens)
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (code.length === 36 && uuidRegex.test(code)) {
       setIsValidatingCode(true);
       try {
         const result = await validateVerificationCode(code);
@@ -44,7 +46,7 @@ const Register: React.FC<RegisterProps> = ({ onRegister, onSwitchToLogin, error,
   // Validar código quando o valor mudar
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      if (verificationCode.length === 6) {
+      if (verificationCode.length === 36) {
         validateCode(verificationCode);
       } else {
         setCodeValidation(null);
@@ -65,8 +67,8 @@ const Register: React.FC<RegisterProps> = ({ onRegister, onSwitchToLogin, error,
         alert('As senhas não coincidem!');
         return;
       }
-      if (verificationCode.length !== 6) {
-        alert('O código de verificação deve ter 6 dígitos!');
+      if (verificationCode.length !== 36) {
+        alert('O código de verificação deve ter 36 caracteres (formato UUID)!');
         return;
       }
       if (!codeValidation || !codeValidation.isValid) {
@@ -161,13 +163,18 @@ const Register: React.FC<RegisterProps> = ({ onRegister, onSwitchToLogin, error,
               <Form.Label className={styles.formLabel}>Código de Verificação</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Digite o código de 6 dígitos"
+                placeholder="Digite o código UUID (ex: 61749772-f947-4cd8-859e-d9b6d48ea812)"
                 value={verificationCode}
-                onChange={(e) => setVerificationCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                onChange={(e) => {
+                  // Permitir apenas caracteres válidos para UUID (letras, números e hífens)
+                  const value = e.target.value.replace(/[^0-9a-fA-F-]/g, '');
+                  // Limitar a 36 caracteres (tamanho do UUID)
+                  setVerificationCode(value.slice(0, 36));
+                }}
                 required
-                minLength={6}
-                maxLength={6}
-                pattern="[0-9]{6}"
+                minLength={36}
+                maxLength={36}
+                pattern="[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
                 className={`${styles.formControl} ${
                   codeValidation?.isValid ? 'is-valid' : 
                   codeValidation?.isValid === false ? 'is-invalid' : ''
@@ -175,7 +182,7 @@ const Register: React.FC<RegisterProps> = ({ onRegister, onSwitchToLogin, error,
                 disabled={isValidatingCode}
               />
               <Form.Control.Feedback type="invalid">
-                Por favor, digite um código de verificação válido de 6 dígitos.
+                Por favor, digite um código de verificação válido no formato UUID.
               </Form.Control.Feedback>
               
               {/* Feedback de validação em tempo real */}
@@ -200,7 +207,7 @@ const Register: React.FC<RegisterProps> = ({ onRegister, onSwitchToLogin, error,
               )}
               
               <Form.Text className="text-muted">
-                Digite o código de 6 dígitos que você recebeu por email.
+                Digite o código UUID que você recebeu por email (formato: 61749772-f947-4cd8-859e-d9b6d48ea812).
               </Form.Text>
             </Form.Group>
 

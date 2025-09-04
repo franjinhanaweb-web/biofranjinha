@@ -263,17 +263,26 @@
   background: rgba(40, 167, 69, 0.05);
 }
 
-/* Estilos específicos para o campo de código de verificação */
+/* Estilos específicos para o campo de código de verificação UUID */
 .registerCard .formControl[type="text"][pattern] {
-  text-align: center;
+  text-align: left;
   font-family: 'Courier New', monospace;
-  font-size: 1.2rem;
-  letter-spacing: 0.2em;
-  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: 0.05em;
+  font-weight: 500;
+  padding: 1rem 1.25rem;
 }
 
 .registerCard .formControl[type="text"][pattern]:focus {
-  letter-spacing: 0.3em;
+  letter-spacing: 0.1em;
+}
+
+/* Estilo específico para o campo de código UUID */
+.registerCard .formControl[placeholder*="UUID"] {
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+  text-transform: lowercase;
 }
 
 .registerCard .formText {

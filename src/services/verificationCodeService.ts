@@ -20,11 +20,13 @@ export interface CodeValidationResult {
 // Validar se um código existe e está disponível
 export const validateVerificationCode = async (code: string): Promise<CodeValidationResult> => {
   try {
-    if (!code || code.length !== 6 || !/^\d{6}$/.test(code)) {
+    // Validar formato UUID (36 caracteres com hífens)
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (!code || code.length !== 36 || !uuidRegex.test(code)) {
       return {
         isValid: false,
         isUsed: false,
-        message: 'Código deve ter exatamente 6 dígitos numéricos'
+        message: 'Código deve ter formato UUID válido (36 caracteres)'
       };
     }
 

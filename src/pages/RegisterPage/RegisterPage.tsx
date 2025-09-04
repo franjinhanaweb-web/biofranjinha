@@ -37,8 +37,10 @@ const RegisterPage: React.FC<RegisterPageProps> = ({ onSwitchToLogin, onRegister
         return;
       }
 
-      if (verificationCode.length !== 6 || !/^\d{6}$/.test(verificationCode)) {
-        setError('O código de verificação deve ter exatamente 6 dígitos numéricos.');
+      // Validar formato UUID
+      const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+      if (verificationCode.length !== 36 || !uuidRegex.test(verificationCode)) {
+        setError('O código de verificação deve ter formato UUID válido (36 caracteres).');
         setLoading(false);
         return;
       }
