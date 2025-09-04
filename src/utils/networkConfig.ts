@@ -37,12 +37,18 @@ export const defaultNetworkConfig: NetworkSuppressionConfig = {
     'https://gallery.yopriceville.com',
     'http://www.designresourcebox.com',
     'https://fonts.googleapis.com',
-    'https://fonts.gstatic.com'
+    'https://fonts.gstatic.com',
+    // Imagens locais da seção hero
+    '/images/hero-photo1.jpg',
+    '/images/hero-background.png'
     // Removido Firebase URLs para permitir funcionamento normal
   ],
   
   suppressedPatterns: [
-    // Padrões para imagens
+    // Padrões para imagens locais
+    /^\/images\/.*\.(jpg|jpeg|png|gif|webp|svg|ico)$/i,
+    
+    // Padrões para imagens externas
     /\.(jpg|jpeg|png|gif|webp|svg|ico)$/i,
     
     // Padrões para fontes
