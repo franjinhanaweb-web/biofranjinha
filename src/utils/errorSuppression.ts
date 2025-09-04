@@ -1,5 +1,9 @@
+import { suppressNetworkRequests } from './networkSuppression';
+
 // Utilitário para suprimir erros específicos do console
 export const suppressNetworkErrors = () => {
+  // Primeiro, suprimir as requisições de rede
+  suppressNetworkRequests();
   // Salvar a função original do console.error
   const originalError = console.error;
   
