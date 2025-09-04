@@ -5,6 +5,16 @@ import App from './App';
 import { suppressNetworkErrors } from './utils/errorSuppression';
 import { initializeBuildConfig } from './config/buildConfig';
 import { initializeAppCheckService } from './services/appCheckService';
+import { logEnvironmentConfig, validateEnvironment } from './config/environment';
+
+// Validar configuração de ambiente
+const envValidation = validateEnvironment();
+if (!envValidation.isValid) {
+  console.warn('⚠️ Configuração de ambiente incompleta:', envValidation.missing);
+}
+
+// Log de configuração (apenas em desenvolvimento)
+logEnvironmentConfig();
 
 // Inicializar configurações de build e segurança
 initializeBuildConfig();

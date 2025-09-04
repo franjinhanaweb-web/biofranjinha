@@ -6,10 +6,14 @@ export const initializeAppCheckService = () => {
   try {
     // Verificar se estamos em produção
     if (process.env.NODE_ENV === 'production') {
-      const siteKey = process.env.REACT_APP_FIREBASE_APP_CHECK_SITE_KEY;
+      // Tentar diferentes nomes de variáveis de ambiente
+      const siteKey = process.env.REACT_APP_FIREBASE_APP_CHECK_SITE_KEY || 
+                     process.env.REACT_APP_RECAPTCHA_SITE_KEY ||
+                     process.env.RECAPTCHA_SITE_KEY;
       
       if (!siteKey) {
-        console.warn('⚠️ App Check não configurado: REACT_APP_FIREBASE_APP_CHECK_SITE_KEY não encontrada');
+        console.warn('⚠️ App Check não configurado: Site key do reCAPTCHA não encontrada');
+        console.warn('Verifique se RECAPTCHA_SITE_KEY está configurada nas variáveis de ambiente');
         return;
       }
 
@@ -33,14 +37,19 @@ export const initializeAppCheckService = () => {
 
 // Verificar se App Check está ativo
 export const isAppCheckEnabled = (): boolean => {
-  return process.env.NODE_ENV === 'production' && 
-         !!process.env.REACT_APP_FIREBASE_APP_CHECK_SITE_KEY;
+  const siteKey = process.env.REACT_APP_FIREBASE_APP_CHECK_SITE_KEY || 
+                 process.env.REACT_APP_RECAPTCHA_SITE_KEY ||
+                 process.env.RECAPTCHA_SITE_KEY;
+  
+  return process.env.NODE_ENV === 'production' && !!siteKey;
 };
 
 // Configurações do App Check
 export const APP_CHECK_CONFIG = {
   // Site key do reCAPTCHA v3 (configurar no Firebase Console)
-  SITE_KEY: process.env.REACT_APP_FIREBASE_APP_CHECK_SITE_KEY,
+  SITE_KEY: process.env.REACT_APP_FIREBASE_APP_CHECK_SITE_KEY || 
+            process.env.REACT_APP_RECAPTCHA_SITE_KEY ||
+            process.env.RECAPTCHA_SITE_KEY,
   
   // Configurações de segurança
   SECURITY: {
