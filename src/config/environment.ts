@@ -74,6 +74,19 @@ export const logEnvironmentConfig = () => {
     console.log('- App Check configurado:', ENV_CONFIG.APP_CHECK.ENABLED);
     console.log('- Site Key encontrada:', !!ENV_CONFIG.APP_CHECK.SITE_KEY);
     
+    // Mostrar qual variável foi encontrada
+    if (ENV_CONFIG.APP_CHECK.SITE_KEY) {
+      const source = process.env.REACT_APP_FIREBASE_APP_CHECK_SITE_KEY ? 'REACT_APP_FIREBASE_APP_CHECK_SITE_KEY' :
+                    process.env.REACT_APP_RECAPTCHA_SITE_KEY ? 'REACT_APP_RECAPTCHA_SITE_KEY' :
+                    process.env.RECAPTCHA_SITE_KEY ? 'RECAPTCHA_SITE_KEY' : 'desconhecida';
+      console.log('- Site Key source:', source);
+    } else {
+      console.log('🔍 Debug - Variáveis de ambiente disponíveis:');
+      console.log('- RECAPTCHA_SITE_KEY:', !!process.env.RECAPTCHA_SITE_KEY);
+      console.log('- REACT_APP_RECAPTCHA_SITE_KEY:', !!process.env.REACT_APP_RECAPTCHA_SITE_KEY);
+      console.log('- REACT_APP_FIREBASE_APP_CHECK_SITE_KEY:', !!process.env.REACT_APP_FIREBASE_APP_CHECK_SITE_KEY);
+    }
+    
     const validation = validateEnvironment();
     if (!validation.isValid) {
       console.warn('⚠️ Variáveis de ambiente faltando:', validation.missing);

@@ -8,10 +8,12 @@ import { initializeAppCheckService } from './services/appCheckService';
 import { logEnvironmentConfig, validateEnvironment } from './config/environment';
 import { enableDevTools, toggleSourceProtectionByEnvironment } from './utils/devTools';
 
-// Validar configuração de ambiente
-const envValidation = validateEnvironment();
-if (!envValidation.isValid) {
-  console.warn('⚠️ Configuração de ambiente incompleta:', envValidation.missing);
+// Validar configuração de ambiente (apenas em produção)
+if (process.env.NODE_ENV === 'production') {
+  const envValidation = validateEnvironment();
+  if (!envValidation.isValid) {
+    console.warn('⚠️ Configuração de ambiente incompleta:', envValidation.missing);
+  }
 }
 
 // Log de configuração (apenas em desenvolvimento)
