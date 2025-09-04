@@ -163,7 +163,7 @@ const Register: React.FC<RegisterProps> = ({ onRegister, onSwitchToLogin, error,
               <Form.Label className={styles.formLabel}>Código de Verificação</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Digite o código UUID (ex: 61749772-f947-4cd8-859e-d9b6d48ea812)"
+                placeholder="Digite o código de verificação"
                 value={verificationCode}
                 onChange={(e) => {
                   // Permitir apenas caracteres válidos para UUID (letras, números e hífens)
@@ -206,9 +206,6 @@ const Register: React.FC<RegisterProps> = ({ onRegister, onSwitchToLogin, error,
                 </div>
               )}
               
-              <Form.Text className="text-muted">
-                Digite o código UUID que você recebeu por email (formato: 61749772-f947-4cd8-859e-d9b6d48ea812).
-              </Form.Text>
             </Form.Group>
 
             <Button 
