@@ -1,13 +1,12 @@
 import { suppressNetworkRequests } from './networkSuppression';
-import { protectSourceCode } from './sourceProtection';
 
 // Utilitário para suprimir erros específicos do console
 export const suppressNetworkErrors = () => {
   // Primeiro, suprimir as requisições de rede
   suppressNetworkRequests();
   
-  // Adicionar proteção do código fonte
-  protectSourceCode();
+  // Proteção do código fonte desabilitada para desenvolvimento
+  // protectSourceCode();
   // Salvar a função original do console.error
   const originalError = console.error;
   

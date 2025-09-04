@@ -20,7 +20,10 @@ export const BUILD_CONFIG = {
 
 // Função para remover console.log em produção
 export const removeConsoleInProduction = () => {
-  if (process.env.NODE_ENV === 'production') {
+  // Só remover console.log se explicitamente habilitado
+  const shouldRemoveConsole = process.env.REACT_APP_REMOVE_CONSOLE === 'true';
+  
+  if (process.env.NODE_ENV === 'production' && shouldRemoveConsole) {
     // Substituir console.log por função vazia
     console.log = () => {};
     console.info = () => {};
