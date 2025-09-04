@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Button, Card, Alert, Spinner, Table } from 'react-bootstrap';
 import { listVerificationCodes } from '../../utils/populateVerificationCodes';
+import { collection, addDoc, Timestamp } from 'firebase/firestore';
+import { db } from '../../config/firebase';
 import styles from './CodeManager.module.css';
 
 interface CodeInfo {
@@ -34,6 +36,26 @@ const CodeManager: React.FC = () => {
     }
   };
 
+  const addTestCode = async () => {
+    setLoading(true);
+    setMessage(null);
+    
+    try {
+      const codesRef = collection(db, 'users_codes');
+      const testCode = {
+        code: 'e38cafd3-9587-43a7-9be9-7ce152b5cb61',
+        isUsed: false
+      };
+      
+      await addDoc(codesRef, testCode);
+      setMessage({ type: 'success', text: 'Código de teste adicionado com isUsed: false!' });
+    } catch (error: any) {
+      setMessage({ type: 'error', text: `Erro ao adicionar código de teste: ${error.message}` });
+    } finally {
+      setLoading(false);
+    }
+  };
+
 
   return (
     <div className={styles.codeManagerContainer}>
@@ -62,6 +84,22 @@ const CodeManager: React.FC = () => {
                 </>
               ) : (
                 '📋 Listar Códigos'
+              )}
+            </Button>
+
+            <Button
+              variant="outline-warning"
+              onClick={addTestCode}
+              disabled={loading}
+              className={styles.actionButton}
+            >
+              {loading ? (
+                <>
+                  <Spinner animation="border" size="sm" className="me-2" />
+                  Adicionando...
+                </>
+              ) : (
+                '🧪 Adicionar Código de Teste'
               )}
             </Button>
           </div>

@@ -1,0 +1,81 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===== REGRAS PARA CÓDIGOS DE CONVITE =====
+    match /codes/{codeId} {
+      // Permitir leitura para todos (necessário para validação de códigos)
+      allow read: if true;
+      
+      // Permitir escrita apenas para usuários autenticados
+      allow write: if request.auth != null;
+      
+      // Permitir atualização para marcar como usado
+      allow update: if request.auth != null;
+    }
+    
+    // ===== REGRAS PARA CÓDIGOS DE VERIFICAÇÃO (NOVO PROJETO) =====
+    match /users_codes/{codeId} {
+      // Permitir leitura para todos (necessário para validação de códigos)
+      allow read: if true;
+      
+      // Permitir escrita apenas para usuários autenticados
+      allow write: if request.auth != null;
+      
+      // Permitir atualização para marcar como usado
+      allow update: if request.auth != null;
+    }
+    
+    // ===== REGRAS PARA PROGRESSO DO USUÁRIO =====
+    match /userProgress/{progressId} {
+      // Permitir leitura apenas pelo próprio usuário
+      allow read: if request.auth != null && 
+                   request.auth.uid == resource.data.userId;
+      
+      // Permitir escrita apenas pelo próprio usuário
+      allow write: if request.auth != null && 
+                   request.auth.uid == resource.data.userId;
+      
+      // Permitir criação se o userId corresponder ao usuário autenticado
+      allow create: if request.auth != null && 
+                   request.auth.uid == request.resource.data.userId;
+    }
+    
+    // ===== REGRAS PARA USUÁRIOS =====
+    match /users/{userId} {
+      // Permitir leitura para verificar email duplicado durante registro
+      allow read: if true;
+      
+      // Permitir escrita apenas pelo próprio usuário
+      allow write: if request.auth != null && 
+                   request.auth.uid == userId;
+      
+      // Permitir criação durante registro (usuário ainda não autenticado)
+      allow create: if true;
+    }
+    
+    // ===== REGRAS PARA CONTEÚDO DA MENTORIA =====
+    match /mentoriaContent/{contentId} {
+      // Permitir leitura para usuários autenticados
+      allow read: if request.auth != null;
+      
+      // Permitir escrita apenas para administradores
+      allow write: if false; // Desabilitado por padrão
+    }
+    
+    // ===== REGRAS PARA USERS_SITE (NOVO PROJETO) =====
+    match /users_site/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Regra temporária para debug (remover depois)
+    match /users_site/{document=**} {
+      allow read, write: if request.auth != null;
+    }
+    
+    // ===== REGRAS PADRÃO =====
+    // Negar acesso a todas as outras coleções por padrão
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

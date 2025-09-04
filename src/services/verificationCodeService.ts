@@ -43,7 +43,16 @@ export const validateVerificationCode = async (code: string): Promise<CodeValida
     const codeDoc = querySnapshot.docs[0];
     const codeData = { id: codeDoc.id, ...codeDoc.data() } as VerificationCode;
 
+    // Debug: Log dos dados do código
+    console.log('🔍 Dados do código encontrado:', {
+      id: codeData.id,
+      code: codeData.code,
+      isUsed: codeData.isUsed,
+      tipo: typeof codeData.isUsed
+    });
+
     if (codeData.isUsed) {
+      console.log('❌ Código marcado como usado:', codeData);
       return {
         isValid: false,
         isUsed: true,
