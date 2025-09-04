@@ -5,9 +5,6 @@ export interface VerificationCode {
   id: string;
   code: string;
   isUsed: boolean;
-  usedBy?: string; // UID do usuário que usou o código
-  usedAt?: Date;
-  createdAt: Date;
 }
 
 export interface CodeValidationResult {
@@ -39,7 +36,7 @@ export const validateVerificationCode = async (code: string): Promise<CodeValida
       return {
         isValid: false,
         isUsed: false,
-        message: 'Código de verificação não encontrado'
+        message: 'Código de verificação não encontrado no banco de dados'
       };
     }
 
@@ -77,9 +74,7 @@ export const markCodeAsUsed = async (codeId: string, userId: string): Promise<vo
   try {
     const codeRef = doc(db, 'users_codes', codeId);
     await updateDoc(codeRef, {
-      isUsed: true,
-      usedBy: userId,
-      usedAt: new Date()
+      isUsed: true
     });
     console.log('Código marcado como usado com sucesso');
   } catch (error) {
@@ -88,35 +83,3 @@ export const markCodeAsUsed = async (codeId: string, userId: string): Promise<vo
   }
 };
 
-// Verificar se um usuário já usou algum código
-export const checkUserHasUsedCode = async (userId: string): Promise<boolean> => {
-  try {
-    const codesRef = collection(db, 'users_codes');
-    const q = query(codesRef, where('usedBy', '==', userId));
-    const querySnapshot = await getDocs(q);
-    
-    return !querySnapshot.empty;
-  } catch (error) {
-    console.error('Erro ao verificar se usuário usou código:', error);
-    return false;
-  }
-};
-
-// Obter código usado por um usuário
-export const getUserUsedCode = async (userId: string): Promise<VerificationCode | null> => {
-  try {
-    const codesRef = collection(db, 'users_codes');
-    const q = query(codesRef, where('usedBy', '==', userId));
-    const querySnapshot = await getDocs(q);
-    
-    if (querySnapshot.empty) {
-      return null;
-    }
-
-    const codeDoc = querySnapshot.docs[0];
-    return { id: codeDoc.id, ...codeDoc.data() } as VerificationCode;
-  } catch (error) {
-    console.error('Erro ao obter código usado pelo usuário:', error);
-    return null;
-  }
-};
