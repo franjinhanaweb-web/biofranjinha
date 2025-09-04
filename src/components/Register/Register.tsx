@@ -161,6 +161,7 @@ const Register: React.FC<RegisterProps> = ({ onRegister, onSwitchToLogin, error,
 
             <Form.Group className="mb-3" controlId="formVerificationCode">
               <Form.Label className={styles.formLabel}>Código de Verificação</Form.Label>
+              {/* Campo para código de verificação único */}
               <Form.Control
                 type="text"
                 placeholder="Digite o código de verificação"
