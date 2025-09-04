@@ -56,7 +56,14 @@ export const createUser = async (
     };
     
     // Salvar dados adicionais no Firestore
-    await setDoc(doc(db, 'users_site', user.uid), userData);
+    try {
+      await setDoc(doc(db, 'users_site', user.uid), userData);
+      console.log('Usuário salvo no Firestore com sucesso');
+    } catch (firestoreError: any) {
+      console.error('Erro ao salvar no Firestore:', firestoreError);
+      // Não falhar o cadastro se o Firestore der erro
+      // O usuário já foi criado no Auth
+    }
     
     return userData;
   } catch (error: any) {
@@ -79,36 +86,21 @@ export const signInUser = async (
     
     const user = userCredential.user;
     
-    // Buscar dados do usuário no Firestore
-    const userDoc = await getDoc(doc(db, 'users_site', user.uid));
+    // Verificar e criar usuário no Firestore se necessário
+    const userData = await ensureUserInFirestore(user);
     
-    if (userDoc.exists()) {
-      const userData = userDoc.data() as UserData;
-      
-      // Atualizar último login
+    // Atualizar último login
+    try {
       await setDoc(doc(db, 'users_site', user.uid), {
         ...userData,
         lastLoginAt: new Date()
       }, { merge: true });
-      
-      return userData;
-    } else {
-      // Se não existir no Firestore, criar dados básicos
-      const userData: UserData = {
-        uid: user.uid,
-        email: user.email!,
-        displayName: user.displayName || 'Usuário',
-        createdAt: new Date(),
-        lastLoginAt: new Date(),
-        preferences: {
-          notifications: true,
-          theme: 'light'
-        }
-      };
-      
-      await setDoc(doc(db, 'users_site', user.uid), userData);
-      return userData;
+    } catch (updateError) {
+      console.error('Erro ao atualizar último login:', updateError);
+      // Não falhar o login por causa disso
     }
+    
+    return userData;
   } catch (error: any) {
     console.error('Erro no login:', error);
     throw new Error(getErrorMessage(error.code));
@@ -127,6 +119,39 @@ export const signOutUser = async (): Promise<void> => {
 // Obter usuário atual
 export const getCurrentUser = (): User | null => {
   return auth.currentUser;
+};
+
+// Verificar e criar usuário no Firestore se não existir
+export const ensureUserInFirestore = async (user: User): Promise<UserData> => {
+  try {
+    // Verificar se usuário já existe no Firestore
+    const userDoc = await getDoc(doc(db, 'users_site', user.uid));
+    
+    if (userDoc.exists()) {
+      console.log('Usuário já existe no Firestore');
+      return userDoc.data() as UserData;
+    } else {
+      // Criar dados do usuário no Firestore
+      const userData: UserData = {
+        uid: user.uid,
+        email: user.email!,
+        displayName: user.displayName || 'Usuário',
+        createdAt: new Date(),
+        lastLoginAt: new Date(),
+        preferences: {
+          notifications: true,
+          theme: 'light'
+        }
+      };
+      
+      await setDoc(doc(db, 'users_site', user.uid), userData);
+      console.log('Usuário criado no Firestore com sucesso');
+      return userData;
+    }
+  } catch (error: any) {
+    console.error('Erro ao verificar/criar usuário no Firestore:', error);
+    throw error;
+  }
 };
 
 // Converter códigos de erro do Firebase para mensagens em português

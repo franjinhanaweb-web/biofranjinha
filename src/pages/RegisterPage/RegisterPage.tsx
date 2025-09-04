@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Register from '../../components/Register/Register';
 import { createUser, UserData } from '../../services/authService';
+import { testFirestoreConnection, testUsersSiteCollection } from '../../utils/firestoreDebug';
 
 interface RegisterPageProps {
   onSwitchToLogin: () => void;
@@ -50,6 +51,12 @@ const RegisterPage: React.FC<RegisterPageProps> = ({ onSwitchToLogin, onRegister
     }
   };
 
+  const handleDebugFirestore = async () => {
+    console.log('🧪 Iniciando testes de debug...');
+    await testFirestoreConnection();
+    await testUsersSiteCollection();
+  };
+
   return (
     <div className="register-page">
       <Register 
@@ -58,6 +65,23 @@ const RegisterPage: React.FC<RegisterPageProps> = ({ onSwitchToLogin, onRegister
         error={error}
         loading={loading}
       />
+      
+      {/* Botão de debug temporário */}
+      <div style={{ marginTop: '20px', textAlign: 'center' }}>
+        <button 
+          onClick={handleDebugFirestore}
+          style={{
+            padding: '10px 20px',
+            backgroundColor: '#007bff',
+            color: 'white',
+            border: 'none',
+            borderRadius: '5px',
+            cursor: 'pointer'
+          }}
+        >
+          🧪 Testar Firestore (Debug)
+        </button>
+      </div>
     </div>
   );
 };
