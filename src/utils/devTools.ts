@@ -28,19 +28,19 @@ export const isSourceProtectionEnabled = (): boolean => {
 
 // Função para alternar proteção baseada no ambiente
 export const toggleSourceProtectionByEnvironment = () => {
-  const isProduction = process.env.NODE_ENV === 'production';
   const forceProtection = process.env.REACT_APP_ENABLE_SOURCE_PROTECTION === 'true';
   const disableProtection = process.env.REACT_APP_DISABLE_SOURCE_PROTECTION === 'true';
   
+  // Só ativar proteção se explicitamente habilitada
   if (disableProtection) {
     console.log('🔧 Proteção do código fonte desabilitada por variável de ambiente');
     return;
   }
   
-  if (isProduction || forceProtection) {
+  if (forceProtection) {
     enableSourceProtection();
   } else {
-    console.log('🔧 Modo desenvolvimento - proteção do código fonte desabilitada');
+    console.log('🔧 Proteção do código fonte desabilitada - use REACT_APP_ENABLE_SOURCE_PROTECTION=true para ativar');
   }
 };
 

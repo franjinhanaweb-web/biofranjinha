@@ -32,6 +32,9 @@ export const removeConsoleInProduction = () => {
     
     // Manter apenas console.error para logs críticos
     // console.error permanece ativo
+    console.log('🔧 Console.log removido em produção');
+  } else {
+    console.log('🔧 Console.log mantido - use REACT_APP_REMOVE_CONSOLE=true para remover');
   }
 };
 
