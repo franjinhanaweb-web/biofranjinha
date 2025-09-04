@@ -13,9 +13,16 @@ export const initializeAppCheckService = () => {
       
       if (!siteKey) {
         console.warn('⚠️ App Check não configurado: Site key do reCAPTCHA não encontrada');
-        console.warn('Verifique se RECAPTCHA_SITE_KEY está configurada nas variáveis de ambiente');
+        console.warn('Verifique se REACT_APP_RECAPTCHA_SITE_KEY está configurada nas variáveis de ambiente');
+        console.warn('Variáveis disponíveis:', {
+          'REACT_APP_FIREBASE_APP_CHECK_SITE_KEY': !!process.env.REACT_APP_FIREBASE_APP_CHECK_SITE_KEY,
+          'REACT_APP_RECAPTCHA_SITE_KEY': !!process.env.REACT_APP_RECAPTCHA_SITE_KEY,
+          'RECAPTCHA_SITE_KEY': !!process.env.RECAPTCHA_SITE_KEY
+        });
         return;
       }
+
+      console.log('🔑 Site key detectada:', siteKey.substring(0, 10) + '...');
 
       // Inicializar App Check com reCAPTCHA v3
       const appCheck = initializeAppCheck(app, {
@@ -24,6 +31,12 @@ export const initializeAppCheckService = () => {
       });
 
       console.log('✅ App Check inicializado com reCAPTCHA v3');
+      
+      // Verificar se o App Check está funcionando
+      setTimeout(() => {
+        console.log('🔍 Verificando status do App Check...');
+      }, 2000);
+
       return appCheck;
     } else {
       console.log('🔧 App Check desabilitado em desenvolvimento');
