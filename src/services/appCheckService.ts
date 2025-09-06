@@ -29,6 +29,14 @@ export const initializeAppCheckService = () => {
       }
 
       console.log('🔑 Site key detectada:', siteKey.substring(0, 10) + '...');
+      
+      // Identificar qual variável de ambiente foi usada
+      const siteKeySource = process.env.REACT_APP_FIREBASE_APP_CHECK_SITE_KEY ? 'REACT_APP_FIREBASE_APP_CHECK_SITE_KEY' :
+                           process.env.REACT_APP_RECAPTCHA_SITE_KEY ? 'REACT_APP_RECAPTCHA_SITE_KEY' :
+                           process.env.RECAPTCHA_SITE_KEY ? 'RECAPTCHA_SITE_KEY' : 'desconhecida';
+      
+      console.log('📋 Fonte da site key:', siteKeySource);
+      console.log('🔧 Provedor: reCAPTCHA v3 (ReCaptchaV3Provider)');
 
       // Inicializar App Check com reCAPTCHA v3
       const appCheck = initializeAppCheck(app, {
@@ -46,7 +54,18 @@ export const initializeAppCheckService = () => {
           // Tentar obter um token do App Check
           const { getToken } = await import('firebase/app-check');
           const token = await getToken(appCheck);
-          console.log('✅ Token do App Check obtido com sucesso:', token.token.substring(0, 20) + '...');
+          
+          // Verificar se é um token de debug
+          const isDebug = isDebugToken(token.token);
+          const tokenType = isDebug ? '🔧 DEBUG' : '🔒 PRODUÇÃO';
+          
+          console.log(`✅ Token do App Check obtido com sucesso (${tokenType}):`, token.token.substring(0, 20) + '...');
+          
+          if (isDebug) {
+            console.log('⚠️  ATENÇÃO: Token de debug detectado!');
+            console.log('   - Este token só funciona em desenvolvimento');
+            console.log('   - Para produção, configure reCAPTCHA v3 no Firebase Console');
+          }
         } catch (error) {
           console.error('❌ Erro ao obter token do App Check:', error);
           console.log('💡 Se houver erros 400, verifique:');
@@ -75,6 +94,33 @@ export const isAppCheckEnabled = (): boolean => {
                  process.env.RECAPTCHA_SITE_KEY;
   
   return process.env.NODE_ENV === 'production' && !!siteKey;
+};
+
+// Função para obter informações detalhadas do reCAPTCHA
+export const getRecaptchaInfo = () => {
+  const siteKey = process.env.REACT_APP_FIREBASE_APP_CHECK_SITE_KEY || 
+                 process.env.REACT_APP_RECAPTCHA_SITE_KEY ||
+                 process.env.RECAPTCHA_SITE_KEY;
+  
+  const siteKeySource = process.env.REACT_APP_FIREBASE_APP_CHECK_SITE_KEY ? 'REACT_APP_FIREBASE_APP_CHECK_SITE_KEY' :
+                       process.env.REACT_APP_RECAPTCHA_SITE_KEY ? 'REACT_APP_RECAPTCHA_SITE_KEY' :
+                       process.env.RECAPTCHA_SITE_KEY ? 'RECAPTCHA_SITE_KEY' : 'nenhuma';
+  
+  return {
+    siteKey: siteKey || null,
+    siteKeySource,
+    provider: 'reCAPTCHA v3 (ReCaptchaV3Provider)',
+    isConfigured: !!siteKey,
+    environment: process.env.NODE_ENV,
+    isProduction: process.env.NODE_ENV === 'production',
+    isAppCheckEnabled: process.env.NODE_ENV === 'production' && !!siteKey
+  };
+};
+
+// Função para verificar se é um token de debug
+export const isDebugToken = (token: string): boolean => {
+  // Tokens de debug do Firebase App Check começam com "debug:" ou são muito curtos
+  return token.startsWith('debug:') || token.length < 20;
 };
 
 // Configurações do App Check
