@@ -4,6 +4,12 @@ import app from '../config/firebase';
 // Configuração do App Check
 export const initializeAppCheckService = () => {
   try {
+    // Verificar se App Check está desabilitado via variável de ambiente
+    if (process.env.REACT_APP_DISABLE_APP_CHECK === 'true') {
+      console.log('🔧 App Check desabilitado via REACT_APP_DISABLE_APP_CHECK');
+      return null;
+    }
+
     // Verificar se estamos em produção
     if (process.env.NODE_ENV === 'production') {
       // Tentar diferentes nomes de variáveis de ambiente
@@ -35,6 +41,11 @@ export const initializeAppCheckService = () => {
       // Verificar se o App Check está funcionando
       setTimeout(() => {
         console.log('🔍 Verificando status do App Check...');
+        console.log('💡 Se houver erros 400, verifique:');
+        console.log('   1. Site key está correta no Firebase Console?');
+        console.log('   2. reCAPTCHA v3 está configurado para este domínio?');
+        console.log('   3. App Check está habilitado no Firebase?');
+        console.log('   4. Para desabilitar temporariamente: REACT_APP_DISABLE_APP_CHECK=true');
       }, 2000);
 
       return appCheck;

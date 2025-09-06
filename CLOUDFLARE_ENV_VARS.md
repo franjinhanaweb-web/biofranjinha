@@ -46,6 +46,11 @@ REACT_APP_DEBUG=true
 REACT_APP_LOG_LEVEL=debug
 ```
 
+### Para desabilitar App Check temporariamente (se houver erros 400)
+```
+REACT_APP_DISABLE_APP_CHECK=true
+```
+
 ## 🎯 **Configuração Recomendada para Produção**
 
 ### Mínima (DevTools habilitados)
