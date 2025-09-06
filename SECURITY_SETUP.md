@@ -38,13 +38,6 @@ REACT_APP_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
 REACT_APP_FIREBASE_APP_ID=your_app_id
 REACT_APP_FIREBASE_MEASUREMENT_ID=your_measurement_id
 
-# App Check (NOVO - configurar no Firebase Console)
-# Use qualquer uma dessas variáveis (o código detecta automaticamente):
-RECAPTCHA_SITE_KEY=your_recaptcha_site_key
-# OU
-REACT_APP_RECAPTCHA_SITE_KEY=your_recaptcha_site_key
-# OU
-REACT_APP_FIREBASE_APP_CHECK_SITE_KEY=your_recaptcha_site_key
 
 # Segurança (NOVO)
 REACT_APP_ENABLE_MFA=true

@@ -16,16 +16,6 @@ export const ENV_CONFIG = {
     MEASUREMENT_ID: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID
   },
   
-  // App Check / reCAPTCHA
-  APP_CHECK: {
-    SITE_KEY: process.env.REACT_APP_FIREBASE_APP_CHECK_SITE_KEY || 
-              process.env.REACT_APP_RECAPTCHA_SITE_KEY ||
-              process.env.RECAPTCHA_SITE_KEY,
-    ENABLED: process.env.NODE_ENV === 'production' && 
-             !!(process.env.REACT_APP_FIREBASE_APP_CHECK_SITE_KEY || 
-                process.env.REACT_APP_RECAPTCHA_SITE_KEY ||
-                process.env.RECAPTCHA_SITE_KEY)
-  },
   
   // Segurança
   SECURITY: {
@@ -54,10 +44,6 @@ export const validateEnvironment = (): { isValid: boolean; missing: string[] } =
   if (!ENV_CONFIG.FIREBASE.MESSAGING_SENDER_ID) missing.push('REACT_APP_FIREBASE_MESSAGING_SENDER_ID');
   if (!ENV_CONFIG.FIREBASE.APP_ID) missing.push('REACT_APP_FIREBASE_APP_ID');
   
-  // Verificar App Check em produção
-  if (ENV_CONFIG.IS_PRODUCTION && !ENV_CONFIG.APP_CHECK.SITE_KEY) {
-    missing.push('RECAPTCHA_SITE_KEY (ou REACT_APP_RECAPTCHA_SITE_KEY)');
-  }
   
   return {
     isValid: missing.length === 0,
@@ -71,21 +57,6 @@ export const logEnvironmentConfig = () => {
     console.log('🔧 Configuração de Ambiente:');
     console.log('- NODE_ENV:', ENV_CONFIG.NODE_ENV);
     console.log('- Firebase configurado:', !!ENV_CONFIG.FIREBASE.API_KEY);
-    console.log('- App Check configurado:', ENV_CONFIG.APP_CHECK.ENABLED);
-    console.log('- Site Key encontrada:', !!ENV_CONFIG.APP_CHECK.SITE_KEY);
-    
-    // Mostrar qual variável foi encontrada
-    if (ENV_CONFIG.APP_CHECK.SITE_KEY) {
-      const source = process.env.REACT_APP_FIREBASE_APP_CHECK_SITE_KEY ? 'REACT_APP_FIREBASE_APP_CHECK_SITE_KEY' :
-                    process.env.REACT_APP_RECAPTCHA_SITE_KEY ? 'REACT_APP_RECAPTCHA_SITE_KEY' :
-                    process.env.RECAPTCHA_SITE_KEY ? 'RECAPTCHA_SITE_KEY' : 'desconhecida';
-      console.log('- Site Key source:', source);
-    } else {
-      console.log('🔍 Debug - Variáveis de ambiente disponíveis:');
-      console.log('- RECAPTCHA_SITE_KEY:', !!process.env.RECAPTCHA_SITE_KEY);
-      console.log('- REACT_APP_RECAPTCHA_SITE_KEY:', !!process.env.REACT_APP_RECAPTCHA_SITE_KEY);
-      console.log('- REACT_APP_FIREBASE_APP_CHECK_SITE_KEY:', !!process.env.REACT_APP_FIREBASE_APP_CHECK_SITE_KEY);
-    }
     
     const validation = validateEnvironment();
     if (!validation.isValid) {
