@@ -8,6 +8,7 @@ import {
 } from 'firebase/auth';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { auth, db } from '../config/firebase';
+import { appCheckService } from './appCheckService';
 
 export interface UserData {
   uid: string;
@@ -16,11 +17,22 @@ export interface UserData {
   createdAt: Date;
   lastLoginAt: Date;
   verificationCode?: string; // Código de verificação usado no cadastro
+  appCheckToken?: string; // Token do App Check para validação
   preferences?: {
     notifications: boolean;
     theme: string;
   };
 }
+
+// Função auxiliar para obter token do App Check
+const getAppCheckToken = async (): Promise<string | null> => {
+  try {
+    return await appCheckService.getToken();
+  } catch (error) {
+    console.warn('Não foi possível obter token do App Check:', error);
+    return null;
+  }
+};
 
 // Criar usuário no Firebase Auth e salvar dados no Firestore
 export const createUser = async (
@@ -30,6 +42,9 @@ export const createUser = async (
   verificationCode?: string
 ): Promise<UserData> => {
   try {
+    // Obter token do App Check antes de criar o usuário
+    const appCheckToken = await getAppCheckToken();
+    
     // Criar usuário no Firebase Auth
     const userCredential: UserCredential = await createUserWithEmailAndPassword(
       auth, 
@@ -52,6 +67,7 @@ export const createUser = async (
       createdAt: new Date(),
       lastLoginAt: new Date(),
       verificationCode: verificationCode,
+      appCheckToken: appCheckToken || undefined,
       preferences: {
         notifications: true,
         theme: 'light'
@@ -78,6 +94,9 @@ export const signInUser = async (
   password: string
 ): Promise<UserData> => {
   try {
+    // Obter token do App Check antes do login
+    const appCheckToken = await getAppCheckToken();
+    
     const userCredential: UserCredential = await signInWithEmailAndPassword(
       auth, 
       email, 
@@ -89,17 +108,21 @@ export const signInUser = async (
     // Verificar e criar usuário no Firestore se necessário
     const userData = await ensureUserInFirestore(user);
     
-    // Atualizar último login
+    // Atualizar último login com token do App Check
     try {
       await setDoc(doc(db, 'users_site', user.uid), {
         ...userData,
-        lastLoginAt: new Date()
+        lastLoginAt: new Date(),
+        appCheckToken: appCheckToken || undefined
       }, { merge: true });
     } catch (updateError) {
       // Não falhar o login por causa disso
     }
     
-    return userData;
+    return {
+      ...userData,
+      appCheckToken: appCheckToken || undefined
+    };
   } catch (error: any) {
     throw new Error(getErrorMessage(error.code));
   }

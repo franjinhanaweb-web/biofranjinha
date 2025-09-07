@@ -13,9 +13,15 @@ REACT_APP_FIREBASE_APP_ID=your_app_id
 REACT_APP_FIREBASE_MEASUREMENT_ID=your_measurement_id
 ```
 
-### reCAPTCHA (configurar com padrão REACT_APP_)
+### reCAPTCHA (obrigatório para App Check)
 ```
 REACT_APP_RECAPTCHA_SITE_KEY=your_recaptcha_site_key
+REACT_APP_RECAPTCHA_TYPE=v3
+```
+
+### Firebase App Check (obrigatório para segurança)
+```
+REACT_APP_APP_CHECK_DEBUG_TOKEN=your_debug_token
 ```
 
 ## 🔧 **Variáveis Opcionais de Desenvolvimento**
@@ -60,8 +66,12 @@ REACT_APP_FIREBASE_MESSAGING_SENDER_ID=...
 REACT_APP_FIREBASE_APP_ID=...
 REACT_APP_FIREBASE_MEASUREMENT_ID=...
 
-# reCAPTCHA (obrigatório)
+# reCAPTCHA (obrigatório para App Check)
 REACT_APP_RECAPTCHA_SITE_KEY=...
+REACT_APP_RECAPTCHA_TYPE=v3
+
+# App Check (obrigatório para segurança)
+REACT_APP_APP_CHECK_DEBUG_TOKEN=...
 
 # Desabilitar proteções (opcional)
 REACT_APP_DISABLE_SOURCE_PROTECTION=true
@@ -78,8 +88,12 @@ REACT_APP_FIREBASE_MESSAGING_SENDER_ID=...
 REACT_APP_FIREBASE_APP_ID=...
 REACT_APP_FIREBASE_MEASUREMENT_ID=...
 
-# reCAPTCHA (obrigatório)
+# reCAPTCHA (obrigatório para App Check)
 REACT_APP_RECAPTCHA_SITE_KEY=...
+REACT_APP_RECAPTCHA_TYPE=v3
+
+# App Check (obrigatório para segurança)
+REACT_APP_APP_CHECK_DEBUG_TOKEN=...
 
 # Segurança máxima
 REACT_APP_ENABLE_SOURCE_PROTECTION=true
