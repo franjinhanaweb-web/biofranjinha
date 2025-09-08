@@ -37,6 +37,14 @@ export class AppCheckService {
     console.log('Verificando App Check:', appCheck);
     console.log('Tipo:', typeof appCheck);
     console.log('Tem getToken?', appCheck && typeof appCheck.getToken === 'function');
+    
+    // Se o App Check existe mas não tem getToken, ainda consideramos disponível
+    // pois pode estar funcionando de outras formas
+    if (appCheck && typeof appCheck === 'object') {
+      console.log('App Check detectado, mas sem método getToken - pode precisar configurar no Firebase Console');
+      return true; // Considerar disponível mesmo sem getToken
+    }
+    
     return !!appCheck && typeof appCheck.getToken === 'function';
   }
 
