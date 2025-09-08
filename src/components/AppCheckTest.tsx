@@ -136,7 +136,10 @@ const AppCheckTest: React.FC = () => {
               <strong>Disponível:</strong> {appCheckService.isAvailable() ? '✅ Sim' : '❌ Não'}
             </li>
             <li>
-              <strong>reCAPTCHA Site Key:</strong> {process.env.REACT_APP_RECAPTCHA_SITE_KEY ? '✅ Configurado' : '❌ Não configurado'}
+              <strong>reCAPTCHA Site Key:</strong> {process.env.REACT_APP_RECAPTCHA_SITE_KEY || '6LfWqsIrAAAAAJAj86oKq2uD7ELdYYZNsQeA2v1z' ? '✅ Configurado' : '❌ Não configurado'}
+            </li>
+            <li>
+              <strong>Site Key (atual):</strong> <code>{process.env.REACT_APP_RECAPTCHA_SITE_KEY || '6LfWqsIrAAAAAJAj86oKq2uD7ELdYYZNsQeA2v1z'}</code>
             </li>
             <li>
               <strong>Debug Token:</strong> {process.env.REACT_APP_APP_CHECK_DEBUG_TOKEN ? '✅ Configurado' : '⚠️ Não configurado (opcional)'}

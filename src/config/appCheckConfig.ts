@@ -8,8 +8,11 @@ export const APP_CHECK_CONFIG = {
   // Token de debug para desenvolvimento (apenas para localhost)
   DEBUG_TOKEN: process.env.REACT_APP_APP_CHECK_DEBUG_TOKEN || 'debug-token',
   
-  // Site key do reCAPTCHA v3
-  RECAPTCHA_SITE_KEY: process.env.REACT_APP_RECAPTCHA_SITE_KEY,
+  // Site key do reCAPTCHA v3 - Configurado diretamente
+  RECAPTCHA_SITE_KEY: process.env.REACT_APP_RECAPTCHA_SITE_KEY || '6LfWqsIrAAAAAJAj86oKq2uD7ELdYYZNsQeA2v1z',
+  
+  // Chave secreta do reCAPTCHA (para referência)
+  RECAPTCHA_SECRET_KEY: '6LfWqsIrAAAAAE_81IOXglswLlqx5m63fdqAc97H',
   
   // Configurações de ambiente
   IS_DEVELOPMENT: process.env.NODE_ENV === 'development',

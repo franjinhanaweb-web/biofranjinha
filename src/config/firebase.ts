@@ -19,16 +19,16 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 // Inicializar App Check com reCAPTCHA
-if (validateAppCheckConfig() && APP_CHECK_CONFIG.RECAPTCHA_SITE_KEY) {
+console.log('Inicializando App Check...');
+console.log('Site Key:', APP_CHECK_CONFIG.RECAPTCHA_SITE_KEY);
+
+if (APP_CHECK_CONFIG.RECAPTCHA_SITE_KEY) {
   const envConfig = getEnvironmentConfig();
   
-  // Escolher provider baseado no tipo de reCAPTCHA
-  const recaptchaType = process.env.REACT_APP_RECAPTCHA_TYPE || 'v3';
-  const provider = recaptchaType === 'enterprise' 
-    ? new ReCaptchaEnterpriseProvider(APP_CHECK_CONFIG.RECAPTCHA_SITE_KEY)
-    : new ReCaptchaV3Provider(APP_CHECK_CONFIG.RECAPTCHA_SITE_KEY);
+  // Usar reCAPTCHA v3 por padrão
+  const provider = new ReCaptchaV3Provider(APP_CHECK_CONFIG.RECAPTCHA_SITE_KEY);
   
-  const appCheckConfig: any = {
+  const appCheckConfig = {
     provider: provider,
     isTokenAutoRefreshEnabled: envConfig.autoRefresh
   };
@@ -37,18 +37,20 @@ if (validateAppCheckConfig() && APP_CHECK_CONFIG.RECAPTCHA_SITE_KEY) {
   if (envConfig.enableDebugToken && APP_CHECK_CONFIG.DEBUG_TOKEN) {
     // @ts-ignore - Token de debug para desenvolvimento
     window.FIREBASE_APPCHECK_DEBUG_TOKEN = APP_CHECK_CONFIG.DEBUG_TOKEN;
+    console.log('Token de debug configurado:', APP_CHECK_CONFIG.DEBUG_TOKEN);
   }
   
   try {
     const appCheck = initializeAppCheck(app, appCheckConfig);
-    console.log('App Check inicializado com sucesso');
+    console.log('✅ App Check inicializado com sucesso!');
+    console.log('Provider:', provider);
     // Exportar a instância do App Check para uso em outros componentes
     (window as any).appCheck = appCheck;
   } catch (error) {
-    console.error('Erro ao inicializar App Check:', error);
+    console.error('❌ Erro ao inicializar App Check:', error);
   }
 } else {
-  console.warn('App Check não foi inicializado - configuração inválida');
+  console.warn('⚠️ App Check não foi inicializado - RECAPTCHA_SITE_KEY não encontrado');
 }
 
 // Inicializar serviços
