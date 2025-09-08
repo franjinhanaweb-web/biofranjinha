@@ -12,8 +12,8 @@ export class AppCheckService {
   private constructor() {
     try {
       // O App Check é inicializado automaticamente no firebase.ts
-      // Aqui apenas verificamos se está disponível
-      this.appCheck = app; // Usar a instância do app diretamente
+      // Aqui verificamos se está disponível na window
+      this.appCheck = (window as any).appCheck;
     } catch (error) {
       console.warn('App Check não está configurado:', error);
     }
@@ -33,7 +33,9 @@ export class AppCheckService {
    * Verifica se o App Check está disponível
    */
   public isAvailable(): boolean {
-    return !!this.appCheck;
+    // Verificar se o App Check está disponível na window
+    const appCheck = (window as any).appCheck;
+    return !!appCheck && typeof appCheck.getToken === 'function';
   }
 
   /**
@@ -41,13 +43,15 @@ export class AppCheckService {
    * Este token deve ser enviado com as requisições para o backend
    */
   public async getToken(): Promise<string | null> {
-    if (!this.appCheck) {
+    const appCheck = (window as any).appCheck;
+    
+    if (!appCheck) {
       console.warn('App Check não está configurado');
       return null;
     }
 
     try {
-      const { token } = await getToken(this.appCheck);
+      const { token } = await getToken(appCheck);
       return token;
     } catch (error) {
       console.error('Erro ao obter token do App Check:', error);
@@ -59,13 +63,15 @@ export class AppCheckService {
    * Obtém um token do App Check com refresh automático
    */
   public async getTokenWithRefresh(): Promise<string | null> {
-    if (!this.appCheck) {
+    const appCheck = (window as any).appCheck;
+    
+    if (!appCheck) {
       console.warn('App Check não está configurado');
       return null;
     }
 
     try {
-      const { token } = await getToken(this.appCheck, true);
+      const { token } = await getToken(appCheck, true);
       return token;
     } catch (error) {
       console.error('Erro ao obter token do App Check:', error);
