@@ -279,6 +279,12 @@ const AppCheckTest: React.FC = () => {
               <strong>Debug Token:</strong> {process.env.REACT_APP_APP_CHECK_DEBUG_TOKEN ? '✅ Configurado' : '⚠️ Não configurado (opcional)'}
             </li>
           </ul>
+          
+          <Alert variant="warning" className="mt-3">
+            <strong>⚠️ Problema detectado:</strong> O App Check não está conseguindo gerar tokens.
+            <br />
+            <strong>Solução:</strong> Configure o App Check no Firebase Console seguindo o guia em <code>FIREBASE_APP_CHECK_SETUP.md</code>
+          </Alert>
         </div>
       </Card.Body>
     </Card>

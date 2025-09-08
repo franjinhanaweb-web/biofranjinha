@@ -28,6 +28,11 @@ service cloud.firestore {
         && isAppCheckValid();
     }
     
+    // Coleção de teste do App Check (permissiva para testes)
+    match /test-appcheck/{document} {
+      allow read, write: if isAppCheckValid();
+    }
+    
     // Bloquear todas as outras coleções
     match /{document=**} {
       allow read, write: if false;
