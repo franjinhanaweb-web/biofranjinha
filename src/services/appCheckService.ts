@@ -34,6 +34,9 @@ export class AppCheckService {
   public isAvailable(): boolean {
     // Verificar se o App Check está disponível na window
     const appCheck = (window as any).appCheck;
+    console.log('Verificando App Check:', appCheck);
+    console.log('Tipo:', typeof appCheck);
+    console.log('Tem getToken?', appCheck && typeof appCheck.getToken === 'function');
     return !!appCheck && typeof appCheck.getToken === 'function';
   }
 
