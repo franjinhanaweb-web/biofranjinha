@@ -38,14 +38,23 @@ export class AppCheckService {
     console.log('Tipo:', typeof appCheck);
     console.log('Tem getToken?', appCheck && typeof appCheck.getToken === 'function');
     
-    // Se o App Check existe mas não tem getToken, ainda consideramos disponível
-    // pois pode estar funcionando de outras formas
+    // Verificar se é uma instância válida do App Check
     if (appCheck && typeof appCheck === 'object') {
-      console.log('App Check detectado, mas sem método getToken - pode precisar configurar no Firebase Console');
-      return true; // Considerar disponível mesmo sem getToken
+      console.log('Propriedades do App Check:', Object.keys(appCheck));
+      console.log('Métodos disponíveis:', Object.getOwnPropertyNames(Object.getPrototypeOf(appCheck)));
+      
+      // Verificar se tem getToken
+      if (typeof appCheck.getToken === 'function') {
+        console.log('✅ App Check está funcionando corretamente');
+        return true;
+      } else {
+        console.warn('⚠️ App Check detectado, mas sem método getToken - pode precisar configurar no Firebase Console');
+        return false; // Não considerar disponível sem getToken
+      }
     }
     
-    return !!appCheck && typeof appCheck.getToken === 'function';
+    console.warn('❌ App Check não está configurado');
+    return false;
   }
 
   /**
@@ -57,6 +66,12 @@ export class AppCheckService {
     
     if (!appCheck) {
       console.warn('App Check não está configurado');
+      return null;
+    }
+
+    // Verificar se tem método getToken
+    if (typeof appCheck.getToken !== 'function') {
+      console.warn('App Check não tem método getToken - pode precisar aguardar propagação');
       return null;
     }
 

@@ -44,8 +44,10 @@ if (APP_CHECK_CONFIG.RECAPTCHA_SITE_KEY) {
     const appCheck = initializeAppCheck(app, appCheckConfig);
     console.log('✅ App Check inicializado com sucesso!');
     console.log('Provider:', provider);
+    console.log('App Check instance:', appCheck);
     // Exportar a instância do App Check para uso em outros componentes
     (window as any).appCheck = appCheck;
+    console.log('App Check exportado para window:', (window as any).appCheck);
   } catch (error) {
     console.error('❌ Erro ao inicializar App Check:', error);
   }
