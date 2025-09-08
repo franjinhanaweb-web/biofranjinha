@@ -42,6 +42,8 @@ if (validateAppCheckConfig() && APP_CHECK_CONFIG.RECAPTCHA_SITE_KEY) {
   try {
     const appCheck = initializeAppCheck(app, appCheckConfig);
     console.log('App Check inicializado com sucesso');
+    // Exportar a instância do App Check para uso em outros componentes
+    (window as any).appCheck = appCheck;
   } catch (error) {
     console.error('Erro ao inicializar App Check:', error);
   }
