@@ -1,8 +1,8 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
-import { initializeAppCheck, ReCaptchaV3Provider, ReCaptchaEnterpriseProvider } from 'firebase/app-check';
-import { APP_CHECK_CONFIG, validateAppCheckConfig, getEnvironmentConfig } from './appCheckConfig';
+import { initializeAppCheck, ReCaptchaV3Provider } from 'firebase/app-check';
+import { APP_CHECK_CONFIG, getEnvironmentConfig } from './appCheckConfig';
 
 // Configuração do Firebase usando variáveis de ambiente do Cloudflare
 const firebaseConfig = {
