@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { appCheckService } from '../services/appCheckService';
-import { Button, Alert, Card, Spinner } from 'react-bootstrap';
+import { Button, Alert, Card, Spinner, Row, Col } from 'react-bootstrap';
+import AppCheckTester from '../utils/appCheckTester';
 
 /**
  * Componente para testar o funcionamento do App Check
@@ -13,6 +14,8 @@ const AppCheckTest: React.FC = () => {
     message: string;
     token?: string;
   } | null>(null);
+
+  const [advancedTests, setAdvancedTests] = useState<any>(null);
 
   const testAppCheck = async () => {
     setIsLoading(true);
@@ -53,6 +56,46 @@ const AppCheckTest: React.FC = () => {
     }
   };
 
+  const testFirestoreWithAppCheck = async () => {
+    setIsLoading(true);
+    setTestResult(null);
+
+    try {
+      // Testar acesso ao Firestore com App Check
+      const { db } = await import('../config/firebase');
+      const { collection, getDocs } = await import('firebase/firestore');
+      
+      // Tentar acessar uma coleção (isso deve ser protegido pelo App Check)
+      const testCollection = collection(db, 'test-appcheck');
+      const snapshot = await getDocs(testCollection);
+      
+      setTestResult({
+        success: true,
+        message: `Firestore acessado com sucesso! Documentos encontrados: ${snapshot.size}`,
+        token: 'Firestore protegido pelo App Check'
+      });
+    } catch (error: any) {
+      if (error.code === 'app-check-token-expired' || error.code === 'app-check-token-invalid') {
+        setTestResult({
+          success: false,
+          message: '❌ App Check bloqueou acesso - Token inválido ou expirado'
+        });
+      } else if (error.code === 'permission-denied') {
+        setTestResult({
+          success: false,
+          message: '❌ App Check bloqueou acesso - Permissão negada'
+        });
+      } else {
+        setTestResult({
+          success: false,
+          message: `Erro no Firestore: ${error.message}`
+        });
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const testWithRefresh = async () => {
     setIsLoading(true);
     setTestResult(null);
@@ -82,6 +125,22 @@ const AppCheckTest: React.FC = () => {
     }
   };
 
+  const runAdvancedTests = async () => {
+    setIsLoading(true);
+    setAdvancedTests(null);
+
+    try {
+      const results = await AppCheckTester.runAllTests();
+      setAdvancedTests(results);
+    } catch (error: any) {
+      setAdvancedTests({
+        error: `Erro ao executar testes: ${error.message}`
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <Card className="mb-4">
       <Card.Header>
@@ -93,7 +152,7 @@ const AppCheckTest: React.FC = () => {
           Use apenas em desenvolvimento para verificar a configuração.
         </p>
         
-        <div className="d-flex gap-2 mb-3">
+        <div className="d-flex gap-2 mb-3 flex-wrap">
           <Button 
             variant="primary" 
             onClick={testAppCheck}
@@ -108,6 +167,22 @@ const AppCheckTest: React.FC = () => {
             disabled={isLoading}
           >
             {isLoading ? <Spinner size="sm" /> : 'Testar com Refresh'}
+          </Button>
+
+          <Button 
+            variant="warning" 
+            onClick={testFirestoreWithAppCheck}
+            disabled={isLoading}
+          >
+            {isLoading ? <Spinner size="sm" /> : 'Testar Firestore'}
+          </Button>
+
+          <Button 
+            variant="danger" 
+            onClick={runAdvancedTests}
+            disabled={isLoading}
+          >
+            {isLoading ? <Spinner size="sm" /> : 'Testes Avançados'}
           </Button>
         </div>
 
@@ -127,6 +202,65 @@ const AppCheckTest: React.FC = () => {
               </>
             )}
           </Alert>
+        )}
+
+        {advancedTests && (
+          <div className="mt-4">
+            <h6>🧪 Resultados dos Testes Avançados:</h6>
+            <Row>
+              <Col md={6}>
+                <Card className="mb-3">
+                  <Card.Header>
+                    <h6 className="mb-0">Acesso Normal</h6>
+                  </Card.Header>
+                  <Card.Body>
+                    <Alert variant={advancedTests.normalAccess?.success ? 'success' : 'danger'}>
+                      {advancedTests.normalAccess?.message}
+                    </Alert>
+                  </Card.Body>
+                </Card>
+              </Col>
+              
+              <Col md={6}>
+                <Card className="mb-3">
+                  <Card.Header>
+                    <h6 className="mb-0">Rate Limiting</h6>
+                  </Card.Header>
+                  <Card.Body>
+                    <Alert variant={advancedTests.rateLimiting?.success ? 'success' : 'warning'}>
+                      {advancedTests.rateLimiting?.message}
+                    </Alert>
+                  </Card.Body>
+                </Card>
+              </Col>
+              
+              <Col md={6}>
+                <Card className="mb-3">
+                  <Card.Header>
+                    <h6 className="mb-0">Permissão de Escrita</h6>
+                  </Card.Header>
+                  <Card.Body>
+                    <Alert variant={advancedTests.writePermission?.success ? 'success' : 'danger'}>
+                      {advancedTests.writePermission?.message}
+                    </Alert>
+                  </Card.Body>
+                </Card>
+              </Col>
+              
+              <Col md={6}>
+                <Card className="mb-3">
+                  <Card.Header>
+                    <h6 className="mb-0">Token Inválido</h6>
+                  </Card.Header>
+                  <Card.Body>
+                    <Alert variant={advancedTests.invalidToken?.success ? 'success' : 'danger'}>
+                      {advancedTests.invalidToken?.message}
+                    </Alert>
+                  </Card.Body>
+                </Card>
+              </Col>
+            </Row>
+          </div>
         )}
 
         <div className="mt-3">
