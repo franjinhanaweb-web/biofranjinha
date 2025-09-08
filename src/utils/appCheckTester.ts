@@ -100,11 +100,13 @@ export class AppCheckTester {
    * Teste 4: Simular token inválido
    */
   static async testInvalidToken() {
+    let originalAppCheck: any = null;
+    
     try {
       console.log('🧪 Testando com token inválido...');
       
       // Temporariamente desabilitar App Check
-      const originalAppCheck = (window as any).appCheck;
+      originalAppCheck = (window as any).appCheck;
       (window as any).appCheck = null;
       
       const testCollection = collection(db, 'test-appcheck');
