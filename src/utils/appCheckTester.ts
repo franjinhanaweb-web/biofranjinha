@@ -4,7 +4,7 @@
  */
 
 import { db } from '../config/firebase';
-import { collection, getDocs, addDoc, deleteDoc, doc } from 'firebase/firestore';
+import { collection, getDocs, addDoc, deleteDoc } from 'firebase/firestore';
 
 export class AppCheckTester {
   /**

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { appCheckService } from '../services/appCheckService';
 import { Button, Alert, Card, Spinner, Row, Col } from 'react-bootstrap';
 import AppCheckTester from '../utils/appCheckTester';
