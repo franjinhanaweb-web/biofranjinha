@@ -1,5 +1,4 @@
 import { getToken } from 'firebase/app-check';
-import app from '../config/firebase';
 
 /**
  * Serviço para gerenciar o Firebase App Check
