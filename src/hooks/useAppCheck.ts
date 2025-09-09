@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getToken } from 'firebase/app-check';
+import { getToken, getAppCheck } from 'firebase/app-check';
 
 interface AppCheckState {
   isReady: boolean;
@@ -38,7 +38,6 @@ export const useAppCheck = (): AppCheckState => {
 
     try {
       const { getApp } = await import('firebase/app');
-      const { getAppCheck } = await import('firebase/app-check');
       
       const app = getApp();
       const appCheck = getAppCheck(app);
