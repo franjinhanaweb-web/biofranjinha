@@ -17,26 +17,22 @@ const firebaseConfig = {
 // Inicializar Firebase
 const app = initializeApp(firebaseConfig);
 
-// Inicializar App Check com reCAPTCHA v3
+// Inicializar App Check com reCAPTCHA v3 PRIMEIRO
 let appCheck: any = null;
 if (process.env.NODE_ENV === 'production') {
   appCheck = initializeAppCheck(app, {
     provider: new ReCaptchaV3Provider(process.env.REACT_APP_RECAPTCHA_SITE_KEY!),
     isTokenAutoRefreshEnabled: true
   });
-}
-
-// Inicializar serviços
-export const auth = getAuth(app);
-export const db = getFirestore(app);
-export { appCheck };
-
-// Configurar App Check para ser usado automaticamente
-if (appCheck) {
-  // O App Check será usado automaticamente pelo Firestore
-  console.log('App Check configurado e ativo');
+  
+  console.log('App Check configurado e ativo para produção');
 } else {
   console.log('App Check desabilitado (desenvolvimento)');
 }
+
+// Inicializar serviços APÓS o App Check
+export const auth = getAuth(app);
+export const db = getFirestore(app);
+export { appCheck };
 
 export default app;
