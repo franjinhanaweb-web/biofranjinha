@@ -30,13 +30,25 @@ const AppCheckProtectionTest: React.FC = () => {
     addTestResult('Firestore Read', false, 'Iniciando teste de leitura...');
     
     try {
+      // Primeiro, obter o token do App Check
+      const token = await getToken();
+      if (!token) {
+        addTestResult('Firestore Read', false, 
+          `❌ Erro: Token do App Check não disponível`,
+          { error: 'No App Check token' }
+        );
+        return;
+      }
+      
+      addTestResult('Firestore Read', false, 'Token obtido, fazendo leitura...');
+      
       const testCollection = collection(db, 'appcheck_test');
       const q = query(testCollection, limit(1));
       const snapshot = await getDocs(q);
       
       addTestResult('Firestore Read', true, 
         `✅ Leitura bem-sucedida! ${snapshot.docs.length} documentos encontrados.`,
-        { docsCount: snapshot.docs.length }
+        { docsCount: snapshot.docs.length, tokenUsed: true }
       );
     } catch (error: any) {
       addTestResult('Firestore Read', false, 
@@ -54,6 +66,18 @@ const AppCheckProtectionTest: React.FC = () => {
     addTestResult('Firestore Write', false, 'Iniciando teste de escrita...');
     
     try {
+      // Primeiro, obter o token do App Check
+      const token = await getToken();
+      if (!token) {
+        addTestResult('Firestore Write', false, 
+          `❌ Erro: Token do App Check não disponível`,
+          { error: 'No App Check token' }
+        );
+        return;
+      }
+      
+      addTestResult('Firestore Write', false, 'Token obtido, fazendo escrita...');
+      
       const testCollection = collection(db, 'appcheck_test');
       const docRef = await addDoc(testCollection, {
         test: 'App Check Protection Test',
@@ -64,7 +88,7 @@ const AppCheckProtectionTest: React.FC = () => {
       
       addTestResult('Firestore Write', true, 
         `✅ Escrita bem-sucedida! Documento criado: ${docRef.id}`,
-        { docId: docRef.id }
+        { docId: docRef.id, tokenUsed: true }
       );
     } catch (error: any) {
       addTestResult('Firestore Write', false, 
