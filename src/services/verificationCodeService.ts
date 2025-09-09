@@ -30,46 +30,76 @@ export const validateVerificationCode = async (code: string): Promise<CodeValida
       };
     }
 
-    // Buscar o código na coleção Codes_biosite
-    const codesRef = collection(db, 'Codes_biosite');
-    const q = query(codesRef, where('code', '==', code));
-    const querySnapshot = await getDocs(q);
+    // Tentar buscar o código na coleção Codes_biosite
+    try {
+      const codesRef = collection(db, 'Codes_biosite');
+      const q = query(codesRef, where('code', '==', code));
+      const querySnapshot = await getDocs(q);
 
-    if (querySnapshot.empty) {
+      if (querySnapshot.empty) {
+        return {
+          isValid: false,
+          isUsed: false,
+          message: 'Código de verificação não encontrado no banco de dados'
+        };
+      }
+
+      const codeDoc = querySnapshot.docs[0];
+      const codeData = { id: codeDoc.id, ...codeDoc.data() } as VerificationCode;
+
+      // Converter isUsed para boolean (caso seja string)
+      const isUsedBoolean = codeData.isUsed === true || codeData.isUsed === 'true';
+
+      if (isUsedBoolean) {
+        return {
+          isValid: false,
+          isUsed: true,
+          message: 'Este código já foi utilizado',
+          codeData
+        };
+      }
+
+      return {
+        isValid: true,
+        isUsed: false,
+        message: 'Código válido e pronto para uso',
+        codeData
+      };
+
+    } catch (dbError: any) {
+      console.error('Erro ao acessar banco de dados:', dbError);
+      
+      // Se for erro de permissão ou configuração, retornar erro específico
+      if (dbError.code === 'permission-denied') {
+        return {
+          isValid: false,
+          isUsed: false,
+          message: 'Erro de permissão. Verifique as configurações do banco de dados.'
+        };
+      }
+      
+      if (dbError.code === 'invalid-argument') {
+        return {
+          isValid: false,
+          isUsed: false,
+          message: 'Erro de configuração do banco de dados. Verifique se o banco "biodefranja" existe e as regras foram aplicadas.'
+        };
+      }
+
+      // Para outros erros, retornar mensagem genérica
       return {
         isValid: false,
         isUsed: false,
-        message: 'Código de verificação não encontrado no banco de dados'
+        message: 'Erro ao conectar com o banco de dados. Tente novamente.'
       };
     }
 
-    const codeDoc = querySnapshot.docs[0];
-    const codeData = { id: codeDoc.id, ...codeDoc.data() } as VerificationCode;
-
-    // Converter isUsed para boolean (caso seja string)
-    const isUsedBoolean = codeData.isUsed === true || codeData.isUsed === 'true';
-
-    if (isUsedBoolean) {
-      return {
-        isValid: false,
-        isUsed: true,
-        message: 'Este código já foi utilizado',
-        codeData
-      };
-    }
-
-    return {
-      isValid: true,
-      isUsed: false,
-      message: 'Código válido e pronto para uso',
-      codeData
-    };
-
-  } catch (error) {
+  } catch (error: any) {
+    console.error('Erro geral na validação:', error);
     return {
       isValid: false,
       isUsed: false,
-      message: 'Erro ao validar código. Tente novamente.'
+      message: 'Erro inesperado ao validar código. Tente novamente.'
     };
   }
 };
