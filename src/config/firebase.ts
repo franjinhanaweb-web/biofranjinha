@@ -33,8 +33,8 @@ if (process.env.NODE_ENV === 'production') {
     console.log('App Check instance:', appCheck);
     
     // Verificar se o App Check está funcionando
-    appCheck.getToken().then((token: any) => {
-      console.log('App Check token obtido na inicialização:', token.token ? 'Sim' : 'Não');
+    appCheck.getToken().then((tokenResponse: any) => {
+      console.log('App Check token obtido na inicialização:', tokenResponse.token ? 'Sim' : 'Não');
     }).catch((error: any) => {
       console.error('Erro ao obter token na inicialização:', error);
     });
