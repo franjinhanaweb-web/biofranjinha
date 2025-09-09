@@ -143,6 +143,62 @@ firebase deploy --only storage
    - Em produção: Deve funcionar com App Check
    - Em desenvolvimento: Deve funcionar normalmente
 
+### 👀 Como Visualizar o App Check Funcionando:
+
+#### **1. Componente de Status (Recomendado):**
+Adicione o componente `AppCheckStatus` em qualquer página para ver o App Check em tempo real:
+
+```tsx
+import AppCheckStatus from './components/AppCheckStatus';
+
+function App() {
+  return (
+    <div>
+      <AppCheckStatus />
+      {/* Seu conteúdo aqui */}
+    </div>
+  );
+}
+```
+
+**O que você verá:**
+- ✅ Status do App Check (Pronto/Carregando)
+- 🌍 Ambiente (Desenvolvimento/Produção)
+- 🔑 Botão para obter token do App Check
+- 📋 Logs em tempo real
+- ℹ️ Informações sobre o funcionamento
+
+#### **2. Console do Navegador:**
+Abra o DevTools (F12) e verifique:
+
+**Em Desenvolvimento:**
+```
+App Check não está ativo em desenvolvimento
+```
+
+**Em Produção:**
+```
+App Check initialized
+Token obtido com sucesso!
+```
+
+#### **3. Console do Firebase:**
+1. Acesse [Console Firebase](https://console.firebase.google.com)
+2. Vá em **App Check** → **Métricas**
+3. Veja estatísticas de uso, tokens válidos/inválidos
+4. Monitore tentativas de acesso bloqueadas
+
+#### **4. Teste de Operações:**
+- **Firestore:** Tente ler/escrever dados
+- **Storage:** Tente fazer upload/download
+- **Em produção:** Operações funcionam com App Check
+- **Em desenvolvimento:** Operações funcionam normalmente
+
+#### **5. Verificação de Proteção:**
+- **Bots:** Serão bloqueados automaticamente
+- **Scripts maliciosos:** Não conseguirão acessar sem App Check
+- **Usuários legítimos:** Funcionam normalmente
+
 ### 📊 Monitoramento:
 
 Acesse o console do Firebase > App Check para ver:
