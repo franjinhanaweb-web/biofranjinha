@@ -5,6 +5,9 @@ export interface VerificationCode {
   id: string;
   code: string;
   isUsed: boolean | string; // Pode ser boolean ou string (do Firebase)
+  usedAt?: any; // Timestamp de quando foi usado
+  usedBy?: string; // ID do usuário que usou o código
+  createdAt?: any; // Timestamp de criação
 }
 
 export interface CodeValidationResult {
@@ -27,8 +30,8 @@ export const validateVerificationCode = async (code: string): Promise<CodeValida
       };
     }
 
-    // Buscar o código na coleção users_codes
-    const codesRef = collection(db, 'users_codes');
+    // Buscar o código na coleção Codes_bioSite
+    const codesRef = collection(db, 'Codes_bioSite');
     const q = query(codesRef, where('code', '==', code));
     const querySnapshot = await getDocs(q);
 
@@ -74,9 +77,11 @@ export const validateVerificationCode = async (code: string): Promise<CodeValida
 // Marcar código como usado
 export const markCodeAsUsed = async (codeId: string, userId: string): Promise<void> => {
   try {
-    const codeRef = doc(db, 'users_codes', codeId);
+    const codeRef = doc(db, 'Codes_bioSite', codeId);
     await updateDoc(codeRef, {
-      isUsed: true
+      isUsed: true,
+      usedAt: new Date(),
+      usedBy: userId
     });
   } catch (error) {
     throw new Error('Erro ao processar código de verificação');
