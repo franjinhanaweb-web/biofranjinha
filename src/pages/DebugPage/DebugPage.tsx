@@ -73,7 +73,7 @@ const DebugPage: React.FC = () => {
         const testDb = getFirestore(testApp, 'biodefranja');
         addLog('info', 'Banco biodefranja configurado');
         
-        const codesRef = collection(testDb, 'Codes_bioSite');
+        const codesRef = collection(testDb, 'Codes_biosite');
         const snapshot = await getDocs(codesRef);
         addLog('success', `Conexão OK! Encontrados ${snapshot.size} códigos na coleção biodefranja`);
       } catch (dbError: any) {
@@ -83,7 +83,7 @@ const DebugPage: React.FC = () => {
         // Tentar com banco padrão
         addLog('info', 'Tentando com banco padrão...');
         try {
-          const codesRef = collection(db, 'Codes_bioSite');
+          const codesRef = collection(db, 'Codes_biosite');
           const snapshot = await getDocs(codesRef);
           addLog('success', `Conexão OK com banco padrão! Encontrados ${snapshot.size} códigos`);
         } catch (defaultError: any) {
@@ -101,7 +101,7 @@ const DebugPage: React.FC = () => {
     try {
       setLoading(true);
       addLog('info', 'Buscando todos os códigos...');
-      const codesRef = collection(db, 'Codes_bioSite');
+      const codesRef = collection(db, 'Codes_biosite');
       const q = query(codesRef, orderBy('createdAt', 'desc'));
       const snapshot = await getDocs(q);
       
@@ -149,7 +149,7 @@ const DebugPage: React.FC = () => {
     try {
       setLoading(true);
       addLog('info', 'Criando código de teste...');
-      const codesRef = collection(db, 'Codes_bioSite');
+      const codesRef = collection(db, 'Codes_biosite');
       const newCode = {
         code: `test-${Date.now()}`,
         isUsed: false,
@@ -171,7 +171,7 @@ const DebugPage: React.FC = () => {
     try {
       setLoading(true);
       addLog('info', `Buscando código específico: ${testCode}`);
-      const codesRef = collection(db, 'Codes_bioSite');
+      const codesRef = collection(db, 'Codes_biosite');
       const q = query(codesRef, where('code', '==', testCode));
       const snapshot = await getDocs(q);
       

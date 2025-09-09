@@ -61,7 +61,7 @@ export const createUser = async (
     
     // Salvar dados adicionais no Firestore
     try {
-      await setDoc(doc(db, 'users_site', user.uid), userData);
+      await setDoc(doc(db, 'Usuarios_biosite', user.uid), userData);
     } catch (firestoreError: any) {
       // Não falhar o cadastro se o Firestore der erro
       // O usuário já foi criado no Auth
@@ -92,7 +92,7 @@ export const signInUser = async (
     
     // Atualizar último login
     try {
-      await setDoc(doc(db, 'users_site', user.uid), {
+      await setDoc(doc(db, 'Usuarios_biosite', user.uid), {
         ...userData,
         lastLoginAt: new Date()
       }, { merge: true });
@@ -124,7 +124,7 @@ export const getCurrentUser = (): User | null => {
 export const ensureUserInFirestore = async (user: User): Promise<UserData> => {
   try {
     // Verificar se usuário já existe no Firestore
-    const userDoc = await getDoc(doc(db, 'users_site', user.uid));
+    const userDoc = await getDoc(doc(db, 'Usuarios_biosite', user.uid));
     
     if (userDoc.exists()) {
       return userDoc.data() as UserData;
@@ -142,7 +142,7 @@ export const ensureUserInFirestore = async (user: User): Promise<UserData> => {
         }
       };
       
-      await setDoc(doc(db, 'users_site', user.uid), userData);
+      await setDoc(doc(db, 'Usuarios_biosite', user.uid), userData);
       return userData;
     }
   } catch (error: any) {

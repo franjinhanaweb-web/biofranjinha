@@ -30,8 +30,8 @@ export const validateVerificationCode = async (code: string): Promise<CodeValida
       };
     }
 
-    // Buscar o código na coleção Codes_bioSite
-    const codesRef = collection(db, 'Codes_bioSite');
+    // Buscar o código na coleção Codes_biosite
+    const codesRef = collection(db, 'Codes_biosite');
     const q = query(codesRef, where('code', '==', code));
     const querySnapshot = await getDocs(q);
 
@@ -77,7 +77,7 @@ export const validateVerificationCode = async (code: string): Promise<CodeValida
 // Marcar código como usado
 export const markCodeAsUsed = async (codeId: string, userId: string): Promise<void> => {
   try {
-    const codeRef = doc(db, 'Codes_bioSite', codeId);
+    const codeRef = doc(db, 'Codes_biosite', codeId);
     await updateDoc(codeRef, {
       isUsed: true,
       usedAt: new Date(),
