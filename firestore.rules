@@ -80,6 +80,12 @@ service cloud.firestore {
       allow read, write: if request.auth != null;
     }
     
+    // ===== REGRAS PARA TESTES (TEMPORÁRIO) =====
+    match /test_collection/{document=**} {
+      // Permitir leitura e escrita para testes com App Check
+      allow read, write: if request.app_check_token != null;
+    }
+    
     // ===== REGRAS PADRÃO =====
     // Negar acesso a todas as outras coleções por padrão
     match /{document=**} {
