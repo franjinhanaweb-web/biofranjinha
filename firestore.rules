@@ -8,14 +8,17 @@ service cloud.firestore {
       // Permitir leitura para todos (validação de códigos)
       allow read: if true;
       
+      // Permitir criação temporariamente para debug
+      allow create: if true;
+      
       // Permitir atualização apenas para marcar como usado
       allow update: if request.resource.data.keys().hasAll(['code', 'isUsed'])
         && request.resource.data.code == resource.data.code
         && (resource.data.isUsed == false || resource.data.isUsed == 'false')
         && (request.resource.data.isUsed == true || request.resource.data.isUsed == 'true');
       
-      // Não permitir criação ou deleção
-      allow create, delete: if false;
+      // Não permitir deleção
+      allow delete: if false;
     }
     
     // ===== REGRAS PARA USUÁRIOS =====
