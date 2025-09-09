@@ -49,7 +49,8 @@ if (process.env.REACT_APP_RECAPTCHA_SITE_KEY) {
       console.log('🔍 Verificando token do App Check...');
       try {
         const { getToken } = await import('firebase/app-check');
-        const token = await getToken(app);
+        const appCheck = await import('firebase/app-check');
+        const token = await getToken(appCheck.getAppCheck(app));
         console.log('✅ Token do App Check gerado:', token.token.substring(0, 20) + '...');
       } catch (error) {
         console.error('❌ Erro ao gerar token do App Check:', error);
