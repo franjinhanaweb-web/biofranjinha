@@ -57,8 +57,9 @@ const DebugPage: React.FC = () => {
       
       // Testar inicialização do Firebase
       addLog('info', 'Testando inicialização do Firebase...');
+      let testApp;
       try {
-        const testApp = initializeApp(config);
+        testApp = initializeApp(config);
         addLog('success', 'Firebase inicializado com sucesso');
       } catch (initError: any) {
         addLog('error', `Erro na inicialização: ${initError.message}`);
