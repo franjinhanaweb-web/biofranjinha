@@ -4,7 +4,7 @@ import { getFirestore } from 'firebase/firestore';
 import {
   initializeAppCheck,
   ReCaptchaV3Provider,
-  getToken as getAppCheckToken, // só se precisar manualmente
+  getToken, // só se precisar manualmente
 } from 'firebase/app-check';
 
 // Configuração do Firebase usando variáveis de ambiente do Cloudflare
@@ -33,6 +33,6 @@ export const db = getFirestore(app);
 export { appCheck };
 
 // (opcional) para ler o token manualmente:
-// const { token } = await getAppCheckToken(appCheck);
+// const { token } = await getToken(appCheck);
 
 export default app;
