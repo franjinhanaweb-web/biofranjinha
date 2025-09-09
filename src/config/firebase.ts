@@ -1,7 +1,7 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
-import { initializeAppCheck, ReCaptchaV3Provider } from 'firebase/app-check';
+import { initializeAppCheck, ReCaptchaEnterpriseProvider } from 'firebase/app-check';
 
 // Configuração do Firebase usando variáveis de ambiente do Cloudflare
 const firebaseConfig = {
@@ -33,6 +33,8 @@ if (isDevelopment || isProduction) {
     const siteKey = process.env.REACT_APP_RECAPTCHA_SITE_KEY;
     console.log('- Site Key (parcial):', siteKey.substring(0, 10) + '...');
     console.log('- Site Key (tamanho):', siteKey.length, 'caracteres');
+    console.log('- Site Key (formato):', siteKey.startsWith('6L') ? '✅ Válido' : '❌ Inválido');
+    console.log('- Site Key (completa):', siteKey); // Temporário para debug
   }
 }
 
@@ -49,13 +51,13 @@ if (!(window as any).__FIREBASE_APP_CHECK_INITIALIZED) {
       }
       
       appCheck = initializeAppCheck(app, {
-        provider: new ReCaptchaV3Provider(siteKey),
+        provider: new ReCaptchaEnterpriseProvider(siteKey),
         isTokenAutoRefreshEnabled: true
       });
       
       // Marcar como inicializado
       (window as any).__FIREBASE_APP_CHECK_INITIALIZED = true;
-      console.log('✅ App Check configurado com reCAPTCHA v3');
+      console.log('✅ App Check configurado com reCAPTCHA Enterprise');
       
     } catch (error) {
       console.error('❌ Erro ao configurar App Check:', error);

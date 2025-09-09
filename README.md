@@ -70,7 +70,7 @@ A pasta `build` será criada com os arquivos estáticos prontos para deploy.
 - `REACT_APP_FIREBASE_APP_ID`
 - `REACT_APP_FIREBASE_MEASUREMENT_ID`
 
-#### reCAPTCHA v3 (Obrigatória para App Check)
+#### reCAPTCHA Enterprise (Obrigatória para App Check)
 - `REACT_APP_RECAPTCHA_SITE_KEY`
 
 #### Como configurar no Cloudflare Pages:
@@ -79,17 +79,25 @@ A pasta `build` será criada com os arquivos estáticos prontos para deploy.
 3. Vá em **Settings** → **Environment Variables**
 4. Adicione cada variável:
    - **Name**: `REACT_APP_RECAPTCHA_SITE_KEY`
-   - **Value**: Sua Site Key do reCAPTCHA v3
+   - **Value**: Sua Site Key do reCAPTCHA Enterprise
    - **Environment**: Production (e Preview se necessário)
 5. **Save** e faça um novo deploy
 
-#### Como obter a Site Key do reCAPTCHA v3:
-1. Acesse [Google reCAPTCHA Admin](https://www.google.com/recaptcha/admin)
-2. Crie um novo site ou edite existente
-3. Selecione **reCAPTCHA v3**
-4. Adicione seu domínio (ex: `seudominio.com`)
-5. Copie a **Site Key** (não a Secret Key)
-6. Cole no Cloudflare Pages como `REACT_APP_RECAPTCHA_SITE_KEY`
+#### Como obter a Site Key do reCAPTCHA Enterprise:
+1. **Ative reCAPTCHA Enterprise API:**
+   - Acesse [Google Cloud Console](https://console.cloud.google.com)
+   - Vá em **APIs & Services** → **Library**
+   - Procure por "reCAPTCHA Enterprise API" e ative
+2. **Crie uma chave:**
+   - Vá em **APIs & Services** → **Credentials**
+   - Clique em **Create Credentials** → **API Key**
+   - Copie a **API Key** gerada
+3. **Configure no Firebase:**
+   - Acesse [Firebase Console](https://console.firebase.google.com)
+   - Vá em **Project Settings** → **App Check**
+   - Clique em **Manage reCAPTCHA Enterprise keys**
+   - Adicione sua **API Key** do Google Cloud
+4. **Cole no Cloudflare Pages** como `REACT_APP_RECAPTCHA_SITE_KEY`
 
 ### Outras Plataformas
 
