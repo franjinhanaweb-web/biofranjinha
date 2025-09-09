@@ -152,23 +152,27 @@ const AppCheckProtectionTest: React.FC = () => {
     addTestResult('App Check Token', false, 'Verificando token do App Check...');
     
     try {
+      // Verificar se estamos em produção
+      addTestResult('App Check Token', false, `Ambiente: ${process.env.NODE_ENV}`);
+      addTestResult('App Check Token', false, `reCAPTCHA Key: ${process.env.REACT_APP_RECAPTCHA_SITE_KEY ? 'Configurada' : 'Não configurada'}`);
+      
       const token = await getToken();
       
       if (token) {
         addTestResult('App Check Token', true, 
           `✅ Token obtido com sucesso! (${token.substring(0, 50)}...)`,
-          { tokenLength: token.length, hasToken: true }
+          { tokenLength: token.length, hasToken: true, environment: process.env.NODE_ENV }
         );
       } else {
         addTestResult('App Check Token', false, 
           `⚠️ Token não obtido (desenvolvimento ou erro)`,
-          { hasToken: false }
+          { hasToken: false, environment: process.env.NODE_ENV }
         );
       }
     } catch (error: any) {
       addTestResult('App Check Token', false, 
         `❌ Erro ao obter token: ${error.message}`,
-        { error: error.message }
+        { error: error.message, environment: process.env.NODE_ENV }
       );
     } finally {
       setIsLoading(false);

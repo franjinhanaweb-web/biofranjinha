@@ -31,4 +31,12 @@ export const auth = getAuth(app);
 export const db = getFirestore(app);
 export { appCheck };
 
+// Configurar App Check para ser usado automaticamente
+if (appCheck) {
+  // O App Check será usado automaticamente pelo Firestore
+  console.log('App Check configurado e ativo');
+} else {
+  console.log('App Check desabilitado (desenvolvimento)');
+}
+
 export default app;
