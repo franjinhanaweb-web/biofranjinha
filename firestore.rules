@@ -2,35 +2,22 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Função para verificar App Check
-    function isAppCheckValid() {
-      return request.appCheck != null && request.appCheck.valid == true;
-    }
-    
     // Regras para usuários do site
     match /users_site/{userId} {
       // Apenas o próprio usuário pode ler/escrever seus dados
-      // + validação do App Check para maior segurança
       allow read, write: if request.auth != null 
         && request.auth.uid == userId
-        && request.auth.token.email_verified == true
-        && isAppCheckValid();
+        && request.auth.token.email_verified == true;
     }
     
     // Regras para códigos de verificação
     match /users_codes/{codeId} {
-      // Apenas leitura para validar códigos (com App Check)
-      allow read: if request.auth != null && isAppCheckValid();
-      // Escrita apenas para marcar como usado (com validação + App Check)
+      // Apenas leitura para validar códigos
+      allow read: if request.auth != null;
+      // Escrita apenas para marcar como usado
       allow write: if request.auth != null 
         && request.auth.uid == resource.data.usedBy
-        && request.writeFields.hasOnly(['isUsed', 'usedBy', 'usedAt'])
-        && isAppCheckValid();
-    }
-    
-    // Coleção de teste do App Check (permissiva para testes)
-    match /test-appcheck/{document} {
-      allow read, write: if isAppCheckValid();
+        && request.writeFields.hasOnly(['isUsed', 'usedBy', 'usedAt']);
     }
     
     // Bloquear todas as outras coleções
