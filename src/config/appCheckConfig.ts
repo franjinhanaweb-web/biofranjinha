@@ -8,8 +8,8 @@ export const APP_CHECK_CONFIG = {
   // Token de debug para desenvolvimento (apenas para localhost)
   DEBUG_TOKEN: process.env.REACT_APP_APP_CHECK_DEBUG_TOKEN,
   
-  // Site key do reCAPTCHA v3 - Deve ser configurada no Cloudflare
-  RECAPTCHA_SITE_KEY: process.env.REACT_APP_RECAPTCHA_SITE_KEY || '6LfBzsIrAAAAACxrxB_zCU6MqbsyMUcyCACAbras',
+  // Site key do reCAPTCHA v3 - Hardcoded para garantir funcionamento
+  RECAPTCHA_SITE_KEY: '6LfBzsIrAAAAACxrxB_zCU6MqbsyMUcyCACAbras',
   
   // Chave secreta do reCAPTCHA (apenas para referência - não usar no frontend)
   RECAPTCHA_SECRET_KEY: process.env.REACT_APP_RECAPTCHA_SECRET_KEY,

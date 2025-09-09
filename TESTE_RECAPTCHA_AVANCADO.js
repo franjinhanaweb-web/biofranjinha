@@ -3,7 +3,7 @@
 
 console.log('🧪 TESTE AVANÇADO DO RECAPTCHA E APP CHECK\n');
 
-// Site Key atual
+// Site Key atual - Hardcoded
 const siteKey = '6LfBzsIrAAAAACxrxB_zCU6MqbsyMUcyCACAbras';
 
 // 1. Verificar se o reCAPTCHA está carregado

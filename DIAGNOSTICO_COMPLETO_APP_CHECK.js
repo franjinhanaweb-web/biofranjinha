@@ -15,7 +15,7 @@ if (typeof window.grecaptcha !== 'undefined') {
 
 // 2. Verificar variáveis de ambiente
 console.log('\n2️⃣ VERIFICANDO VARIÁVEIS DE AMBIENTE:');
-const siteKey = process.env.REACT_APP_RECAPTCHA_SITE_KEY || '6LfBzsIrAAAAACxrxB_zCU6MqbsyMUcyCACAbras';
+const siteKey = '6LfBzsIrAAAAACxrxB_zCU6MqbsyMUcyCACAbras';
 console.log('   - Site Key:', siteKey);
 console.log('   - Domínio atual:', window.location.hostname);
 
