@@ -30,8 +30,8 @@ const AppCheckProtectionTest: React.FC = () => {
     addTestResult('Firestore Read', false, 'Iniciando teste de leitura...');
     
     try {
-      const usersCollection = collection(db, 'users');
-      const q = query(usersCollection, limit(1));
+      const testCollection = collection(db, 'appcheck_test');
+      const q = query(testCollection, limit(1));
       const snapshot = await getDocs(q);
       
       addTestResult('Firestore Read', true, 
@@ -54,8 +54,8 @@ const AppCheckProtectionTest: React.FC = () => {
     addTestResult('Firestore Write', false, 'Iniciando teste de escrita...');
     
     try {
-      const usersCollection = collection(db, 'users');
-      const docRef = await addDoc(usersCollection, {
+      const testCollection = collection(db, 'appcheck_test');
+      const docRef = await addDoc(testCollection, {
         test: 'App Check Protection Test',
         timestamp: new Date().toISOString(),
         random: Math.random(),
@@ -86,8 +86,8 @@ const AppCheckProtectionTest: React.FC = () => {
       // Em produção, isso deve falhar devido às regras do Firestore
       // Em desenvolvimento, pode funcionar porque App Check está desabilitado
       
-      const usersCollection = collection(db, 'users');
-      const q = query(usersCollection, limit(1));
+      const testCollection = collection(db, 'appcheck_test');
+      const q = query(testCollection, limit(1));
       const snapshot = await getDocs(q);
       
       // Se chegou aqui, significa que a requisição funcionou
@@ -169,8 +169,8 @@ const AppCheckProtectionTest: React.FC = () => {
       }
 
       // 2. Testar operações com token
-      const usersCollection = collection(db, 'users');
-      const docRef = await addDoc(usersCollection, {
+      const testCollection = collection(db, 'appcheck_test');
+      const docRef = await addDoc(testCollection, {
         test: 'Full Protection Test',
         timestamp: new Date().toISOString(),
         appCheckToken: token.substring(0, 20) + '...',

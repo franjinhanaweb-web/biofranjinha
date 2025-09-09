@@ -46,7 +46,7 @@ service cloud.firestore {
     
     // ===== REGRAS PARA USUÁRIOS =====
     match /users/{userId} {
-      // Permitir leitura para verificar email duplicado durante registro
+      // Permitir leitura para verificar email duplicado durante registro (SEM App Check para compatibilidade)
       allow read: if true;
       
       // Permitir escrita apenas pelo próprio usuário com App Check
@@ -56,6 +56,12 @@ service cloud.firestore {
       
       // Permitir criação durante registro (usuário ainda não autenticado)
       allow create: if true;
+    }
+    
+    // ===== REGRAS PARA TESTES DE APP CHECK =====
+    match /appcheck_test/{document=**} {
+      // Coleção específica para testes - EXIGE App Check em todas as operações
+      allow read, write: if request.app_check_token != null;
     }
     
     // ===== REGRAS PARA CONTEÚDO DA MENTORIA =====
@@ -78,12 +84,6 @@ service cloud.firestore {
     // Regra temporária para debug (remover depois) - SEM App Check para debug
     match /users_site/{document=**} {
       allow read, write: if request.auth != null;
-    }
-    
-    // ===== REGRAS PARA TESTES (TEMPORÁRIO) =====
-    match /test_collection/{document=**} {
-      // Permitir leitura e escrita para testes com App Check
-      allow read, write: if request.app_check_token != null;
     }
     
     // ===== REGRAS PADRÃO =====
