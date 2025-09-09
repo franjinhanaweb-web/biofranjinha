@@ -20,7 +20,7 @@ O App Check foi configurado com reCAPTCHA v3 para proteger seu aplicativo contra
 3. Vá em **App Check** no menu lateral
 4. Clique em **Começar**
 5. Selecione **reCAPTCHA v3** como provedor
-6. Configure o reCAPTCHA v3 com sua chave: `6LfBzsIrAAAAACxrxB_zCU6MqbsyMUcyCACAbras`
+6. Configure o reCAPTCHA v3 com sua chave: `6Lfkl8MrAAAAAO70wyF4oGteYAbUbt1FweTGuMRN`
 7. Adicione seus domínios autorizados (ex: `seu-dominio.com`, `localhost` para desenvolvimento)
 8. Ative o App Check para Firestore e Storage
 
@@ -34,7 +34,7 @@ Como você hospeda no Cloudflare, siga estes passos:
 4. Clique em **Add variable**
 5. Configure:
    - **Variable name**: `REACT_APP_RECAPTCHA_SITE_KEY`
-   - **Value**: `6LfBzsIrAAAAACxrxB_zCU6MqbsyMUcyCACAbras`
+   - **Value**: `6Lfkl8MrAAAAAO70wyF4oGteYAbUbt1FweTGuMRN`
    - **Environment**: Production (e Preview se quiser testar)
 6. Clique em **Save**
 
@@ -42,7 +42,7 @@ Como você hospeda no Cloudflare, siga estes passos:
 
 **Para desenvolvimento local**, crie um arquivo `.env` na raiz do projeto:
 ```env
-REACT_APP_RECAPTCHA_SITE_KEY=6LfBzsIrAAAAACxrxB_zCU6MqbsyMUcyCACAbras
+REACT_APP_RECAPTCHA_SITE_KEY=6Lfkl8MrAAAAAO70wyF4oGteYAbUbt1FweTGuMRN
 ```
 
 #### 3. Uso no Código:
@@ -121,7 +121,7 @@ firebase deploy --only storage
 1. **Para desenvolvimento local:**
    ```bash
    # Crie o arquivo .env local
-   echo "REACT_APP_RECAPTCHA_SITE_KEY=6LfBzsIrAAAAACxrxB_zCU6MqbsyMUcyCACAbras" > .env
+   echo "REACT_APP_RECAPTCHA_SITE_KEY=6Lfkl8MrAAAAAO70wyF4oGteYAbUbt1FweTGuMRN" > .env
    
    # Execute localmente
    npm start
@@ -205,4 +205,4 @@ Acesse o console do Firebase > App Check para ver:
 - Estatísticas de uso
 - Tentativas de acesso bloqueadas
 - Tokens válidos/inválidos
-- Sua chave: `6LfBzsIrAAAAACxrxB_zCU6MqbsyMUcyCACAbras`
+- Sua chave: `6Lfkl8MrAAAAAO70wyF4oGteYAbUbt1FweTGuMRN`
