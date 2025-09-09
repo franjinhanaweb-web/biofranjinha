@@ -28,7 +28,7 @@ if (!validateAppCheckConfig()) {
   const envConfig = getEnvironmentConfig();
   
   // Aguardar o reCAPTCHA carregar antes de inicializar o App Check
-  const initializeAppCheckWithRetry = async () => {
+  const initializeAppCheckWithRetry = async (): Promise<void> => {
     // Verificar se reCAPTCHA está disponível
     if (typeof (window as any).grecaptcha === 'undefined') {
       console.log('Aguardando reCAPTCHA carregar...');
