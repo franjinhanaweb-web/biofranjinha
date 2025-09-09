@@ -24,7 +24,7 @@ export const db = getFirestore(app, 'biodefranja');
 // Configurar App Check (apenas em produção)
 if (process.env.NODE_ENV === 'production') {
   try {
-    const appCheck = initializeAppCheck(app, {
+    initializeAppCheck(app, {
       provider: new ReCaptchaV3Provider(process.env.REACT_APP_RECAPTCHA_SITE_KEY!),
       isTokenAutoRefreshEnabled: true
     });
