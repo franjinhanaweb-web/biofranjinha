@@ -51,7 +51,7 @@ const DebugPage: React.FC = () => {
       const codes = snapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
-      }));
+      })) as any[];
       
       setAllCodes(codes);
       addLog('success', `Encontrados ${codes.length} códigos`);
