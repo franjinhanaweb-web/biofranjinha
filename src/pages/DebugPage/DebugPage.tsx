@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Card, Button, Alert, Table, Form, InputGroup } from 'react-bootstrap';
-import { collection, getDocs, addDoc, query, where, orderBy } from 'firebase/firestore';
+import { collection, getDocs, addDoc, query, where, orderBy, getFirestore } from 'firebase/firestore';
+import { initializeApp } from 'firebase/app';
 import { db } from '../../config/firebase';
 import { validateVerificationCode } from '../../services/verificationCodeService';
 
@@ -46,16 +47,48 @@ const DebugPage: React.FC = () => {
       addLog('info', `API Key: ${config.apiKey ? 'DEFINIDA' : 'NÃO DEFINIDA'}`);
       addLog('info', `Project ID: ${config.projectId || 'NÃO DEFINIDO'}`);
       addLog('info', `Auth Domain: ${config.authDomain || 'NÃO DEFINIDO'}`);
+      addLog('info', `Storage Bucket: ${config.storageBucket || 'NÃO DEFINIDO'}`);
+      addLog('info', `App ID: ${config.appId || 'NÃO DEFINIDO'}`);
       
       if (!config.apiKey || !config.projectId) {
         addLog('error', 'Configuração do Firebase incompleta! Verifique as variáveis de ambiente.');
         return;
       }
       
+      // Testar inicialização do Firebase
+      addLog('info', 'Testando inicialização do Firebase...');
+      try {
+        const testApp = initializeApp(config);
+        addLog('success', 'Firebase inicializado com sucesso');
+      } catch (initError: any) {
+        addLog('error', `Erro na inicialização: ${initError.message}`);
+        return;
+      }
+      
       addLog('info', 'Testando conexão com Firestore...');
-      const codesRef = collection(db, 'Codes_bioSite');
-      const snapshot = await getDocs(codesRef);
-      addLog('success', `Conexão OK! Encontrados ${snapshot.size} códigos na coleção`);
+      
+      // Testar conexão com banco específico
+      try {
+        const testDb = getFirestore(testApp, 'biodefranja');
+        addLog('info', 'Banco biodefranja configurado');
+        
+        const codesRef = collection(testDb, 'Codes_bioSite');
+        const snapshot = await getDocs(codesRef);
+        addLog('success', `Conexão OK! Encontrados ${snapshot.size} códigos na coleção biodefranja`);
+      } catch (dbError: any) {
+        addLog('error', `Erro ao conectar com banco biodefranja: ${dbError.message}`);
+        addLog('error', `Código do erro: ${dbError.code || 'N/A'}`);
+        
+        // Tentar com banco padrão
+        addLog('info', 'Tentando com banco padrão...');
+        try {
+          const codesRef = collection(db, 'Codes_bioSite');
+          const snapshot = await getDocs(codesRef);
+          addLog('success', `Conexão OK com banco padrão! Encontrados ${snapshot.size} códigos`);
+        } catch (defaultError: any) {
+          addLog('error', `Erro também com banco padrão: ${defaultError.message}`);
+        }
+      }
     } catch (error: any) {
       addLog('error', `Erro de conexão: ${error.message}`);
       addLog('error', `Código do erro: ${error.code || 'N/A'}`);
