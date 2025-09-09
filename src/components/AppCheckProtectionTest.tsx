@@ -4,7 +4,7 @@ import { db } from '../config/firebase';
 import { collection, addDoc, getDocs, query, limit } from 'firebase/firestore';
 
 const AppCheckProtectionTest: React.FC = () => {
-  const { isReady, getToken } = useAppCheck();
+  const { getToken } = useAppCheck();
   const [testResults, setTestResults] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
