@@ -22,18 +22,30 @@ export const auth = getAuth(app);
 export const db = getFirestore(app, 'biodefranja');
 
 // Configurar App Check apenas se Site Key estiver disponível
+console.log('🔍 Debug App Check:');
+console.log('- NODE_ENV:', process.env.NODE_ENV);
+console.log('- REACT_APP_RECAPTCHA_SITE_KEY:', process.env.REACT_APP_RECAPTCHA_SITE_KEY ? '✅ Encontrada' : '❌ Não encontrada');
+
 if (process.env.REACT_APP_RECAPTCHA_SITE_KEY) {
   try {
+    console.log('🚀 Inicializando App Check...');
     initializeAppCheck(app, {
       provider: new ReCaptchaV3Provider(process.env.REACT_APP_RECAPTCHA_SITE_KEY),
       isTokenAutoRefreshEnabled: true
     });
-    console.log('App Check configurado com reCAPTCHA v3');
+    console.log('✅ App Check configurado com reCAPTCHA v3');
+    
+    // Verificar se o token está sendo gerado
+    setTimeout(() => {
+      console.log('🔍 Verificando token do App Check...');
+      // Aqui vamos verificar se o token está sendo gerado
+    }, 2000);
+    
   } catch (error) {
-    console.warn('Erro ao configurar App Check:', error);
+    console.error('❌ Erro ao configurar App Check:', error);
   }
 } else {
-  console.warn('App Check não configurado: REACT_APP_RECAPTCHA_SITE_KEY não encontrada');
+  console.warn('⚠️ App Check não configurado: REACT_APP_RECAPTCHA_SITE_KEY não encontrada');
 }
 
 export default app;
