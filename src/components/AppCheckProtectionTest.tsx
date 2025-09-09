@@ -30,8 +30,8 @@ const AppCheckProtectionTest: React.FC = () => {
     addTestResult('Firestore Read', false, 'Iniciando teste de leitura...');
     
     try {
-      const testCollection = collection(db, 'test_collection');
-      const q = query(testCollection, limit(1));
+      const usersCollection = collection(db, 'users');
+      const q = query(usersCollection, limit(1));
       const snapshot = await getDocs(q);
       
       addTestResult('Firestore Read', true, 
@@ -54,11 +54,12 @@ const AppCheckProtectionTest: React.FC = () => {
     addTestResult('Firestore Write', false, 'Iniciando teste de escrita...');
     
     try {
-      const testCollection = collection(db, 'test_collection');
-      const docRef = await addDoc(testCollection, {
+      const usersCollection = collection(db, 'users');
+      const docRef = await addDoc(usersCollection, {
         test: 'App Check Protection Test',
         timestamp: new Date().toISOString(),
-        random: Math.random()
+        random: Math.random(),
+        email: `test-${Date.now()}@example.com`
       });
       
       addTestResult('Firestore Write', true, 
@@ -83,8 +84,8 @@ const AppCheckProtectionTest: React.FC = () => {
     try {
       // Simular uma requisição que não inclui o token do App Check
       // Isso seria feito removendo temporariamente o App Check
-      const testCollection = collection(db, 'test_collection');
-      const q = query(testCollection, limit(1));
+      const usersCollection = collection(db, 'users');
+      const q = query(usersCollection, limit(1));
       const snapshot = await getDocs(q);
       
       addTestResult('Without App Check', true, 
@@ -148,11 +149,12 @@ const AppCheckProtectionTest: React.FC = () => {
       }
 
       // 2. Testar operações com token
-      const testCollection = collection(db, 'test_collection');
-      const docRef = await addDoc(testCollection, {
+      const usersCollection = collection(db, 'users');
+      const docRef = await addDoc(usersCollection, {
         test: 'Full Protection Test',
         timestamp: new Date().toISOString(),
-        appCheckToken: token.substring(0, 20) + '...'
+        appCheckToken: token.substring(0, 20) + '...',
+        email: `full-test-${Date.now()}@example.com`
       });
 
       addTestResult('Full Protection Test', true, 
