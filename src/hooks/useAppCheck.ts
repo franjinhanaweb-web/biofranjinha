@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { getAppCheckToken } from '../config/firebase';
+import { getAppCheckToken } from 'firebase/app-check';
+import { appCheck } from '../config/firebase';
 
 interface AppCheckState {
   isReady: boolean;
@@ -37,7 +38,7 @@ export const useAppCheck = (): AppCheckState => {
     }
 
     try {
-      const token = await getAppCheckToken();
+      const { token } = await getAppCheckToken(appCheck);
       return token;
     } catch (err) {
       console.error('Erro ao obter token do App Check:', err);
