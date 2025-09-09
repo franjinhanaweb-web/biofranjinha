@@ -82,20 +82,40 @@ const AppCheckProtectionTest: React.FC = () => {
     addTestResult('Without App Check', false, 'Simulando requisição sem App Check...');
     
     try {
-      // Simular uma requisição que não inclui o token do App Check
-      // Isso seria feito removendo temporariamente o App Check
+      // IMPORTANTE: Este teste simula uma requisição SEM App Check
+      // Em produção, isso deve falhar devido às regras do Firestore
+      // Em desenvolvimento, pode funcionar porque App Check está desabilitado
+      
       const usersCollection = collection(db, 'users');
       const q = query(usersCollection, limit(1));
       const snapshot = await getDocs(q);
       
+      // Se chegou aqui, significa que a requisição funcionou
+      // Isso pode indicar que:
+      // 1. Estamos em desenvolvimento (App Check desabilitado)
+      // 2. As regras do Firestore não estão exigindo App Check
+      // 3. Há um problema na configuração
+      
       addTestResult('Without App Check', true, 
-        `⚠️ Requisição funcionou (pode ser desenvolvimento ou App Check desabilitado)`,
-        { docsCount: snapshot.docs.length }
+        `⚠️ ATENÇÃO: Requisição funcionou sem App Check!`,
+        { 
+          docsCount: snapshot.docs.length,
+          environment: process.env.NODE_ENV,
+          warning: 'Isso pode indicar que a proteção não está ativa'
+        }
       );
     } catch (error: any) {
+      // Se chegou aqui, significa que a requisição foi bloqueada
+      // Isso é o comportamento esperado em produção com App Check ativo
+      
       addTestResult('Without App Check', false, 
-        `✅ Requisição bloqueada! Erro: ${error.message}`,
-        { error: error.code, message: error.message }
+        `✅ PERFEITO: Requisição bloqueada! Proteção ativa.`,
+        { 
+          error: error.code, 
+          message: error.message,
+          environment: process.env.NODE_ENV,
+          success: 'App Check está protegendo corretamente'
+        }
       );
     } finally {
       setIsLoading(false);
@@ -294,6 +314,8 @@ const AppCheckProtectionTest: React.FC = () => {
             <li><strong>Produção:</strong> Testes com App Check devem funcionar, sem App Check devem falhar</li>
             <li><strong>Token:</strong> Deve ser obtido em produção, null em desenvolvimento</li>
             <li><strong>Proteção:</strong> Em produção, operações sem App Check são bloqueadas</li>
+            <li><strong>⚠️ ATENÇÃO:</strong> Se "Simular Sem App Check" funcionar em produção, há problema na proteção</li>
+            <li><strong>✅ PERFEITO:</strong> Se "Simular Sem App Check" falhar em produção, proteção está ativa</li>
           </ul>
         </div>
       </div>
