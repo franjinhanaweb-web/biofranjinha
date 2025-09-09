@@ -5,7 +5,6 @@ import AuthPage from './pages/AuthPage/AuthPage';
 import LandingPage from './pages/LandingPage/LandingPage';
 import LoginPage from './pages/LoginPage/LoginPage';
 import RegisterPage from './pages/RegisterPage/RegisterPage';
-import AppCheckDemo from './pages/AppCheckDemo';
 import { UserData } from './services/authService';
 import './App.css';
 
@@ -72,10 +71,6 @@ function AppContent() {
             <Navigate to="/" replace />
           )
         } 
-      />
-      <Route 
-        path="/app-check-demo" 
-        element={<AppCheckDemo />} 
       />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
