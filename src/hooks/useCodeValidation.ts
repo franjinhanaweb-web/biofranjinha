@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { validateCode, validateAndUseCode, CodeValidationResult } from '../services/codeService';
+import { validateVerificationCode, markCodeAsUsed, CodeValidationResult } from '../services/verificationCodeService';
 
 export interface UseCodeValidationReturn {
   isValidating: boolean;
@@ -18,13 +18,14 @@ export const useCodeValidation = (): UseCodeValidationReturn => {
     setValidationResult(null);
 
     try {
-      const result = await validateCode(code);
+      const result = await validateVerificationCode(code);
       setValidationResult(result);
       return result;
     } catch (error: any) {
       const errorResult: CodeValidationResult = {
         isValid: false,
-        error: 'Erro inesperado ao validar código'
+        isUsed: false,
+        message: 'Erro inesperado ao validar código'
       };
       setValidationResult(errorResult);
       return errorResult;
@@ -38,13 +39,39 @@ export const useCodeValidation = (): UseCodeValidationReturn => {
     setValidationResult(null);
 
     try {
-      const result = await validateAndUseCode(code, userId);
-      setValidationResult(result);
-      return result;
+      // Primeiro validar o código
+      const validation = await validateVerificationCode(code);
+      
+      if (!validation.isValid) {
+        setValidationResult(validation);
+        return validation;
+      }
+
+      // Se válido, marcar como usado
+      if (validation.codeData) {
+        await markCodeAsUsed(validation.codeData.id, userId);
+        const result: CodeValidationResult = {
+          isValid: true,
+          isUsed: false,
+          message: 'Código validado e marcado como usado com sucesso',
+          codeData: validation.codeData
+        };
+        setValidationResult(result);
+        return result;
+      } else {
+        const errorResult: CodeValidationResult = {
+          isValid: false,
+          isUsed: false,
+          message: 'Erro ao processar código de verificação'
+        };
+        setValidationResult(errorResult);
+        return errorResult;
+      }
     } catch (error: any) {
       const errorResult: CodeValidationResult = {
         isValid: false,
-        error: 'Erro inesperado ao processar código'
+        isUsed: false,
+        message: 'Erro inesperado ao processar código'
       };
       setValidationResult(errorResult);
       return errorResult;
