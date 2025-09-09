@@ -34,20 +34,15 @@ export const validateAppCheckConfig = (): boolean => {
   }
   
   if (APP_CHECK_CONFIG.IS_DEVELOPMENT && !APP_CHECK_CONFIG.DEBUG_TOKEN) {
-    console.warn('⚠️ REACT_APP_APP_CHECK_DEBUG_TOKEN não configurado para desenvolvimento');
-    console.warn('Configure no Cloudflare Pages para testes locais');
+    console.warn('⚠️ Debug token não configurado para desenvolvimento');
   }
   
   if (errors.length > 0) {
-    console.error('❌ Erros de configuração do App Check:');
+    console.error('❌ App Check não configurado:');
     errors.forEach(error => console.error(`  - ${error}`));
-    console.error('📋 Configure as variáveis no Cloudflare Pages:');
-    console.error('  - REACT_APP_RECAPTCHA_SITE_KEY');
-    console.error('  - REACT_APP_APP_CHECK_DEBUG_TOKEN (opcional para desenvolvimento)');
     return false;
   }
   
-  console.log('✅ Configuração do App Check validada com sucesso');
   return true;
 };
 

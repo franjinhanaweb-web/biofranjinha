@@ -39,35 +39,27 @@ if (!validateAppCheckConfig()) {
   if (envConfig.enableDebugToken && APP_CHECK_CONFIG.DEBUG_TOKEN) {
     // @ts-ignore - Token de debug para desenvolvimento
     window.FIREBASE_APPCHECK_DEBUG_TOKEN = APP_CHECK_CONFIG.DEBUG_TOKEN;
-    console.log('Token de debug configurado:', APP_CHECK_CONFIG.DEBUG_TOKEN);
   }
   
   try {
     const appCheck = initializeAppCheck(app, appCheckConfig);
-    console.log('✅ App Check inicializado com sucesso!');
-    console.log('Provider:', provider);
-    console.log('App Check instance:', appCheck);
-    console.log('Tipo do App Check:', typeof appCheck);
-    console.log('Métodos do App Check:', Object.getOwnPropertyNames(Object.getPrototypeOf(appCheck)));
+    console.log('✅ App Check inicializado');
     
     // Exportar a instância do App Check para uso em outros componentes
     (window as any).appCheck = appCheck;
-    console.log('App Check exportado para window:', (window as any).appCheck);
     
     // Verificar se o getToken está disponível
     if (typeof (appCheck as any).getToken === 'function') {
-      console.log('✅ Método getToken está disponível');
+      console.log('✅ App Check funcionando corretamente');
     } else {
-      console.warn('⚠️ Método getToken não está disponível no App Check');
-      console.log('Tentando aguardar inicialização...');
+      console.warn('⚠️ App Check sem método getToken - aguardando inicialização...');
       
       // Aguardar um pouco e tentar novamente
       setTimeout(() => {
-        console.log('Verificando App Check após delay:', (window as any).appCheck);
         if (typeof (window as any).appCheck?.getToken === 'function') {
-          console.log('✅ getToken agora está disponível!');
+          console.log('✅ App Check agora está funcionando');
         } else {
-          console.error('❌ getToken ainda não está disponível');
+          console.error('❌ App Check não funcionou - verifique configuração');
         }
       }, 2000);
     }

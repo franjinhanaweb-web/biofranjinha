@@ -32,28 +32,17 @@ export class AppCheckService {
    * Verifica se o App Check está disponível
    */
   public isAvailable(): boolean {
-    // Verificar se o App Check está disponível na window
     const appCheck = (window as any).appCheck;
-    console.log('Verificando App Check:', appCheck);
-    console.log('Tipo:', typeof appCheck);
-    console.log('Tem getToken?', appCheck && typeof appCheck.getToken === 'function');
     
-    // Verificar se é uma instância válida do App Check
     if (appCheck && typeof appCheck === 'object') {
-      console.log('Propriedades do App Check:', Object.keys(appCheck));
-      console.log('Métodos disponíveis:', Object.getOwnPropertyNames(Object.getPrototypeOf(appCheck)));
-      
-      // Verificar se tem getToken
       if (typeof appCheck.getToken === 'function') {
-        console.log('✅ App Check está funcionando corretamente');
         return true;
       } else {
-        console.warn('⚠️ App Check detectado, mas sem método getToken - pode precisar configurar no Firebase Console');
-        return false; // Não considerar disponível sem getToken
+        console.warn('⚠️ App Check sem método getToken');
+        return false;
       }
     }
     
-    console.warn('❌ App Check não está configurado');
     return false;
   }
 
@@ -65,25 +54,21 @@ export class AppCheckService {
     const appCheck = (window as any).appCheck;
     
     if (!appCheck) {
-      console.warn('App Check não está configurado');
       return null;
     }
 
     // Verificar se tem método getToken
     if (typeof appCheck.getToken !== 'function') {
-      console.warn('App Check não tem método getToken - tentando aguardar...');
-      
       // Aguardar até 5 segundos para o getToken ficar disponível
       for (let i = 0; i < 10; i++) {
         await new Promise(resolve => setTimeout(resolve, 500));
         const currentAppCheck = (window as any).appCheck;
         if (currentAppCheck && typeof currentAppCheck.getToken === 'function') {
-          console.log('✅ getToken agora está disponível após aguardar');
           return this.getTokenFromAppCheck(currentAppCheck);
         }
       }
       
-      console.error('❌ getToken não ficou disponível após aguardar');
+      console.error('❌ App Check não funcionou após aguardar');
       return null;
     }
 
@@ -96,10 +81,9 @@ export class AppCheckService {
   private async getTokenFromAppCheck(appCheck: any): Promise<string | null> {
     try {
       const { token } = await getToken(appCheck);
-      console.log('✅ Token obtido com sucesso:', token ? 'Token válido' : 'Token vazio');
       return token;
     } catch (error) {
-      console.error('Erro ao obter token do App Check:', error);
+      console.error('❌ Erro ao obter token:', error);
       return null;
     }
   }
@@ -110,23 +94,15 @@ export class AppCheckService {
   public async getTokenWithRefresh(): Promise<string | null> {
     const appCheck = (window as any).appCheck;
     
-    if (!appCheck) {
-      console.warn('App Check não está configurado');
-      return null;
-    }
-
-    // Verificar se tem método getToken
-    if (typeof appCheck.getToken !== 'function') {
-      console.warn('App Check não tem método getToken para refresh');
+    if (!appCheck || typeof appCheck.getToken !== 'function') {
       return null;
     }
 
     try {
       const { token } = await getToken(appCheck, true);
-      console.log('✅ Token renovado com sucesso:', token ? 'Token válido' : 'Token vazio');
       return token;
     } catch (error) {
-      console.error('Erro ao obter token do App Check:', error);
+      console.error('❌ Erro ao renovar token:', error);
       return null;
     }
   }
@@ -139,7 +115,7 @@ export class AppCheckService {
       const token = await this.getToken();
       return !!token;
     } catch (error) {
-      console.error('Teste do App Check falhou:', error);
+      console.error('❌ Teste do App Check falhou:', error);
       return false;
     }
   }
