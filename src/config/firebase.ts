@@ -31,6 +31,14 @@ if (process.env.NODE_ENV === 'production') {
     
     console.log('App Check configurado e ativo para produção');
     console.log('App Check instance:', appCheck);
+    
+    // Verificar se o App Check está funcionando
+    appCheck.getToken().then((token: any) => {
+      console.log('App Check token obtido na inicialização:', token.token ? 'Sim' : 'Não');
+    }).catch((error: any) => {
+      console.error('Erro ao obter token na inicialização:', error);
+    });
+    
   } catch (error) {
     console.error('Erro ao inicializar App Check:', error);
   }
@@ -42,5 +50,13 @@ if (process.env.NODE_ENV === 'production') {
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 export { appCheck };
+
+// Configurar App Check para ser usado automaticamente pelo Firestore
+if (appCheck) {
+  // O App Check será usado automaticamente pelo Firestore quando configurado corretamente
+  console.log('Firestore configurado para usar App Check automaticamente');
+} else {
+  console.log('Firestore sem App Check (desenvolvimento)');
+}
 
 export default app;
