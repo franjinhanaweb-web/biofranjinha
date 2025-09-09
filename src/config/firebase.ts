@@ -20,12 +20,20 @@ const app = initializeApp(firebaseConfig);
 // Inicializar App Check com reCAPTCHA v3 PRIMEIRO
 let appCheck: any = null;
 if (process.env.NODE_ENV === 'production') {
-  appCheck = initializeAppCheck(app, {
-    provider: new ReCaptchaV3Provider(process.env.REACT_APP_RECAPTCHA_SITE_KEY!),
-    isTokenAutoRefreshEnabled: true
-  });
-  
-  console.log('App Check configurado e ativo para produção');
+  try {
+    console.log('Inicializando App Check...');
+    console.log('reCAPTCHA Site Key:', process.env.REACT_APP_RECAPTCHA_SITE_KEY ? 'Configurada' : 'Não configurada');
+    
+    appCheck = initializeAppCheck(app, {
+      provider: new ReCaptchaV3Provider(process.env.REACT_APP_RECAPTCHA_SITE_KEY!),
+      isTokenAutoRefreshEnabled: true
+    });
+    
+    console.log('App Check configurado e ativo para produção');
+    console.log('App Check instance:', appCheck);
+  } catch (error) {
+    console.error('Erro ao inicializar App Check:', error);
+  }
 } else {
   console.log('App Check desabilitado (desenvolvimento)');
 }

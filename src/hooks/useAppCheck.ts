@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { getToken } from 'firebase/app-check';
+import { appCheck } from '../config/firebase'; // Import direto da instância
 
 interface AppCheckState {
   isReady: boolean;
@@ -37,9 +38,6 @@ export const useAppCheck = (): AppCheckState => {
     }
 
     try {
-      // Importa a instância do App Check que já foi inicializada
-      const { appCheck } = await import('../config/firebase');
-      
       if (!appCheck) {
         console.warn('App Check não foi inicializado');
         return null;
