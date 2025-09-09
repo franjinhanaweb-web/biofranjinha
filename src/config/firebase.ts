@@ -1,6 +1,7 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
+import { initializeAppCheck, ReCaptchaV3Provider } from 'firebase/app-check';
 
 // Configuração do Firebase usando variáveis de ambiente do Cloudflare
 const firebaseConfig = {
@@ -19,4 +20,23 @@ const app = initializeApp(firebaseConfig);
 // Inicializar serviços
 export const auth = getAuth(app);
 export const db = getFirestore(app, 'biodefranja');
+
+// Configurar App Check (apenas em produção)
+if (process.env.NODE_ENV === 'production') {
+  try {
+    const appCheck = initializeAppCheck(app, {
+      provider: new ReCaptchaV3Provider(process.env.REACT_APP_RECAPTCHA_SITE_KEY!),
+      isTokenAutoRefreshEnabled: true
+    });
+    console.log('App Check configurado com sucesso');
+  } catch (error) {
+    console.warn('Erro ao configurar App Check:', error);
+  }
+} else {
+  // Em desenvolvimento, usar token de debug
+  if (typeof window !== 'undefined') {
+    (window as any).FIREBASE_APPCHECK_DEBUG_TOKEN = true;
+  }
+}
+
 export default app;
