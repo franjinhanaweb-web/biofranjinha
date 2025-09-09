@@ -8,10 +8,10 @@ service cloud.firestore {
       allow read: if true;
       
       // Permitir escrita apenas para usuários autenticados com App Check
-      allow write: if request.auth != null && request.app_check_token != null;
+      allow write: if request.auth != null && true;
       
       // Permitir atualização para marcar como usado com App Check
-      allow update: if request.auth != null && request.app_check_token != null;
+      allow update: if request.auth != null && true;
     }
     
     // ===== REGRAS PARA CÓDIGOS DE VERIFICAÇÃO (NOVO PROJETO) =====
@@ -20,10 +20,10 @@ service cloud.firestore {
       allow read: if true;
       
       // Permitir escrita apenas para usuários autenticados com App Check
-      allow write: if request.auth != null && request.app_check_token != null;
+      allow write: if request.auth != null && true;
       
       // Permitir atualização para marcar como usado com App Check
-      allow update: if request.auth != null && request.app_check_token != null;
+      allow update: if request.auth != null && true;
     }
     
     // ===== REGRAS PARA PROGRESSO DO USUÁRIO =====
@@ -31,17 +31,17 @@ service cloud.firestore {
       // Permitir leitura apenas pelo próprio usuário com App Check
       allow read: if request.auth != null && 
                    request.auth.uid == resource.data.userId &&
-                   request.app_check_token != null;
+                   true;
       
       // Permitir escrita apenas pelo próprio usuário com App Check
       allow write: if request.auth != null && 
                    request.auth.uid == resource.data.userId &&
-                   request.app_check_token != null;
+                   true;
       
       // Permitir criação se o userId corresponder ao usuário autenticado com App Check
       allow create: if request.auth != null && 
                    request.auth.uid == request.resource.data.userId &&
-                   request.app_check_token != null;
+                   true;
     }
     
     // ===== REGRAS PARA USUÁRIOS =====
@@ -52,7 +52,7 @@ service cloud.firestore {
       // Permitir escrita apenas pelo próprio usuário com App Check
       allow write: if request.auth != null && 
                    request.auth.uid == userId &&
-                   request.app_check_token != null;
+                   true;
       
       // Permitir criação durante registro (usuário ainda não autenticado)
       allow create: if true;
@@ -61,13 +61,13 @@ service cloud.firestore {
     // ===== REGRAS PARA TESTES DE APP CHECK =====
     match /appcheck_test/{document=**} {
       // Coleção específica para testes - EXIGE App Check em todas as operações
-      allow read, write: if request.app_check_token != null;
+      allow read, write: if true;
     }
     
     // ===== REGRAS PARA CONTEÚDO DA MENTORIA =====
     match /mentoriaContent/{contentId} {
       // Permitir leitura para usuários autenticados com App Check
-      allow read: if request.auth != null && request.app_check_token != null;
+      allow read: if request.auth != null && true;
       
       // Permitir escrita apenas para administradores
       allow write: if false; // Desabilitado por padrão
@@ -78,13 +78,13 @@ service cloud.firestore {
       // EXIGE App Check para TODAS as operações
       allow read, write: if request.auth != null 
         && request.auth.uid == userId
-        && request.app_check_token != null;
+        && true;
     }
     
     // ===== REGRAS PARA TESTES DE APP CHECK =====
     match /appcheck_test/{document=**} {
       // Coleção específica para testes - EXIGE App Check em todas as operações
-      allow read, write: if request.app_check_token != null;
+      allow read, write: if true;
     }
     
     // ===== REGRAS PARA USERS_SITE (NOVO PROJETO) =====
@@ -92,7 +92,7 @@ service cloud.firestore {
       // Apenas o próprio usuário pode ler/escrever seus dados com App Check
       allow read, write: if request.auth != null 
         && request.auth.uid == userId
-        && request.app_check_token != null;
+        && true;
     }
     
     // ===== REGRAS PADRÃO =====
