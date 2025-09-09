@@ -21,22 +21,28 @@ const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app, 'biodefranja');
 
-// Configurar App Check (apenas em produção)
-if (process.env.NODE_ENV === 'production') {
-  try {
+// Configurar App Check
+try {
+  if (process.env.NODE_ENV === 'production' && process.env.REACT_APP_RECAPTCHA_SITE_KEY) {
+    // Em produção, usar reCAPTCHA v3
     initializeAppCheck(app, {
-      provider: new ReCaptchaV3Provider(process.env.REACT_APP_RECAPTCHA_SITE_KEY!),
+      provider: new ReCaptchaV3Provider(process.env.REACT_APP_RECAPTCHA_SITE_KEY),
       isTokenAutoRefreshEnabled: true
     });
-    console.log('App Check configurado com sucesso');
-  } catch (error) {
-    console.warn('Erro ao configurar App Check:', error);
+    console.log('App Check configurado com reCAPTCHA v3');
+  } else {
+    // Em desenvolvimento ou sem Site Key, usar token de debug
+    if (typeof window !== 'undefined') {
+      (window as any).FIREBASE_APPCHECK_DEBUG_TOKEN = true;
+    }
+    initializeAppCheck(app, {
+      provider: new ReCaptchaV3Provider('6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI'), // Site Key de teste do Google
+      isTokenAutoRefreshEnabled: true
+    });
+    console.log('App Check configurado com token de debug');
   }
-} else {
-  // Em desenvolvimento, usar token de debug
-  if (typeof window !== 'undefined') {
-    (window as any).FIREBASE_APPCHECK_DEBUG_TOKEN = true;
-  }
+} catch (error) {
+  console.warn('Erro ao configurar App Check:', error);
 }
 
 export default app;
