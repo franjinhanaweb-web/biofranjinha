@@ -7,9 +7,9 @@ service cloud.firestore {
       // Permitir leitura para todos (necessário para validação durante registro)
       allow read: if true;
       
-      // Permitir apenas atualização do campo isUsed (não criação/deleção)
-      allow update: if request.auth != null 
-        && request.resource.data.keys().hasAll(['code', 'isUsed'])
+      // Permitir atualização do campo isUsed (marcar como usado)
+      // Permite tanto para usuários autenticados quanto durante o processo de registro
+      allow update: if request.resource.data.keys().hasAll(['code', 'isUsed'])
         && request.resource.data.code == resource.data.code
         && resource.data.isUsed == false
         && request.resource.data.isUsed == true;
