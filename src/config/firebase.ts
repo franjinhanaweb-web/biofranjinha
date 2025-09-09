@@ -44,18 +44,8 @@ if (process.env.REACT_APP_RECAPTCHA_SITE_KEY) {
     });
     console.log('✅ App Check configurado com reCAPTCHA v3');
     
-    // Verificar se o token está sendo gerado
-    setTimeout(async () => {
-      console.log('🔍 Verificando token do App Check...');
-      try {
-        const { getToken } = await import('firebase/app-check');
-        const appCheck = await import('firebase/app-check');
-        const token = await getToken(appCheck.getAppCheck(app));
-        console.log('✅ Token do App Check gerado:', token.token.substring(0, 20) + '...');
-      } catch (error) {
-        console.error('❌ Erro ao gerar token do App Check:', error);
-      }
-    }, 2000);
+    // App Check configurado - token será gerado automaticamente quando necessário
+    console.log('🔍 App Check pronto - token será gerado automaticamente');
     
   } catch (error) {
     console.error('❌ Erro ao configurar App Check:', error);
