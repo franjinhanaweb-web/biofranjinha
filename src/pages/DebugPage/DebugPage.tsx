@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Card, Button, Alert, Table, Form, InputGroup } from 'react-bootstrap';
 import { collection, getDocs, addDoc, query, where, orderBy } from 'firebase/firestore';
 import { db } from '../../config/firebase';
-import { validateVerificationCode, markCodeAsUsed } from '../../services/verificationCodeService';
+import { validateVerificationCode } from '../../services/verificationCodeService';
 
 interface DebugInfo {
   type: 'success' | 'error' | 'info';
