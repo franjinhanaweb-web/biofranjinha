@@ -34,8 +34,23 @@ if (process.env.REACT_APP_RECAPTCHA_SITE_KEY) {
     // Verificar se o reCAPTCHA está carregado
     if (typeof window !== 'undefined' && (window as any).grecaptcha) {
       console.log('✅ reCAPTCHA carregado no navegador');
+      console.log('🔍 reCAPTCHA version:', (window as any).grecaptcha.version);
     } else {
       console.warn('⚠️ reCAPTCHA não carregado no navegador');
+      console.log('🔍 Tentando carregar reCAPTCHA...');
+      
+      // Tentar carregar reCAPTCHA dinamicamente
+      const script = document.createElement('script');
+      script.src = `https://www.google.com/recaptcha/api.js?render=${process.env.REACT_APP_RECAPTCHA_SITE_KEY}`;
+      script.async = true;
+      script.defer = true;
+      script.onload = () => {
+        console.log('✅ reCAPTCHA carregado dinamicamente');
+      };
+      script.onerror = () => {
+        console.error('❌ Erro ao carregar reCAPTCHA');
+      };
+      document.head.appendChild(script);
     }
     
     initializeAppCheck(app, {
