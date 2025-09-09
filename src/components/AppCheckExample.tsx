@@ -3,6 +3,7 @@ import AppCheckStatus from './AppCheckStatus';
 import AppCheckDebug from './AppCheckDebug';
 import AppCheckProtectionTest from './AppCheckProtectionTest';
 import UsuariosBiositeTest from './UsuariosBiositeTest';
+import AppCheckDiagnostic from './AppCheckDiagnostic';
 import RecaptchaProvider from './RecaptchaProvider';
 
 // Exemplo de como usar o App Check na sua aplicação
@@ -41,6 +42,12 @@ const AppCheckExample: React.FC = () => {
         <div className="row mt-4">
           <div className="col-12">
             <UsuariosBiositeTest />
+          </div>
+        </div>
+        
+        <div className="row mt-4">
+          <div className="col-12">
+            <AppCheckDiagnostic />
           </div>
         </div>
         
