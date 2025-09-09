@@ -6,7 +6,7 @@ const AppCheckDiagnostic: React.FC = () => {
   const [diagnostics, setDiagnostics] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const addDiagnostic = (category: string, status: 'success' | 'warning' | 'error', message: string, details?: any) => {
+  const addDiagnostic = (category: string, status: 'success' | 'warning' | 'error' | 'info', message: string, details?: any) => {
     const diagnostic = {
       id: Date.now(),
       category,
