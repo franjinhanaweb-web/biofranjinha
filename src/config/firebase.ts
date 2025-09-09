@@ -27,45 +27,58 @@ if (!validateAppCheckConfig()) {
 } else if (APP_CHECK_CONFIG.RECAPTCHA_SITE_KEY) {
   const envConfig = getEnvironmentConfig();
   
-  // Usar reCAPTCHA v3 por padrão
-  const provider = new ReCaptchaV3Provider(APP_CHECK_CONFIG.RECAPTCHA_SITE_KEY);
-  
-  const appCheckConfig = {
-    provider: provider,
-    isTokenAutoRefreshEnabled: envConfig.autoRefresh
+  // Aguardar o reCAPTCHA carregar antes de inicializar o App Check
+  const initializeAppCheckWithRetry = async () => {
+    // Verificar se reCAPTCHA está disponível
+    if (typeof (window as any).grecaptcha === 'undefined') {
+      console.log('Aguardando reCAPTCHA carregar...');
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      return initializeAppCheckWithRetry();
+    }
+    
+    try {
+      // Usar reCAPTCHA v3 por padrão
+      const provider = new ReCaptchaV3Provider(APP_CHECK_CONFIG.RECAPTCHA_SITE_KEY);
+      
+      const appCheckConfig = {
+        provider: provider,
+        isTokenAutoRefreshEnabled: envConfig.autoRefresh
+      };
+      
+      // Adicionar token de debug apenas em desenvolvimento
+      if (envConfig.enableDebugToken && APP_CHECK_CONFIG.DEBUG_TOKEN) {
+        // @ts-ignore - Token de debug para desenvolvimento
+        window.FIREBASE_APPCHECK_DEBUG_TOKEN = APP_CHECK_CONFIG.DEBUG_TOKEN;
+      }
+      
+      const appCheck = initializeAppCheck(app, appCheckConfig);
+      console.log('✅ App Check inicializado');
+      
+      // Exportar a instância do App Check para uso em outros componentes
+      (window as any).appCheck = appCheck;
+      
+      // Verificar se o getToken está disponível
+      if (typeof (appCheck as any).getToken === 'function') {
+        console.log('✅ App Check funcionando corretamente');
+      } else {
+        console.warn('⚠️ App Check sem método getToken - aguardando inicialização...');
+        
+        // Aguardar um pouco e tentar novamente
+        setTimeout(() => {
+          if (typeof (window as any).appCheck?.getToken === 'function') {
+            console.log('✅ App Check agora está funcionando');
+          } else {
+            console.error('❌ App Check não funcionou - verifique configuração');
+          }
+        }, 3000);
+      }
+    } catch (error) {
+      console.error('❌ Erro ao inicializar App Check:', error);
+    }
   };
   
-  // Adicionar token de debug apenas em desenvolvimento
-  if (envConfig.enableDebugToken && APP_CHECK_CONFIG.DEBUG_TOKEN) {
-    // @ts-ignore - Token de debug para desenvolvimento
-    window.FIREBASE_APPCHECK_DEBUG_TOKEN = APP_CHECK_CONFIG.DEBUG_TOKEN;
-  }
-  
-  try {
-    const appCheck = initializeAppCheck(app, appCheckConfig);
-    console.log('✅ App Check inicializado');
-    
-    // Exportar a instância do App Check para uso em outros componentes
-    (window as any).appCheck = appCheck;
-    
-    // Verificar se o getToken está disponível
-    if (typeof (appCheck as any).getToken === 'function') {
-      console.log('✅ App Check funcionando corretamente');
-    } else {
-      console.warn('⚠️ App Check sem método getToken - aguardando inicialização...');
-      
-      // Aguardar um pouco e tentar novamente
-      setTimeout(() => {
-        if (typeof (window as any).appCheck?.getToken === 'function') {
-          console.log('✅ App Check agora está funcionando');
-        } else {
-          console.error('❌ App Check não funcionou - verifique configuração');
-        }
-      }, 2000);
-    }
-  } catch (error) {
-    console.error('❌ Erro ao inicializar App Check:', error);
-  }
+  // Inicializar com retry
+  initializeAppCheckWithRetry();
 } else {
   console.warn('⚠️ App Check não foi inicializado - RECAPTCHA_SITE_KEY não encontrado');
 }
