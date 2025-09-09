@@ -7,11 +7,11 @@ service cloud.firestore {
       // Permitir leitura para todos (necessário para validação de códigos)
       allow read: if true;
       
-      // Permitir escrita apenas para usuários autenticados com App Check
-      allow write: if request.auth != null && true;
+      // Permitir escrita apenas para usuários autenticados
+      allow write: if request.auth != null;
       
-      // Permitir atualização para marcar como usado com App Check
-      allow update: if request.auth != null && true;
+      // Permitir atualização para marcar como usado
+      allow update: if request.auth != null;
     }
     
     // ===== REGRAS PARA CÓDIGOS DE VERIFICAÇÃO (NOVO PROJETO) =====
@@ -19,55 +19,45 @@ service cloud.firestore {
       // Permitir leitura para todos (necessário para validação de códigos)
       allow read: if true;
       
-      // Permitir escrita apenas para usuários autenticados com App Check
-      allow write: if request.auth != null && true;
+      // Permitir escrita apenas para usuários autenticados
+      allow write: if request.auth != null;
       
-      // Permitir atualização para marcar como usado com App Check
-      allow update: if request.auth != null && true;
+      // Permitir atualização para marcar como usado
+      allow update: if request.auth != null;
     }
     
     // ===== REGRAS PARA PROGRESSO DO USUÁRIO =====
     match /userProgress/{progressId} {
-      // Permitir leitura apenas pelo próprio usuário com App Check
+      // Permitir leitura apenas pelo próprio usuário
       allow read: if request.auth != null && 
-                   request.auth.uid == resource.data.userId &&
-                   true;
+                   request.auth.uid == resource.data.userId;
       
-      // Permitir escrita apenas pelo próprio usuário com App Check
+      // Permitir escrita apenas pelo próprio usuário
       allow write: if request.auth != null && 
-                   request.auth.uid == resource.data.userId &&
-                   true;
+                   request.auth.uid == resource.data.userId;
       
-      // Permitir criação se o userId corresponder ao usuário autenticado com App Check
+      // Permitir criação se o userId corresponder ao usuário autenticado
       allow create: if request.auth != null && 
-                   request.auth.uid == request.resource.data.userId &&
-                   true;
+                   request.auth.uid == request.resource.data.userId;
     }
     
     // ===== REGRAS PARA USUÁRIOS =====
     match /users/{userId} {
-      // Permitir leitura para verificar email duplicado durante registro (SEM App Check para compatibilidade)
+      // Permitir leitura para verificar email duplicado durante registro
       allow read: if true;
       
-      // Permitir escrita apenas pelo próprio usuário com App Check
+      // Permitir escrita apenas pelo próprio usuário
       allow write: if request.auth != null && 
-                   request.auth.uid == userId &&
-                   true;
+                   request.auth.uid == userId;
       
       // Permitir criação durante registro (usuário ainda não autenticado)
       allow create: if true;
     }
     
-    // ===== REGRAS PARA TESTES DE APP CHECK =====
-    match /appcheck_test/{document=**} {
-      // Coleção específica para testes - EXIGE App Check em todas as operações
-      allow read, write: if true;
-    }
-    
     // ===== REGRAS PARA CONTEÚDO DA MENTORIA =====
     match /mentoriaContent/{contentId} {
-      // Permitir leitura para usuários autenticados com App Check
-      allow read: if request.auth != null && true;
+      // Permitir leitura para usuários autenticados
+      allow read: if request.auth != null;
       
       // Permitir escrita apenas para administradores
       allow write: if false; // Desabilitado por padrão
@@ -75,24 +65,16 @@ service cloud.firestore {
     
     // ===== REGRAS PARA USUARIOS_BIOSITE (COLEÇÃO PRINCIPAL) =====
     match /Usuarios_biosite/{userId} {
-      // EXIGE App Check para TODAS as operações
+      // Apenas o próprio usuário pode ler/escrever seus dados
       allow read, write: if request.auth != null 
-        && request.auth.uid == userId
-        && true;
-    }
-    
-    // ===== REGRAS PARA TESTES DE APP CHECK =====
-    match /appcheck_test/{document=**} {
-      // Coleção específica para testes - EXIGE App Check em todas as operações
-      allow read, write: if true;
+        && request.auth.uid == userId;
     }
     
     // ===== REGRAS PARA USERS_SITE (NOVO PROJETO) =====
     match /users_site/{userId} {
-      // Apenas o próprio usuário pode ler/escrever seus dados com App Check
+      // Apenas o próprio usuário pode ler/escrever seus dados
       allow read, write: if request.auth != null 
-        && request.auth.uid == userId
-        && true;
+        && request.auth.uid == userId;
     }
     
     // ===== REGRAS PADRÃO =====
@@ -102,4 +84,3 @@ service cloud.firestore {
     }
   }
 }
-
