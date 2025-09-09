@@ -27,15 +27,38 @@ const DebugPage: React.FC = () => {
     setDebugLogs(prev => [newLog, ...prev.slice(0, 19)]); // Manter apenas 20 logs
   };
 
-  // Teste 1: Verificar conexão com Firebase
+  // Teste 1: Verificar configuração e conexão com Firebase
   const testFirebaseConnection = async () => {
     try {
-      addLog('info', 'Testando conexão com Firebase...');
+      addLog('info', 'Testando configuração do Firebase...');
+      
+      // Verificar variáveis de ambiente
+      const config = {
+        apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+        authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+        projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+        storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+        messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+        appId: process.env.REACT_APP_FIREBASE_APP_ID,
+        measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID
+      };
+      
+      addLog('info', `API Key: ${config.apiKey ? 'DEFINIDA' : 'NÃO DEFINIDA'}`);
+      addLog('info', `Project ID: ${config.projectId || 'NÃO DEFINIDO'}`);
+      addLog('info', `Auth Domain: ${config.authDomain || 'NÃO DEFINIDO'}`);
+      
+      if (!config.apiKey || !config.projectId) {
+        addLog('error', 'Configuração do Firebase incompleta! Verifique as variáveis de ambiente.');
+        return;
+      }
+      
+      addLog('info', 'Testando conexão com Firestore...');
       const codesRef = collection(db, 'Codes_bioSite');
       const snapshot = await getDocs(codesRef);
       addLog('success', `Conexão OK! Encontrados ${snapshot.size} códigos na coleção`);
     } catch (error: any) {
       addLog('error', `Erro de conexão: ${error.message}`);
+      addLog('error', `Código do erro: ${error.code || 'N/A'}`);
     }
   };
 
