@@ -73,17 +73,26 @@ service cloud.firestore {
       allow write: if false; // Desabilitado por padrão
     }
     
+    // ===== REGRAS PARA USUARIOS_BIOSITE (COLEÇÃO PRINCIPAL) =====
+    match /Usuarios_biosite/{userId} {
+      // EXIGE App Check para TODAS as operações
+      allow read, write: if request.auth != null 
+        && request.auth.uid == userId
+        && request.app_check_token != null;
+    }
+    
+    // ===== REGRAS PARA TESTES DE APP CHECK =====
+    match /appcheck_test/{document=**} {
+      // Coleção específica para testes - EXIGE App Check em todas as operações
+      allow read, write: if request.app_check_token != null;
+    }
+    
     // ===== REGRAS PARA USERS_SITE (NOVO PROJETO) =====
     match /users_site/{userId} {
       // Apenas o próprio usuário pode ler/escrever seus dados com App Check
       allow read, write: if request.auth != null 
         && request.auth.uid == userId
         && request.app_check_token != null;
-    }
-    
-    // Regra temporária para debug (remover depois) - SEM App Check para debug
-    match /users_site/{document=**} {
-      allow read, write: if request.auth != null;
     }
     
     // ===== REGRAS PADRÃO =====
