@@ -18,8 +18,9 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 // Inicializar App Check com reCAPTCHA v3
+let appCheck: any = null;
 if (process.env.NODE_ENV === 'production') {
-  const appCheck = initializeAppCheck(app, {
+  appCheck = initializeAppCheck(app, {
     provider: new ReCaptchaV3Provider(process.env.REACT_APP_RECAPTCHA_SITE_KEY!),
     isTokenAutoRefreshEnabled: true
   });
@@ -28,5 +29,6 @@ if (process.env.NODE_ENV === 'production') {
 // Inicializar serviços
 export const auth = getAuth(app);
 export const db = getFirestore(app);
+export { appCheck };
 
 export default app;
