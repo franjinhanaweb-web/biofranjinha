@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAppCheck } from '../hooks/useAppCheck';
 import { db } from '../config/firebase';
-import { collection, addDoc, getDocs, query, where, limit } from 'firebase/firestore';
+import { collection, addDoc, getDocs, query, limit } from 'firebase/firestore';
 
 const UsuariosBiositeTest: React.FC = () => {
   const { getToken } = useAppCheck();
