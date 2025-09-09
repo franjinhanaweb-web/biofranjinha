@@ -1,7 +1,7 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
-import { initializeAppCheck, ReCaptchaV3Provider } from 'firebase/app-check';
+import { initializeAppCheck, ReCaptchaV3Provider, getToken as getAppCheckToken } from 'firebase/app-check';
 
 // Configuração do Firebase usando variáveis de ambiente do Cloudflare
 const firebaseConfig = {
@@ -21,29 +21,23 @@ const app = initializeApp(firebaseConfig);
 let appCheck: any = null;
 if (process.env.NODE_ENV === 'production') {
   try {
-    console.log('Inicializando App Check...');
-    console.log('reCAPTCHA Site Key:', process.env.REACT_APP_RECAPTCHA_SITE_KEY ? 'Configurada' : 'Não configurada');
+    console.log('[App Check] Inicializando App Check...');
+    console.log('[App Check] reCAPTCHA Site Key:', process.env.REACT_APP_RECAPTCHA_SITE_KEY ? 'Configurada' : 'Não configurada');
     
+    // NÃO chamar getToken() aqui! Apenas inicializar
     appCheck = initializeAppCheck(app, {
       provider: new ReCaptchaV3Provider(process.env.REACT_APP_RECAPTCHA_SITE_KEY!),
       isTokenAutoRefreshEnabled: true
     });
     
-    console.log('App Check configurado e ativo para produção');
-    console.log('App Check instance:', appCheck);
-    
-    // Verificar se o App Check está funcionando
-    appCheck.getToken().then((tokenResponse: any) => {
-      console.log('App Check token obtido na inicialização:', tokenResponse.token ? 'Sim' : 'Não');
-    }).catch((error: any) => {
-      console.error('Erro ao obter token na inicialização:', error);
-    });
+    console.log('[App Check] App Check inicializado com sucesso!');
+    console.log('[App Check] Firestore usará App Check automaticamente');
     
   } catch (error) {
-    console.error('Erro ao inicializar App Check:', error);
+    console.error('[App Check] Erro ao inicializar App Check:', error);
   }
 } else {
-  console.log('App Check desabilitado (desenvolvimento)');
+  console.log('[App Check] Modo desenvolvimento - App Check desabilitado');
 }
 
 // Inicializar serviços APÓS o App Check
@@ -51,12 +45,18 @@ export const auth = getAuth(app);
 export const db = getFirestore(app);
 export { appCheck };
 
-// Configurar App Check para ser usado automaticamente pelo Firestore
-if (appCheck) {
-  // O App Check será usado automaticamente pelo Firestore quando configurado corretamente
-  console.log('Firestore configurado para usar App Check automaticamente');
-} else {
-  console.log('Firestore sem App Check (desenvolvimento)');
+// Função para obter token manualmente (se necessário)
+export async function getAppCheckToken() {
+  if (appCheck) {
+    try {
+      const { token } = await getAppCheckToken(appCheck, false);
+      return token;
+    } catch (error) {
+      console.error('[App Check] Erro ao obter token:', error);
+      return null;
+    }
+  }
+  return null;
 }
 
 export default app;

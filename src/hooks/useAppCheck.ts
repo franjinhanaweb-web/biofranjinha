@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getToken } from 'firebase/app-check';
-import { appCheck } from '../config/firebase'; // Import direto da instância
+import { getAppCheckToken } from '../config/firebase';
 
 interface AppCheckState {
   isReady: boolean;
@@ -31,20 +30,15 @@ export const useAppCheck = (): AppCheckState => {
     checkRecaptcha();
   }, []);
 
-  const getAppCheckToken = async (): Promise<string | null> => {
+  const getAppCheckTokenWrapper = async (): Promise<string | null> => {
     if (process.env.NODE_ENV !== 'production') {
       console.warn('App Check não está ativo em desenvolvimento');
       return null;
     }
 
     try {
-      if (!appCheck) {
-        console.warn('App Check não foi inicializado');
-        return null;
-      }
-      
-      const token = await getToken(appCheck, false);
-      return token.token;
+      const token = await getAppCheckToken();
+      return token;
     } catch (err) {
       console.error('Erro ao obter token do App Check:', err);
       setError('Erro ao verificar App Check');
@@ -55,6 +49,6 @@ export const useAppCheck = (): AppCheckState => {
   return {
     isReady,
     error,
-    getToken: getAppCheckToken
+    getToken: getAppCheckTokenWrapper
   };
 };
