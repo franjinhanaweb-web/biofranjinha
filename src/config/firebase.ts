@@ -1,7 +1,7 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
-import { initializeAppCheck, ReCaptchaV3Provider, getToken as getAppCheckToken } from 'firebase/app-check';
+import { initializeAppCheck, ReCaptchaV3Provider, getToken } from 'firebase/app-check';
 
 // Configuração do Firebase usando variáveis de ambiente do Cloudflare
 const firebaseConfig = {
@@ -49,7 +49,7 @@ export { appCheck };
 export async function getAppCheckToken() {
   if (appCheck) {
     try {
-      const { token } = await getAppCheckToken(appCheck, false);
+      const { token } = await getToken(appCheck, false);
       return token;
     } catch (error) {
       console.error('[App Check] Erro ao obter token:', error);
