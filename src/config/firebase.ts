@@ -2,7 +2,7 @@ import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import { initializeAppCheck, ReCaptchaV3Provider } from 'firebase/app-check';
-import { APP_CHECK_CONFIG, getEnvironmentConfig } from './appCheckConfig';
+import { APP_CHECK_CONFIG, getEnvironmentConfig, validateAppCheckConfig } from './appCheckConfig';
 
 // Configuração do Firebase usando variáveis de ambiente do Cloudflare
 const firebaseConfig = {
@@ -20,9 +20,11 @@ const app = initializeApp(firebaseConfig);
 
 // Inicializar App Check com reCAPTCHA
 console.log('Inicializando App Check...');
-console.log('Site Key:', APP_CHECK_CONFIG.RECAPTCHA_SITE_KEY);
 
-if (APP_CHECK_CONFIG.RECAPTCHA_SITE_KEY) {
+// Validar configuração antes de inicializar
+if (!validateAppCheckConfig()) {
+  console.error('❌ App Check não será inicializado devido a erros de configuração');
+} else if (APP_CHECK_CONFIG.RECAPTCHA_SITE_KEY) {
   const envConfig = getEnvironmentConfig();
   
   // Usar reCAPTCHA v3 por padrão

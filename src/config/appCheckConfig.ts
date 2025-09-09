@@ -6,13 +6,13 @@
 // Configuração para desenvolvimento
 export const APP_CHECK_CONFIG = {
   // Token de debug para desenvolvimento (apenas para localhost)
-  DEBUG_TOKEN: process.env.REACT_APP_APP_CHECK_DEBUG_TOKEN || 'debug-token',
+  DEBUG_TOKEN: process.env.REACT_APP_APP_CHECK_DEBUG_TOKEN,
   
-  // Site key do reCAPTCHA v3 - Configurado diretamente
-  RECAPTCHA_SITE_KEY: process.env.REACT_APP_RECAPTCHA_SITE_KEY || '6LfWqsIrAAAAAJAj86oKq2uD7ELdYYZNsQeA2v1z',
+  // Site key do reCAPTCHA v3 - Deve ser configurada no Cloudflare
+  RECAPTCHA_SITE_KEY: process.env.REACT_APP_RECAPTCHA_SITE_KEY,
   
-  // Chave secreta do reCAPTCHA (para referência)
-  RECAPTCHA_SECRET_KEY: '6LfWqsIrAAAAAE_81IOXglswLlqx5m63fdqAc97H',
+  // Chave secreta do reCAPTCHA (apenas para referência - não usar no frontend)
+  RECAPTCHA_SECRET_KEY: process.env.REACT_APP_RECAPTCHA_SECRET_KEY,
   
   // Configurações de ambiente
   IS_DEVELOPMENT: process.env.NODE_ENV === 'development',
@@ -30,18 +30,24 @@ export const validateAppCheckConfig = (): boolean => {
   const errors: string[] = [];
   
   if (!APP_CHECK_CONFIG.RECAPTCHA_SITE_KEY) {
-    errors.push('REACT_APP_RECAPTCHA_SITE_KEY não está configurado');
+    errors.push('REACT_APP_RECAPTCHA_SITE_KEY não está configurado no Cloudflare Pages');
   }
   
   if (APP_CHECK_CONFIG.IS_DEVELOPMENT && !APP_CHECK_CONFIG.DEBUG_TOKEN) {
-    console.warn('Token de debug do App Check não configurado para desenvolvimento');
+    console.warn('⚠️ REACT_APP_APP_CHECK_DEBUG_TOKEN não configurado para desenvolvimento');
+    console.warn('Configure no Cloudflare Pages para testes locais');
   }
   
   if (errors.length > 0) {
-    console.error('Erros de configuração do App Check:', errors);
+    console.error('❌ Erros de configuração do App Check:');
+    errors.forEach(error => console.error(`  - ${error}`));
+    console.error('📋 Configure as variáveis no Cloudflare Pages:');
+    console.error('  - REACT_APP_RECAPTCHA_SITE_KEY');
+    console.error('  - REACT_APP_APP_CHECK_DEBUG_TOKEN (opcional para desenvolvimento)');
     return false;
   }
   
+  console.log('✅ Configuração do App Check validada com sucesso');
   return true;
 };
 
