@@ -20,31 +20,12 @@ const app = initializeApp(firebaseConfig);
 // Inicializar App Check ANTES dos outros serviços
 let appCheck: any = null;
 
-// Logs de diagnóstico controlados por NODE_ENV
-const isDevelopment = process.env.NODE_ENV === 'development';
-const isProduction = process.env.NODE_ENV === 'production';
-
-if (isDevelopment || isProduction) {
-  console.log('🔍 Firebase App Check - Diagnóstico:');
-  console.log('- Ambiente:', process.env.NODE_ENV);
-  console.log('- Site Key encontrada:', process.env.REACT_APP_RECAPTCHA_SITE_KEY ? '✅ Sim' : '❌ Não');
-  
-  if (process.env.REACT_APP_RECAPTCHA_SITE_KEY) {
-    const siteKey = process.env.REACT_APP_RECAPTCHA_SITE_KEY;
-    console.log('- Site Key (parcial):', siteKey.substring(0, 10) + '...');
-    console.log('- Site Key (tamanho):', siteKey.length, 'caracteres');
-    console.log('- Site Key (formato):', siteKey.startsWith('6L') ? '✅ Válido' : '❌ Inválido');
-    console.log('- Site Key (completa):', siteKey); // Temporário para debug
-  }
-}
+// App Check será inicializado se Site Key estiver disponível
 
 // Proteção contra inicialização dupla
 if (!(window as any).__FIREBASE_APP_CHECK_INITIALIZED) {
   if (process.env.REACT_APP_RECAPTCHA_SITE_KEY) {
     try {
-      console.log('🚀 Inicializando App Check...');
-      
-      // App Check controla o lifecycle do reCAPTCHA automaticamente
       const siteKey = process.env.REACT_APP_RECAPTCHA_SITE_KEY;
       if (!siteKey) {
         throw new Error('REACT_APP_RECAPTCHA_SITE_KEY não encontrada');
@@ -57,17 +38,11 @@ if (!(window as any).__FIREBASE_APP_CHECK_INITIALIZED) {
       
       // Marcar como inicializado
       (window as any).__FIREBASE_APP_CHECK_INITIALIZED = true;
-      console.log('✅ App Check configurado com reCAPTCHA Enterprise');
       
     } catch (error) {
-      console.error('❌ Erro ao configurar App Check:', error);
+      console.error('Erro ao configurar App Check:', error);
     }
-  } else {
-    console.warn('⚠️ App Check não configurado: REACT_APP_RECAPTCHA_SITE_KEY não encontrada');
-    console.warn('📝 Configure a variável no Cloudflare Pages → Settings → Environment Variables');
   }
-} else {
-  console.log('ℹ️ App Check já inicializado, reutilizando instância');
 }
 
 // Inicializar serviços APÓS App Check
