@@ -30,7 +30,7 @@ const Header: React.FC<HeaderProps> = ({ brandName, navItems, user, onLogout }) 
                 <Nav.Link 
                   key={index} 
                   href={item.href}
-                  className={styles.navLink}
+                  className={`${styles.navLink} ${item.isHighlighted ? styles.highlightedLink : ''}`}
                 >
                   {item.label}
                 </Nav.Link>

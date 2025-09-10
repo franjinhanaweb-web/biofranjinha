@@ -1,6 +1,7 @@
 export interface NavItem {
   label: string;
   href: string;
+  isHighlighted?: boolean;
 }
 
 export interface HeroProps {

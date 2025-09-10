@@ -33,6 +33,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onNavigateToLogin, onNavigate
     { label: 'Início', href: '#home' },
     { label: 'Experiências', href: '#experiencias' },
     { label: 'Sobre', href: '#sobre' },
+    { label: 'Agenda', href: '#agenda', isHighlighted: true },
     { label: 'Localização', href: '#localizacao' },
     { label: 'Preferências', href: '#preferencias' },
     { label: 'Pagamento', href: '#pagamento' },
