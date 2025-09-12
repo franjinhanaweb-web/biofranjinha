@@ -5,15 +5,14 @@ service cloud.firestore {
     
     // ===== REGRAS PARA CÓDIGOS DE VERIFICAÇÃO =====
     match /Codes_biosite/{codeId} {
-      // Permitir leitura para todos (validação de códigos) - com App Check
+      // Permitir leitura para todos (validação de códigos)
       allow read: if true;
       
-      // Permitir criação apenas por usuários autenticados com App Check válido
-      allow create: if request.auth != null && request.appCheck != null;
+      // Permitir criação apenas por usuários autenticados
+      allow create: if request.auth != null;
       
-      // Permitir atualização apenas para marcar como usado - com App Check
+      // Permitir atualização apenas para marcar como usado
       allow update: if request.auth != null 
-        && request.appCheck != null
         && request.resource.data.keys().hasAll(['code', 'isUsed'])
         && request.resource.data.code == resource.data.code
         && (resource.data.isUsed == false || resource.data.isUsed == 'false')
@@ -28,11 +27,11 @@ service cloud.firestore {
       // Permitir leitura para verificar email duplicado
       allow read: if true;
       
-      // Permitir criação apenas durante registro (usuário autenticado com App Check)
-      allow create: if request.auth != null && request.auth.uid == userId && request.appCheck != null;
+      // Permitir criação apenas durante registro (usuário autenticado)
+      allow create: if request.auth != null && request.auth.uid == userId;
       
-      // Permitir escrita apenas pelo próprio usuário com App Check
-      allow write: if request.auth != null && request.auth.uid == userId && request.appCheck != null;
+      // Permitir escrita apenas pelo próprio usuário
+      allow write: if request.auth != null && request.auth.uid == userId;
     }
     
     // ===== REGRAS PARA USUÁRIOS DO SITE =====
@@ -40,14 +39,14 @@ service cloud.firestore {
       // Permitir leitura para verificar email duplicado
       allow read: if true;
       
-      // Permitir criação apenas durante registro (usuário autenticado com App Check)
-      allow create: if request.auth != null && request.auth.uid == userId && request.appCheck != null;
+      // Permitir criação apenas durante registro (usuário autenticado)
+      allow create: if request.auth != null && request.auth.uid == userId;
       
-      // Permitir atualização apenas pelo próprio usuário com App Check
-      allow update: if request.auth != null && request.auth.uid == userId && request.appCheck != null;
+      // Permitir atualização apenas pelo próprio usuário
+      allow update: if request.auth != null && request.auth.uid == userId;
       
-      // Permitir escrita (create + update) apenas pelo próprio usuário com App Check
-      allow write: if request.auth != null && request.auth.uid == userId && request.appCheck != null;
+      // Permitir escrita (create + update) apenas pelo próprio usuário
+      allow write: if request.auth != null && request.auth.uid == userId;
     }
     
     // ===== REGRAS PADRÃO =====
