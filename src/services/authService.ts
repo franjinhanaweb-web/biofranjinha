@@ -6,7 +6,7 @@ import {
   UserCredential,
   updateProfile
 } from 'firebase/auth';
-import { doc, setDoc, getDoc, Timestamp } from 'firebase/firestore';
+import { doc, setDoc, getDoc, updateDoc, Timestamp } from 'firebase/firestore';
 import { auth, db } from '../config/firebase';
 
 export interface UserData {
@@ -96,10 +96,10 @@ export const signInUser = async (
       console.log('Usuário autenticado:', !!auth.currentUser);
       console.log('UID do usuário autenticado:', auth.currentUser?.uid);
       
-      await setDoc(doc(db, 'Usuarios_biosite', user.uid), {
-        ...userData,
+      // Usar updateDoc em vez de setDoc com merge
+      await updateDoc(doc(db, 'Usuarios_biosite', user.uid), {
         lastLoginAt: Timestamp.now()
-      }, { merge: true });
+      });
       
       console.log('Último login atualizado com sucesso!');
     } catch (updateError: any) {
