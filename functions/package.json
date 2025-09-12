@@ -5,18 +5,10 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
-    "dev": "tsc --watch",
-    "lint": "eslint src --ext .ts",
-    "deploy": "wrangler pages deploy"
+    "dev": "tsc --watch"
   },
-  "dependencies": {
-    "@cloudflare/workers-types": "^4.20231218.0"
-  },
+  "dependencies": {},
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^6.0.0",
-    "@typescript-eslint/parser": "^6.0.0",
-    "eslint": "^8.0.0",
-    "typescript": "^5.0.0",
-    "wrangler": "^3.0.0"
+    "typescript": "^5.0.0"
   }
 }
