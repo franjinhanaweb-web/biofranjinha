@@ -92,11 +92,20 @@ export const signInUser = async (
     
     // Atualizar último login
     try {
+      console.log('Tentando atualizar último login para usuário:', user.uid);
+      console.log('Usuário autenticado:', !!auth.currentUser);
+      console.log('UID do usuário autenticado:', auth.currentUser?.uid);
+      
       await setDoc(doc(db, 'Usuarios_biosite', user.uid), {
         ...userData,
         lastLoginAt: Timestamp.now()
       }, { merge: true });
-    } catch (updateError) {
+      
+      console.log('Último login atualizado com sucesso!');
+    } catch (updateError: any) {
+      console.error('Erro ao atualizar último login:', updateError);
+      console.error('Código do erro:', updateError.code);
+      console.error('Mensagem do erro:', updateError.message);
       // Não falhar o login por causa disso
     }
     
@@ -123,12 +132,18 @@ export const getCurrentUser = (): User | null => {
 // Verificar e criar usuário no Firestore se não existir
 export const ensureUserInFirestore = async (user: User): Promise<UserData> => {
   try {
+    console.log('Verificando usuário no Firestore:', user.uid);
+    
     // Verificar se usuário já existe no Firestore
     const userDoc = await getDoc(doc(db, 'Usuarios_biosite', user.uid));
     
     if (userDoc.exists()) {
-      return userDoc.data() as UserData;
+      console.log('Usuário encontrado no Firestore');
+      const data = userDoc.data() as UserData;
+      console.log('Dados do usuário:', data);
+      return data;
     } else {
+      console.log('Usuário não encontrado, criando novo registro');
       // Criar dados do usuário no Firestore
       const userData: UserData = {
         uid: user.uid,
@@ -142,10 +157,13 @@ export const ensureUserInFirestore = async (user: User): Promise<UserData> => {
         }
       };
       
+      console.log('Dados a serem salvos:', userData);
       await setDoc(doc(db, 'Usuarios_biosite', user.uid), userData);
+      console.log('Usuário criado no Firestore com sucesso!');
       return userData;
     }
   } catch (error: any) {
+    console.error('Erro em ensureUserInFirestore:', error);
     throw error;
   }
 };
