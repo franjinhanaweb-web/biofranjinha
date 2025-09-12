@@ -5,7 +5,7 @@
     "module": "ES2022",
     "moduleResolution": "node",
     "outDir": "./dist",
-    "rootDir": "./src",
+    "rootDir": ".",
     "strict": false,
     "esModuleInterop": true,
     "skipLibCheck": true,
@@ -16,8 +16,9 @@
     "noImplicitReturns": false,
     "noImplicitThis": false,
     "noUnusedLocals": false,
-    "noUnusedParameters": false
+    "noUnusedParameters": false,
+    "types": ["@cloudflare/workers-types"]
   },
-  "include": ["src/**/*"],
+  "include": ["**/*.ts"],
   "exclude": ["node_modules", "dist"]
 }
