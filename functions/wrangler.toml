@@ -1,0 +1,9 @@
+name = "afranjinha-auth-functions"
+compatibility_date = "2024-01-01"
+
+[env.production]
+name = "afranjinha-auth-functions"
+
+[env.production.vars]
+# As variáveis de ambiente serão configuradas via Cloudflare Pages dashboard
+# FIREBASE_WEB_API_KEY = "sua-chave-aqui"
