@@ -1,4 +1,4 @@
-import { CheckResponse } from '../types';
+import { CheckResponse } from './types';
 
 export async function handleCheckRequest(request: Request, env: any): Promise<Response> {
   // Verificar se é GET

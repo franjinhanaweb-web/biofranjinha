@@ -1,4 +1,4 @@
-import { SessionRequest, SessionResponse, FirebaseSessionCookieRequest, FirebaseSessionCookieResponse } from '../types';
+import { SessionRequest, SessionResponse, FirebaseSessionCookieRequest, FirebaseSessionCookieResponse } from './types';
 
 export async function handleSessionRequest(request: Request, env: any): Promise<Response> {
   // Verificar se é POST

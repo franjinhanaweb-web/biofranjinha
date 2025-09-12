@@ -1,4 +1,4 @@
-import { LogoutResponse } from '../types';
+import { LogoutResponse } from './types';
 
 export async function handleLogoutRequest(request: Request, env: any): Promise<Response> {
   // Verificar se é POST
