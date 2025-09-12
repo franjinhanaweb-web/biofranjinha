@@ -96,6 +96,16 @@ export const signInUser = async (
       console.log('Usuário autenticado:', !!auth.currentUser);
       console.log('UID do usuário autenticado:', auth.currentUser?.uid);
       
+      // Verificar se App Check está funcionando
+      const { getToken } = await import('firebase/app-check');
+      try {
+        const appCheckToken = await getToken();
+        console.log('App Check token obtido:', !!appCheckToken);
+        console.log('App Check token (primeiros 20 chars):', appCheckToken?.token?.substring(0, 20) + '...');
+      } catch (appCheckError) {
+        console.error('Erro ao obter App Check token:', appCheckError);
+      }
+      
       // Usar updateDoc em vez de setDoc com merge
       await updateDoc(doc(db, 'Usuarios_biosite', user.uid), {
         lastLoginAt: Timestamp.now()
@@ -106,6 +116,7 @@ export const signInUser = async (
       console.error('Erro ao atualizar último login:', updateError);
       console.error('Código do erro:', updateError.code);
       console.error('Mensagem do erro:', updateError.message);
+      console.error('Detalhes do erro:', updateError);
       // Não falhar o login por causa disso
     }
     
