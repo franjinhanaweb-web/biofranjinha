@@ -6,15 +6,15 @@ import {
   UserCredential,
   updateProfile
 } from 'firebase/auth';
-import { doc, setDoc, getDoc } from 'firebase/firestore';
+import { doc, setDoc, getDoc, Timestamp } from 'firebase/firestore';
 import { auth, db } from '../config/firebase';
 
 export interface UserData {
   uid: string;
   email: string;
   displayName: string;
-  createdAt: Date;
-  lastLoginAt: Date;
+  createdAt: Timestamp;
+  lastLoginAt: Timestamp;
   verificationCode?: string; // Código de verificação usado no cadastro
   preferences?: {
     notifications: boolean;
@@ -50,8 +50,8 @@ export const createUser = async (
       uid: user.uid,
       email: user.email!,
       displayName: displayName,
-      createdAt: new Date(),
-      lastLoginAt: new Date(),
+      createdAt: Timestamp.now(),
+      lastLoginAt: Timestamp.now(),
       verificationCode: verificationCode,
       preferences: {
         notifications: true,
@@ -94,7 +94,7 @@ export const signInUser = async (
     try {
       await setDoc(doc(db, 'Usuarios_biosite', user.uid), {
         ...userData,
-        lastLoginAt: new Date()
+        lastLoginAt: Timestamp.now()
       }, { merge: true });
     } catch (updateError) {
       // Não falhar o login por causa disso
@@ -134,8 +134,8 @@ export const ensureUserInFirestore = async (user: User): Promise<UserData> => {
         uid: user.uid,
         email: user.email!,
         displayName: user.displayName || 'Usuário',
-        createdAt: new Date(),
-        lastLoginAt: new Date(),
+        createdAt: Timestamp.now(),
+        lastLoginAt: Timestamp.now(),
         preferences: {
           notifications: true,
           theme: 'light'
