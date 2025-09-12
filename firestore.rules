@@ -38,13 +38,7 @@ service cloud.firestore {
       // Permitir leitura para verificar email duplicado
       allow read: if true;
       
-      // Permitir criação apenas durante registro (usuário autenticado)
-      allow create: if request.auth != null && request.auth.uid == userId;
-      
-      // Permitir atualização apenas pelo próprio usuário
-      allow update: if request.auth != null && request.auth.uid == userId;
-      
-      // Permitir escrita (create + update) apenas pelo próprio usuário
+      // Permitir todas as operações de escrita apenas pelo próprio usuário
       allow write: if request.auth != null && request.auth.uid == userId;
     }
     

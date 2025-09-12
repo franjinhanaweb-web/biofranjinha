@@ -24,12 +24,17 @@ let appCheck: any = null;
 
 // Proteção contra inicialização dupla
 if (!(window as any).__FIREBASE_APP_CHECK_INITIALIZED) {
+  console.log('Inicializando App Check...');
+  console.log('REACT_APP_RECAPTCHA_SITE_KEY disponível:', !!process.env.REACT_APP_RECAPTCHA_SITE_KEY);
+  
   if (process.env.REACT_APP_RECAPTCHA_SITE_KEY) {
     try {
       const siteKey = process.env.REACT_APP_RECAPTCHA_SITE_KEY;
       if (!siteKey) {
         throw new Error('REACT_APP_RECAPTCHA_SITE_KEY não encontrada');
       }
+      
+      console.log('Configurando App Check com site key:', siteKey.substring(0, 10) + '...');
       
       appCheck = initializeAppCheck(app, {
         provider: new ReCaptchaEnterpriseProvider(siteKey),
@@ -39,10 +44,16 @@ if (!(window as any).__FIREBASE_APP_CHECK_INITIALIZED) {
       // Marcar como inicializado
       (window as any).__FIREBASE_APP_CHECK_INITIALIZED = true;
       
+      console.log('App Check inicializado com sucesso!');
+      
     } catch (error) {
       console.error('Erro ao configurar App Check:', error);
     }
+  } else {
+    console.warn('REACT_APP_RECAPTCHA_SITE_KEY não encontrada - App Check não será inicializado');
   }
+} else {
+  console.log('App Check já foi inicializado anteriormente');
 }
 
 // Inicializar serviços APÓS App Check
