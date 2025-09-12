@@ -33,7 +33,7 @@ export async function handleSessionRequest(request: Request, env: any): Promise<
     };
 
     const firebaseResponse = await fetch(
-      `https://identitytoolkit.googleapis.com/v1/accounts:createSessionCookie?key=${env.FIREBASE_WEB_API_KEY}`,
+      `https://identitytoolkit.googleapis.com/v1/accounts:createSessionCookie?key=${env.REACT_APP_FIREBASE_API_KEY}`,
       {
         method: 'POST',
         headers: {

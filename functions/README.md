@@ -61,7 +61,7 @@ functions/
 Configure no Cloudflare Pages Dashboard:
 
 ```bash
-FIREBASE_WEB_API_KEY=AIzaSyC...  # Web API Key do Firebase
+REACT_APP_FIREBASE_API_KEY=AIzaSyC...  # Web API Key do Firebase
 ```
 
 ### 2. Deploy

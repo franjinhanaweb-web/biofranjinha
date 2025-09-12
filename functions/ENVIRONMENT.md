@@ -2,7 +2,7 @@
 
 Configure as seguintes variáveis de ambiente no Cloudflare Pages:
 
-## FIREBASE_WEB_API_KEY
+## REACT_APP_FIREBASE_API_KEY
 - **Descrição**: Web API Key do projeto Firebase
 - **Como obter**: Firebase Console > Project Settings > General > Web API Key
 - **Exemplo**: `AIzaSyC...`
