@@ -98,10 +98,15 @@ export const signInUser = async (
       
       // Verificar se App Check está funcionando
       const { getToken } = await import('firebase/app-check');
+      const { appCheck } = await import('../config/firebase');
       try {
-        const appCheckToken = await getToken();
-        console.log('App Check token obtido:', !!appCheckToken);
-        console.log('App Check token (primeiros 20 chars):', appCheckToken?.token?.substring(0, 20) + '...');
+        if (appCheck) {
+          const appCheckToken = await getToken(appCheck);
+          console.log('App Check token obtido:', !!appCheckToken);
+          console.log('App Check token (primeiros 20 chars):', appCheckToken?.token?.substring(0, 20) + '...');
+        } else {
+          console.log('App Check não está inicializado');
+        }
       } catch (appCheckError) {
         console.error('Erro ao obter App Check token:', appCheckError);
       }
@@ -116,7 +121,6 @@ export const signInUser = async (
       console.error('Erro ao atualizar último login:', updateError);
       console.error('Código do erro:', updateError.code);
       console.error('Mensagem do erro:', updateError.message);
-      console.error('Detalhes do erro:', updateError);
       // Não falhar o login por causa disso
     }
     
