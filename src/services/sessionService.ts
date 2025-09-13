@@ -11,7 +11,9 @@ export interface CheckResponse {
 }
 
 class SessionService {
-  private baseUrl = '/auth'; // Ajuste conforme sua configuração
+  private baseUrl = process.env.NODE_ENV === 'production' 
+    ? 'https://biofranjinha.pages.dev/auth'  // URL completa em produção
+    : '/auth'; // Proxy em desenvolvimento
 
   /**
    * Criar sessão trocando Firebase ID Token por Session Cookie
