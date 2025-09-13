@@ -1,19 +1,26 @@
 import { LogoutResponse } from './types';
+import { corsHeaders, fullHeaders } from './cors';
 
 export async function handleLogoutRequest(request: Request, env: any): Promise<Response> {
   console.log('🚪 [LOGOUT] Iniciando logout');
   console.log('🚪 [LOGOUT] Method:', request.method);
   console.log('🚪 [LOGOUT] URL:', request.url);
   
+  // Handle CORS preflight request
+  if (request.method === 'OPTIONS') {
+    console.log('🚪 [LOGOUT] CORS preflight request');
+    return new Response(null, {
+      status: 200,
+      headers: corsHeaders,
+    });
+  }
+  
   // Verificar se é POST
   if (request.method !== 'POST') {
     console.log('❌ [LOGOUT] Method not allowed:', request.method);
     return new Response(JSON.stringify({ ok: false, message: 'Method not allowed' }), {
       status: 405,
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Content-Type-Options': 'nosniff',
-      },
+      headers: fullHeaders,
     });
   }
 
@@ -27,8 +34,7 @@ export async function handleLogoutRequest(request: Request, env: any): Promise<R
     return new Response(JSON.stringify(response), {
       status: 200,
       headers: {
-        'Content-Type': 'application/json',
-        'X-Content-Type-Options': 'nosniff',
+        ...fullHeaders,
         'Set-Cookie': cookieValue,
       },
     });
@@ -37,10 +43,7 @@ export async function handleLogoutRequest(request: Request, env: any): Promise<R
     console.error('Logout error:', error);
     return new Response(JSON.stringify({ ok: false, message: 'Internal server error' }), {
       status: 500,
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Content-Type-Options': 'nosniff',
-      },
+      headers: fullHeaders,
     });
   }
 }

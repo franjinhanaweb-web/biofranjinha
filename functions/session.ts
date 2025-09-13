@@ -1,19 +1,26 @@
 import { SessionRequest, SessionResponse, FirebaseSessionCookieRequest, FirebaseSessionCookieResponse } from './types';
+import { corsHeaders, fullHeaders } from './cors';
 
 export async function handleSessionRequest(request: Request, env: any): Promise<Response> {
   console.log('🔐 [SESSION] Iniciando criação de sessão');
   console.log('🔐 [SESSION] Method:', request.method);
   console.log('🔐 [SESSION] URL:', request.url);
   
+  // Handle CORS preflight request
+  if (request.method === 'OPTIONS') {
+    console.log('🔐 [SESSION] CORS preflight request');
+    return new Response(null, {
+      status: 200,
+      headers: corsHeaders,
+    });
+  }
+  
   // Verificar se é POST
   if (request.method !== 'POST') {
     console.log('❌ [SESSION] Method not allowed:', request.method);
     return new Response(JSON.stringify({ ok: false, message: 'Method not allowed' }), {
       status: 405,
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Content-Type-Options': 'nosniff',
-      },
+      headers: fullHeaders,
     });
   }
 
@@ -26,10 +33,7 @@ export async function handleSessionRequest(request: Request, env: any): Promise<
       console.log('❌ [SESSION] ID Token não fornecido');
       return new Response(JSON.stringify({ ok: false, message: 'ID Token is required' }), {
         status: 400,
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Content-Type-Options': 'nosniff',
-        },
+        headers: fullHeaders,
       });
     }
 
@@ -63,10 +67,7 @@ export async function handleSessionRequest(request: Request, env: any): Promise<
       console.error('❌ [SESSION] Error details:', errorText);
       return new Response(JSON.stringify({ ok: false, message: 'Authentication failed' }), {
         status: 401,
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Content-Type-Options': 'nosniff',
-        },
+        headers: fullHeaders,
       });
     }
 
@@ -83,8 +84,7 @@ export async function handleSessionRequest(request: Request, env: any): Promise<
     return new Response(JSON.stringify(response), {
       status: 200,
       headers: {
-        'Content-Type': 'application/json',
-        'X-Content-Type-Options': 'nosniff',
+        ...fullHeaders,
         'Set-Cookie': cookieValue,
       },
     });
@@ -93,10 +93,7 @@ export async function handleSessionRequest(request: Request, env: any): Promise<
     console.error('Session creation error:', error);
     return new Response(JSON.stringify({ ok: false, message: 'Internal server error' }), {
       status: 500,
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Content-Type-Options': 'nosniff',
-      },
+      headers: fullHeaders,
     });
   }
 }
