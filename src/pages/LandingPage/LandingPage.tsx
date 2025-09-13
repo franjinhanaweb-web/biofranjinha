@@ -33,7 +33,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onNavigateToLogin, onNavigate
     { label: 'Início', href: '#home' },
     { label: 'Experiências', href: '#experiencias' },
     { label: 'Sobre', href: '#sobre' },
-    { label: 'Agenda', href: 'https://calendarv3.pages.dev/booking', isHighlighted: true },
+    { label: 'Agenda', href: 'https://www.afranjinha.com.br/agenda', isHighlighted: true },
     { label: 'Localização', href: '#localizacao' },
     { label: 'Preferências', href: '#preferencias' },
     { label: 'Pagamento', href: '#pagamento' },
