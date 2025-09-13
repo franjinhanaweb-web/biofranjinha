@@ -8,6 +8,7 @@ import {
 } from 'firebase/auth';
 import { doc, setDoc, getDoc, updateDoc, Timestamp } from 'firebase/firestore';
 import { auth, db } from '../config/firebase';
+import { sessionService } from './sessionService';
 
 export interface UserData {
   uid: string;
@@ -90,6 +91,16 @@ export const signInUser = async (
     // Verificar e criar usuário no Firestore se necessário
     const userData = await ensureUserInFirestore(user);
     
+    // Criar sessão no servidor
+    try {
+      console.log('🔄 [AUTH] Criando sessão no servidor...');
+      await sessionService.createSession();
+      console.log('✅ [AUTH] Sessão criada com sucesso!');
+    } catch (sessionError) {
+      console.error('❌ [AUTH] Erro ao criar sessão no servidor:', sessionError);
+      // Não falhar o login por causa disso
+    }
+    
     // Atualizar último login
     try {
       console.log('Tentando atualizar último login para usuário:', user.uid);
@@ -133,6 +144,17 @@ export const signInUser = async (
 // Fazer logout do usuário
 export const signOutUser = async (): Promise<void> => {
   try {
+    // Fazer logout no servidor primeiro
+    try {
+      console.log('🔄 [AUTH] Fazendo logout no servidor...');
+      await sessionService.logout();
+      console.log('✅ [AUTH] Logout no servidor realizado!');
+    } catch (sessionError) {
+      console.error('❌ [AUTH] Erro ao fazer logout no servidor:', sessionError);
+      // Continuar com logout do Firebase mesmo se der erro no servidor
+    }
+    
+    // Fazer logout do Firebase Auth
     await signOut(auth);
   } catch (error: any) {
     throw new Error('Erro ao fazer logout');
