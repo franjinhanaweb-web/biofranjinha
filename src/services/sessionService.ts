@@ -12,7 +12,7 @@ export interface CheckResponse {
 
 class SessionService {
   private baseUrl = process.env.NODE_ENV === 'production' 
-    ? 'https://biofranjinha.pages.dev/auth'  // URL completa em produção
+    ? 'https://www.afranjinha.com.br'  // URL completa em produção
     : '/auth'; // Proxy em desenvolvimento
 
   /**
