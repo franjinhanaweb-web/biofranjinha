@@ -301,3 +301,5 @@ const corsHeaders = {
 - **Segurança**: Cookie é HttpOnly, Secure e SameSite=Strict
 - **Renovação**: Implemente renovação automática para melhor UX
 - **Tratamento de Erros**: Sempre trate erros de rede e autenticação
+
+

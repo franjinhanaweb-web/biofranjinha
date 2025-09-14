@@ -20,3 +20,5 @@ export const fullHeaders = {
   ...corsHeaders,
   ...securityHeaders,
 };
+
+
